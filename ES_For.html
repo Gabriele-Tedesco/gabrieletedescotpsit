@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problemi di base per competenze sulla decodifica</title>
+
+  <style>
+        
+    #es1 {
+      text-align: center;
+      background-color: grey;
+      border: 1px solid black;
+    }
+    #Out1 {
+      color: red;
+    }
+    #Out2 {
+      color: blue;
+    }
+    #es2 {
+      background-color: #d6de68;
+      border: 1px solid black;
+      text-align: center;
+    }
+    #es3 {
+      background-color: #27e8ab;
+      border: 1px solid black;
+      text-align: center;
+    }
+    #es4 {
+      background-color: #b3dee6;
+      border: 1px solid black;
+      text-align: center;
+    }
+    #es5 {
+      background-color: #e8c08b;
+      border: 1px solid black;
+      text-align: center;
+    }
+    .Out6 {
+      color: red;
+    }  
+    .Out7 {
+      color: green;
+    }
+    .Out8 {
+      color: blue;
+    }
+    
+  </style>
+
+
+  
+</head>
+<body>
+   <div id="es1">
+  <h2>  Problema 1</h2>
+     <p> Dato un bottone ripeti scrivere i numeri da 1 a 10 in riga e da 1 a 10 in colonna</p>
+<button onclick="Problema1()"> Ripeti </button>
+     <p id="Out1"></p>
+     <p id="Out2"></p>
+     </div>
+
+  <div id="es2">
+    <h2>  Problema 2</h2>
+    <p>Dato un input di tipo numerico, dato un bottone che chiama una funzione stampare i numeri che vanno da 0 all'input dato (provare con n = 1000)</p>
+
+    <input type="text" id="number">
+    <button onclick="Problema2()">Ordine</button>
+    <p id="Out3"></p>
+       </div>
+  
+
+  <div id="es3">
+    <h2>  Problema 3</h2>
+    <p>Dati 2 input (n1 e n2) stampare i numeri compresi tra n1 e n2</p>
+    <input type="text" id="n1">
+    <input type="text" id="n2">
+    <button onclick="Problema3()">Stampa</button>
+    <p id="Out4"></p>
+       </div>
+
+
+  <div id="es4">
+    <h2>  Problema 4</h2>
+    <p>Stampare la tabellina dell'input dato</p>
+    <input type="text" id="tabellina">
+    <button onclick="Problema4()">Calcolo</button>
+    <p id="Out5"></p>
+       </div>
+  <div id="es5">
+    <h2>  Problema 5</h2>
+    <p>Dati 3 bottoni stampare la tabellina del 11, 12 e 13 per ogni bottone con colori diversi</p>
+    <button class="Out6" onclick="Tab11()">Tabellina dell'11</button>
+    <p id="Out6" class="Out6"></p>
+    <button class="Out7" onclick="Tab12()">Tabellina del 12</button>
+    <p id="Out7" class="Out7"></p>
+    <button class="Out8" onclick="Tab13()">Tabellina del 13</button>
+    <p id="Out8" class="Out8"></p>
+       </div>
+<script>
+  function Problema1() {
+    let str = "";
+    let str1 =  "";
+    for (let i = 1; i <= 10; i++) {
+
+      str = str + " " + i;
+      str1 = str1 + "<br>" + i;
+  }    
+    document.getElementById("Out1").innerHTML = str;
+    document.getElementById("Out2").innerHTML = str1;
+  }
+  function Problema2(){
+    let n = document.getElementById("number").value;
+    let str = "";
+    for (let i = 0; i <= n; i++) {
+      str = str + " " + i;
+    }
+    document.getElementById("Out3").innerHTML = str;
+  }
+  function Problema3(){
+    let n1 = document.getElementById("n1").value;
+    n1++
+    let n2 = document.getElementById("n2").value;
+    let str = "";
+    for(let i=n1; i<n2; i++){
+      str = str + " " + i;
+    }
+    document.getElementById("Out4").innerHTML = str;
+  }
+  function Problema4(){
+    let n = document.getElementById("tabellina").value;
+    let str = "";
+    for(let i=1; i<=10; i++){
+      str = str + " " + i*n;
+    }
+    document.getElementById("Out5").innerHTML = str;
+  }
+  function Tab11(){
+    let str = "";
+    for(i=1; i<=10; i++){
+      str = str + " " + i*11;
+    }
+    document.getElementById("Out6").innerHTML = str;
+  }
+  function Tab12(){
+    let str = "";
+    for(i=1; i<=10; i++){
+      str = str + " " + i*12;
+    }
+    document.getElementById("Out7").innerHTML = str;
+  }
+  function Tab13(){
+    let str = "";
+    for(i=1; i<=10; i++){
+      str = str + " " + i*13;
+    }
+    document.getElementById("Out8").innerHTML = str;
+  }
+</script>
+  
+  
+</body>
+</html>
