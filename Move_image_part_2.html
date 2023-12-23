@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move Image pt 2</title>
+  <style>
+    #container {
+      width: 300px;
+      height: 300px;
+      position: relative;
+    }
+
+    #timer {
+      text-align: center;
+    }
+
+    #alto {
+      position: absolute;
+      top: 0px;
+      left: 50px;
+      font-size: 15px;
+      background-color: lightblue;
+    }
+
+    #basso {
+      position: absolute;
+      top: 20px;
+      left: 45px;
+      background-color: lightblue;
+    }
+
+    #destra {
+      position: absolute;
+      top: 9px;
+      left: 85px;
+      font-size: 12px;
+      background-color: lightblue;
+    }
+
+    #sinistra {
+      position: absolute;
+      top: 9px;
+      left: 0px;
+      background-color: lightblue;
+    }
+
+    #str {
+      position: absolute;
+      top: 100px;
+    }
+
+    #Image {
+      width: 30px;
+      position: absolute;
+      right: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="timer">60</div>
+  <div id="container">
+    <button id="alto" onclick="moveImage('up')">alto</button>
+    <button id="basso" onclick="moveImage('down')">basso</button>
+    <button id="destra" onclick="moveImage('right')">destra</button>
+    <button id="sinistra" onclick="moveImage('left')">sinistra</button>
+    <img id="Image" src="C:\Users\hp\Downloads\TennisBall.png" alt="pallina da tennis">
+  </div>
+  <script>
+    const movingImage = document.getElementById('Image');
+    const timerDisplay = document.getElementById('timer');
+    let timerSeconds = 60;
+
+    function moveImage(direction) {
+      if (timerSeconds <= 0) {
+        alert('Il tempo è scaduto!');
+        return;
+      }
+
+      const step = 10;
+      let currentLeft = parseInt(getComputedStyle(movingImage).left) || 0;
+      let currentTop = parseInt(getComputedStyle(movingImage).top) || 0;
+
+      switch (direction) {
+        case 'up':
+          movingImage.style.top = `${currentTop - step}px`;
+          break;
+        case 'down':
+          movingImage.style.top = `${currentTop + step}px`;
+          break;
+        case 'left':
+          movingImage.style.left = `${currentLeft - step}px`;
+          break;
+        case 'right':
+          movingImage.style.left = `${currentLeft + step}px`;
+          break;
+        default:
+          break;
+      }
+    }
+
+    function startTimer() {
+      const timerInterval = setInterval(() => {
+        timerSeconds--;
+        timerDisplay.textContent = timerSeconds;
+
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          alert('Il tempo è scaduto!');
+        }
+      }, 1000);
+    }
+
+    startTimer();
+  </script>
+</body>
+
+</html>
