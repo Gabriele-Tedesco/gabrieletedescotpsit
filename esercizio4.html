@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Esercizio-4</title>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <!--
+  Creare un contatore che va da 1 a 5 ad intervalli di 1000 ms ....allo scadere del contatore ( contatore==5)  stampare la tabellina del  1 2 3 4 5 6 7 8 9 10
+  in sequenza in colonna.
+  -->
+  <div>
+    <h1>Contatore</h1>
+    <p id="contatore">0</p>
+    <p id="tabellina"></p>
+  </div>
+  <script>
+     let contatore = 0;
+     let timer = setInterval(function(){
+      contatore=contatore+1
+      document.getElementById("contatore").innerHTML = contatore;
+      if(contatore==5){
+        clearInterval(timer);
+        tabellina();
+      }
+    }, 1000);
+    function tabellina(){
+      document.getElementById("tabellina").innerHTML += "<hr>";
+      for(let i=1; i<=10; i++){
+        for(let j=1; j<=10; j++){
+          //&nbsp serve per dare lo spazio su html, messo tra le virgolette funziona anche su javascript
+          if(i*j<10){
+            document.getElementById("tabellina").innerHTML += "&nbsp&nbsp";
+          }
+          if(i*j<100){
+            document.getElementById("tabellina").innerHTML += "&nbsp";
+          }
+          document.getElementById("tabellina").innerHTML += i*j + "&nbsp"; 
+        }
+        document.getElementById("tabellina").innerHTML += "<br>";
+      }
+      document.getElementById("tabellina").innerHTML += "<hr>"; 
+    }
+  </script>
+</body>
+
+</html>
