@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    .div{
+      background-color: red;
+      width: 10px;
+      height: 10px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+  Creare un input numerico (variabile numero div). Premendo il bottone si creano n div ( con il bordo 1 e grandezza 10x10 px )
+  colorare i div come si vuole 
+  Attenzione utilizzare il ciclo for e mettere il codice di creazione del div dentro il ciclo for
+  -->
+  <input type="number" id="number">
+  <button onclick=createDiv()>Invia</button>
+  <div id="square"></div>
+  <script>
+    function createDiv(){
+      let n = document.getElementById("number").value;
+      for(let i=0; i<n; i++){
+        document.getElementById("square").innerHTML += "<div class='div'></div>";
+      }
+    }
+  </script>
+</body>
+
+</html>
