@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Grafica-3</title>
+    <head>
+      <style>
+        .lightgrey{
+          background-color: lightgrey;
+          width: 10px;
+          height: 10px;
+          border: 1px solid black;
+          margin: 2px;
+          display: inline-block;
+        }
+        .darkgrey{
+          background-color: darkgrey;
+          width: 10px;
+          height: 10px;
+          border: 1px solid black;
+          margin: 2px;
+          display: inline-block;
+        }
+      </style>
+    </head>
+  </head>
+  <body>
+      <!-- creare un programma che esegue un ciclo da 1 a 100
+    quando il numero è pari stampi un quadrato 10x10 con bordo nero e sfondo grigio chiaro con margin 2px
+    quando il numero è dispari stampi un quadrato 10x 10 accanto a quello di prima con sfondo grigio scuro
+    ogni 10 numeri e quindi 10 quadrati vai a capo-->
+    <div id="square"></div>
+    <script>
+      for(let i=1; i<=100; i++){
+        if(i%2!=0){
+          document.getElementById("square").innerHTML += "<div class='lightgrey'></div>";
+        }
+        else{
+          document.getElementById("square").innerHTML += "<div class='darkgrey'></div>";
+        }
+        if(i>0&&i%10==0){
+          document.getElementById("square").innerHTML += "<br>";
+        }
+      }
+    </script>
+  </body>
+</html>
