@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esercizio</title>
+</head>
+<body>
+    <!--Calcolare il peso inserito in input considerando le accelerazioni di gravita
+di tutti i pianeti del sistema solare. Suggerimento: inserito il peso come input
+valido per il nostro pianeta, la funzione restituisce in output il peso
+corrispettivo su tutti i pianeti considerati. Realizzare l'esercizio senza
+l'utilizzo dell'array, dopo la teoria sugli array in javascript
+ricodificare l'esercizio utilizzando un array che contiene le accelerazioni dei pianeti-->
+        <input type="number" id="number">
+        <button  onclick="peso()">Calcola</button>
+        <p id="script"></p>
+        <script>
+            function peso(){
+                let n=document.getElementById("number").value;
+                let pesoTerra = 9.81*n;
+                let pesoMercurio = 3.60*n;
+                let pesoPlutone = 2.26*n;
+                let pesoMarte = 3.72*n;
+                let pesoGiove = 24.87*n;
+                let pesoSaturno = 10.43*n;
+                let pesoUrano = 10.04*n;
+                let pesoNettuno = 12.92*n;
+                let pesoVenere = 8.84*n;
+                document.getElementById("script").innerHTML += "Il peso della Terra calcolato vale: " + pesoTerra + "<br>";
+                document.getElementById("script").innerHTML += "Il peso di Mercurio calcolato vale: " + pesoMercurio + "<br>";
+                document.getElementById("script").innerHTML += "Il peso di Plutone calcolato vale: " + pesoPlutone + "<br>";
+                document.getElementById("script").innerHTML += "Il peso di Marte calcolato vale: " + pesoMarte + "<br>";
+                document.getElementById("script").innerHTML += "Il peso di Giove calcolato vale: " + pesoGiove + "<br>";
+                document.getElementById("script").innerHTML += "Il peso di Saturno calcolato vale: " + pesoSaturno + "<br>";
+                document.getElementById("script").innerHTML += "Il peso della Urano calcolato vale: " + pesoUrano + "<br>";
+                document.getElementById("script").innerHTML += "Il peso della Nettuno calcolato vale: " + pesoNettuno + "<br>";
+                document.getElementById("script").innerHTML += "Il peso della Venere calcolato vale: " + pesoVenere + "<br>";
+            }
+        </script>
+</body>
+</html>
