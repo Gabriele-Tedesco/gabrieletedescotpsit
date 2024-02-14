@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Math random</title>
+    <head>
+    </head>
+  </head>
+  <body>
+      <!-- creare un ciclo for che stampa 1000 numeri casuali tra 1 e 6-->
+    <div id="numbers"></div>
+    <script>
+      for(let i=1; i<=1000; i++){
+        document.getElementById('numbers').innerHTML += Math.floor((Math.random()*6+1)) + " ";
+      }
+    </script>
+  </body>
+</html>
