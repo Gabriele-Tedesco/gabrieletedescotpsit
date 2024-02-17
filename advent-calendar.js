@@ -89,7 +89,7 @@ function createBox(i) {
   // Creiamo il codice per il box
   return `
     <div class="${classes}">
-      <img class="box-icon" src="images/icons/${icon}.png" alt="icon">
+      <img class="box-icon" src="images/icons/${ico}.png" alt="icon">
       <div class="box-date">${date}</div>
     </div>`;
 }
