@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMC</title>
+    <style>
+        /*
+        Scrivi un programma JavaScript che calcoli l'Indice di Massa Corporea (IMC) di una persona. Chiedi
+        all'utente di inserire il proprio peso in kg e la propria altezza in metri. Calcola quindi l'IMC
+        utilizzando la seguente formula e visualizza il risultato insieme a una classificazione
+        approssimativa del peso:
+        Formula dell'IMC:
+        L'Indice di Massa Corporea (IMC) si calcola dividendo il peso in kg per il quadrato dell'altezza in
+        metri. La formula è la seguente: IMC=peso/altezza2
+        Dove:
+        ? peso
+        ? peso è il peso della persona in kg.
+        ? altezza
+        ? altezza è l'altezza della persona in metri.
+        Classificazione del peso:
+        ? IMC < 18.5: Sottopeso
+        ? 18.5 ? IMC < 25: Normopeso
+        ? 25 ? IMC < 30: Sovrappeso
+        ? IMC ? 30: Obesità
+
+        input: peso e altezza
+        IMC = peso/altezza*altezza
+        output: risultato della tabella
+        */
+    </style>
+</head>
+<body>
+    <label for="peso">Peso (in chilogrammi): </label>
+    <input type="number" min="1" id="peso">
+    <br>
+    <br>
+    <label for="altezza">Altezza (in metri): </label>
+    <input type="text" id="altezza">
+    <br>
+    <br>
+    <button onclick="imc()">Calcola</button>
+    <br>
+    <p id="imc"></p>
+    <script>
+        function imc(){
+            let altezza=parseFloat(document.getElementById("altezza").value);
+            let peso=document.getElementById("peso").value;
+            let imc, altezza2;
+            altezza2=altezza*altezza;
+            imc=peso/altezza2;
+            document.getElementById("imc").innerHTML="Il tuo indice di massa corporea è " + imc;
+            if(imc<18.5){
+                document.getElementById("imc").innerHTML+="<br>"+"sei sottopeso";
+            }
+            if(imc>=18.5 && imc<25){
+                document.getElementById("imc").innerHTML+="<br>"+"sei normopeso";
+            }
+            if(imc>=25 && imc<30){
+                document.getElementById("imc").innerHTML+="<br>"+"sei sovrappeso";
+            }
+            if(imc>=30){
+                document.getElementById("imc").innerHTML+="<br>"+"sei in uno stato di obesità";
+            }
+        }
+    </script>
+</body>
+</html>
