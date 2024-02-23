@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style type="text/css">
+		/*
+		Chiedi all'utente di inserire il raggio del cerchio e calcola l'area corrispondente. Visualizza quindi il risultato.
+		Data l’area del cerchio ottenuta (A) premendo un bottone che compare di seguito all’area ottenuta
+		possa stampare a video A volte un quadrato di larghezza 20px * 20px
+		*/
+		#quad{
+			width: 20px;
+			height: 20px;
+			border: 1px solid blue;
+			background: lightgray;
+		}
+	</style>
+</head>
+<body>
+	<input type="text" id="raggio" min=0>
+	<button onclick="square()">Square</button>
+	<p id="quadrato"></p>
+	<script type="text/javascript">
+		function square(){
+			let r=document.getElementById("raggio").value;
+			let r2=r*r;
+			let A=3.14*r2;
+			document.getElementById("quadrato").innerHTML="L'area del cerchio vale "+A+"<br>";
+			for(let i=0; i<A; i++){
+				document.getElementById("quadrato").innerHTML+="<div id='quad'></div>" + "<br>"
+			}
+		}
+	</script>
+</body>
+</html>
