@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*
+        Scrivi un programma html js css che presenta 3 bottoni.
+        Cliccando il primo bottone scrive a video un numero a tua scelta n e ricliccando lo stesso bottone
+        riscrive il numero sommato di due (n+2)
+        Per il secondo bottone la funzionalità è la medesima al primo ma al secondo click presenta il primo
+        numero +3
+        Per il terzo bottone +7 ad ogni click
+        */
+    </style>
+</head>
+<body>
+    <button onclick="number2()">Numero+2</button>
+    <br>
+    <p id="number2"></p>
+    <button onclick="number3()">Numero+3</button>
+    <br>
+    <p id="number3"></p>
+    <button onclick="number7()">Numero+7</button>
+    <br>
+    <p id="number7"></p>
+
+
+    <script>
+let n=0;
+let n1=0;
+let n2=0;
+        function number2(){
+            n=n+2;
+            document.getElementById("number2").innerHTML=n;
+        }
+        function number3(){
+            n1=n1+3;
+            document.getElementById("number3").innerHTML=n1;
+        }
+        function number7(){
+            n2=n2+7;
+            document.getElementById("number7").innerHTML=n2;
+        }                
+    </script>
+</body>
+</html>
