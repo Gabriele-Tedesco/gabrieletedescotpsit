@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bar v1.1</title>
+</head>
+<body>
+	<!--
+Crea una versione 1 di un bar con le seguenti funzionalità:
+Aggiungi quattro bottoni come spiegato durante la lezione:
+Conta elementi
+Aggiungi
+Elimina
+Acquista
+Utilizza due array:
+Uno per memorizzare i drink disponibili
+Un altro per gestire gli ordini
+Ricevi gli ordini tramite un array utilizzando il numero corrispondente al drink desiderato.
+Successivamente, stampa la lista dei drink ordinati in ordine utilizzando l'array dei numeri inviati.
+Ricorda di studiare i metodi join e At per implementare correttamente le funzionalità richieste.
+	-->
+<p id="vettore"></p>
+<button onclick="contaElementi()">Conta elementi</button>
+<p id="output1"></p>
+<button onclick="Aggiungi()">Aggiungi bevanda</button>
+<p></p>
+<button onclick="Elimina()">Elimina bevanda</button>
+<p></p>
+<button onclick="Acquista()">Acquista bevanda</button>
+<p id="output2"></p>
+<script>
+	let bevande = ["Mojito", "Long island", "Negroni"];
+	let ordini = [];
+	visualizza();
+	function visualizza(){
+		document.getElementById("vettore").innerHTML = "Bevande: " + bevande.join(", ");		
+	}
+	function contaElementi(){
+		document.getElementById("output1").innerHTML = "Ci sono " + bevande.length + " elementi";
+	}
+	function Aggiungi(){
+		bevanda = prompt("Aggiungi una bevanda: ");
+		bevande.push(bevanda);
+		visualizza();
+	}
+	function Elimina(){
+		bevande.pop();
+		visualizza();
+	}
+	function Acquista(){
+		let ordine = prompt("Inserisci il numero della bevanda che vuoi acquistare");
+		ordini.push(bevande.at(ordine-1));
+		document.getElementById("output2").innerHTML = "Ordine: " + ordini.join(", ");
+	}
+</script>
+</body>
+</html>
