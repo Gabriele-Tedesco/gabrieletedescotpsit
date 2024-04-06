@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Analisi numerica</title>
+
+  
+    <!-- Bootstrap core CSS -->
+<link href="./bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+   
+    <!-- Custom styles for this template -->
+    <link href="cover.css" rel="stylesheet">
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+   
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="mb-auto">
+    <div>
+      <h3 class="float-md-start mb-0">Gabriele Tedesco</h3>
+      <nav class="nav nav-masthead justify-content-center float-md-end">
+        <a class="nav-link active" aria-current="page" href="Es_array_bootstrap.html">Home</a>
+        <a class="nav-link" href="#">Features</a>
+        <a class="nav-link" href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="px-3">
+
+        <p class="fw-bolder">Algoritmo 1 stampare i numeri da 1 a 100</p>
+      <button onclick="Numeri(100)" class="btn btn-primary">Stampa i numeri</button>
+      <p id="out1" class="fw-semibold"></p>
+
+      <p class="fw-bolder">Algoritmo 2 inserimento dei numeri interi in un array </p>
+      <button onclick="ArrayNumeri(100)" class="btn btn-primary"> Inserisci numeri nell'array</button>
+      <p id="out2" class="fw-semibold"></p>
+
+      <p class="fw-bolder"> Algoritmo 3 inserimento dei numeri interi pari in un array</p>
+      <button onclick="ArrayNumeriPari(100)" class="btn btn-primary"> Inserisci numeri pari nell'array</button>
+      <p id="out3" class="fw-semibold"></p>
+          
+      <p class="fw-bolder"> Algoritmo 4 inserimento dei numeri interi dispari in un array</p>
+      <button onclick="ArrayNumeriDispari(100)" class="btn btn-primary"> Inserisci numeri dispari nell'array</button>
+      <p id="out4" class="fw-semibold"></p>
+
+      <p class="fw-bolder"> Algoritmo 5 Visualizzazione dei valori dell'array con un set interval</p>
+      <button id="startButton" class="btn btn-primary"> Visualizza </button>
+      <p id="out5" class="fw-semibold"></p>
+
+  </main>
+
+  <footer class="mt-auto text-white-50">
+    <p>Cover template for <a href="https://getbootstrap.com/&quot"; class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo&quot"; class="text-white">@mdo</a>.</p>
+  </footer>
+</div>
+
+<script >
+     let arrayNumeri=[]
+     let arrayNumeriPari=[]
+     let arrayNumeriDispari=[]
+     let arrayFattoridi_N=[]
+     let startButton=document.getElementById("startButton");
+
+      for(let i=1;i<=100;i++){ 
+        arrayNumeri.push(i)
+      }
+
+    function Numeri(n){
+        for(let i=1;i<=n;i++){ 
+          if(i<100){
+            document.getElementById("out1").innerHTML+=i+", "         
+          } 
+          else {
+            document.getElementById("out1").innerHTML+=i
+          }
+
+        }
+     }
+
+     function ArrayNumeri(n){
+        document.getElementById("out2").innerHTML=arrayNumeri.join(", ")
+     }
+
+     function ArrayNumeriPari(n){
+        for(let i=1;i<=n;i++){
+          if (i%2==0){
+            arrayNumeriPari.push(i)
+          }
+        }
+        document.getElementById("out3").innerHTML=arrayNumeriPari.join(", ")
+
+     }
+
+    function ArrayNumeriDispari(n){
+        for(let i=1;i<=n;i++){
+          if (i%2!=0){
+            arrayNumeriDispari.push(i)
+          }
+        }
+        document.getElementById("out4").innerHTML=arrayNumeriDispari.join(", ")
+     }
+     
+
+     let i=0
+    function Visualizza_array(){
+        if(i<100){
+          if(i<99){
+            document.getElementById("out5").innerHTML+=arrayNumeri[i]+", ";             
+          }
+          else{
+            document.getElementById("out5").innerHTML+=arrayNumeri[i]        
+          }
+          i++
+        }
+        else{
+          return 0
+        }
+    }
+
+    startButton.onclick = function() {
+      interval = setInterval(Visualizza_array, 1000);
+    }
+</script>
+<script src="./bootstrap.bundle.min.js"></script>
+   
+  </body>
+</html>
