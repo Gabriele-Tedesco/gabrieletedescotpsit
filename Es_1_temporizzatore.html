@@ -1,0 +1,83 @@
+<SCRIPT Language='JavaScript'>
+
+function inizia()
+{
+   var a=document.getElementById('A');
+   var b=document.getElementById('B');
+
+   a.style.backgroundColor='blue';
+   b.style.backgroundColor='yellow';
+   a.style.width=100;
+   a.style.height=100;
+   b.style.width=100;
+   b.style.height=100;
+
+   al=parseInt(Math.random()*400)+100;
+   at=parseInt(Math.random()*400)+100;
+   a.style.left=al;
+   a.style.top=at;
+
+   bl=parseInt(Math.random()*400)+100;
+   bt=parseInt(Math.random()*400)+100;
+   b.style.left=bl;
+   b.style.top=bt;
+
+   setInterval(function () {
+      w=parseInt(a.style.width);
+      h=parseInt(a.style.height);
+      
+      al=parseInt(Math.random()*500)+100;
+      at=parseInt(Math.random()*500)+100;
+      a.style.left=al;
+      a.style.top=at;
+
+      bl=parseInt(Math.random()*500)+100;
+      bt=parseInt(Math.random()*500)+100;
+      b.style.left=bl;
+      b.style.top=bt;
+
+	  dl=Math.abs(al-bl);
+	  dt=Math.abs(at-bt);
+	 
+	  if(dl<w && dt<h)
+	  {
+	     a.style.backgroundColor='red';
+	     b.style.backgroundColor='red';
+	  }
+	  else
+	  {
+	     a.style.backgroundColor='blue';
+         b.style.backgroundColor='yellow';
+      }	  
+
+  }, 1000);
+}
+
+</SCRIPT>
+
+
+<HTML>
+   <HEAD>
+   <TITLE>test5</TITLE>
+   </HEAD>
+
+   <style type="text/css">
+     
+      .miediv
+      {
+         position:absolute;
+         border-width:1px;
+         border:solid black;
+      }
+
+   </style>
+
+
+    <BODY onLoad="inizia()">
+
+    <DIV id='A' class='miediv'></DIV>
+    <DIV id='B' class='miediv'></DIV>
+
+   </BODY>
+
+</HTML>
