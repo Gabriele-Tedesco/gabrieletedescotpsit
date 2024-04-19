@@ -1,0 +1,71 @@
+<SCRIPT Language='JavaScript'>
+
+function inizia()
+{
+ 
+   var a = document.getElementsByName('A');
+
+   for(i=0;i<a.length;i++)
+   {
+      a[i].style.backgroundColor='yellow';
+      a[i].style.left=(i*60)+10;
+   }
+
+   var pos=-1;
+   var verso=1;
+ 
+   setInterval(function () {
+   
+      for(i=0;i<a.length;i++)
+      {
+         a[i].style.backgroundColor='yellow';
+      } 
+	  
+      pos=pos+verso;
+      
+      //if(pos>5) pos=5;
+	  
+	  if(pos>=a.length-1 && verso==1)
+	     verso=-verso;
+	  else 	 
+	     if(pos<=0 && verso==-1)
+	      verso=-verso;
+          		  
+	  a[pos].style.backgroundColor='red';
+	  
+   }, 500);
+}
+
+</SCRIPT>
+
+
+<HTML>
+   <HEAD>
+   <TITLE>test6</TITLE>
+   </HEAD>
+
+   <style type="text/css">
+     
+      .miediv
+      {
+
+         position:absolute;
+         height:50px;
+         width:50px;
+         border-width:1px;
+         border:solid black;
+	 top:20px;
+      }
+
+   </style>
+
+   <BODY onLoad="inizia()">
+	<DIV name='A' class='miediv'></DIV>
+	<DIV name='A' class='miediv'></DIV>
+	<DIV name='A' class='miediv'></DIV>
+	<DIV name='A' class='miediv'></DIV>
+	<DIV name='A' class='miediv'></DIV>
+	<DIV name='A' class='miediv'></DIV>
+   </BODY>
+
+</HTML>
