@@ -1,0 +1,87 @@
+<SCRIPT Language='JavaScript'>
+function inizia()
+{ 
+   let pos=2;
+   b=document.getElementById("layout");
+   r=10;
+   c=10;
+   var a = new Array();
+
+   for(i=0;i<r;i++)
+   {
+      a[i] = new Array();
+      for(j=0;j<c;j++)
+      {
+         nuovo = document.createElement('div');
+         nuovo.setAttribute('class', 'miediv');
+	 a[i][j]=nuovo;
+	 b.appendChild(a[i][j]);
+
+	 t=(i*55)+10;
+         l=(j*55)+10;
+         a[i][j].style.backgroundColor='yellow';
+         a[i][j].style.top=t;
+         a[i][j].style.left=l;
+      }
+   }
+   setInterval(function(){
+        if(pos<5){
+            pos++;
+            a[pos][3].style.backgroundColor='red';
+            if(pos>=3){
+                a[pos-1][3].style.backgroundColor='yellow';
+            }
+        } else if(pos<8){
+            a[5][pos-1].style.backgroundColor='red';
+            pos++
+            if(pos>=5){
+                a[5][pos-3].style.backgroundColor='yellow';
+            }
+        } else if(pos<11){
+            a[pos-2][6].style.backgroundColor='red';
+            pos++;
+            if(pos>=8){
+                a[pos-4][6].style.backgroundColor='yellow';
+            }            
+        } else {
+            a[8][7].style.backgroundColor='red';
+            a[8][6].style.backgroundColor='yellow';
+            if(pos>=12){
+                a[8][7].style.backgroundColor='yellow';
+                pos=1;
+            }
+            pos++;
+        }
+    },500)
+}
+
+
+</SCRIPT>
+
+
+<HTML>
+   <HEAD>
+   <TITLE>Es_4_temporizzatore</TITLE>
+   </HEAD>
+
+   <style type="text/css">
+
+      .miediv
+      {
+         position:absolute;
+         height:45px;
+         width:45px;
+         border-width:1px;
+         border:solid black;
+      }
+      #layout{
+        width: 100%;
+        height: 100%;
+      }
+   </style>
+
+<body onload="inizia()">
+    <div id="layout"></div>
+</body>
+
+</HTML>
