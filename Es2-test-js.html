@@ -1,0 +1,58 @@
+<SCRIPT Language='JavaScript'>
+   var cont=4;
+   var pos=10;
+   function inizia()
+   {
+    
+      var a = document.getElementsByName('A');
+   
+      for(i=0;i<a.length;i++)
+      {
+         a[i].style.backgroundColor='green';
+         a[i].style.left=(i*60)+pos;
+      }
+    
+      setInterval(function () {
+      if(pos!=60){
+        a[cont].style.left=(cont*60)+pos;
+        pos++;
+      } else {
+        pos=10;
+        cont--;
+      }
+      }, 25);
+   }
+   
+   </SCRIPT>
+   
+   
+   <HTML>
+      <HEAD>
+      <TITLE>Esercizio-2</TITLE>
+      </HEAD>
+   
+      <style type="text/css">
+        
+         .miediv
+         {
+   
+            position:absolute;
+            height:50px;
+            width:50px;
+            border-width:1px;
+            border:solid black;
+            top:20px;
+         }
+   
+      </style>
+   
+      <BODY onLoad="inizia()">
+       <DIV name='A' class='miediv'></DIV>
+       <DIV name='A' class='miediv'></DIV>
+       <DIV name='A' class='miediv'></DIV>
+       <DIV name='A' class='miediv'></DIV>
+       <DIV name='A' class='miediv'></DIV>
+      </BODY>
+   
+   </HTML>
+   
