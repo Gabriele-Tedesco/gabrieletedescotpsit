@@ -1,0 +1,107 @@
+<SCRIPT Language='JavaScript'>
+    /*
+    prima coordinata:
+        al1=300;
+        at1=50
+    
+    seconda coordinata:
+        al1=550;
+        at1=300;
+        
+    terza coorsinata:
+        al1=300;
+        at1=50;
+        
+    quarta coordinata:
+        al1=50;
+        at1=300;    
+    */
+    function inizia()
+    {
+       var al1=50;
+       var at1=300;
+       var at2=50;
+       var al2=550;
+       var al3=300;
+       var at3=50;
+       var a=document.getElementById('A');
+       var text=document.getElementById('text');
+    
+       a.style.backgroundColor='blue';
+       a.style.width=50;
+       a.style.height=50;
+    
+       al=50;
+       at=300;
+       a.style.left=al;
+       a.style.top=at;
+    
+       setInterval(function () {
+        if(al1!=300 && at1!=50){
+            text.innerHTML='NE';
+            al1++;
+            at1--;
+            a.style.left=al1;
+            a.style.top=at1;
+       } else if(al1!=550 && at2!=300){
+            text.innerHTML='SE';
+            al1++;
+            at2++;
+            a.style.left=al1;
+            a.style.top=at2;
+       } else if(al2!=300 && at2!=50){
+            text.innerHTML='NO';
+            al2--;
+            at2--;
+            a.style.left=al2;
+            a.style.top=at2;      
+       } else if(al3!=50 && at3!=300){
+            text.innerHTML='SO';
+            al3--;
+            at3++;
+            a.style.left=al3;
+            a.style.top=at3;        
+       } else {
+            al1=50;
+            at1=300;
+            at2=50;
+            al2=550;
+            al3=300;
+            at3=50;
+       }
+      }, 10);
+    }
+    
+    </SCRIPT>
+    
+    
+    <HTML>
+       <HEAD>
+       <TITLE>Esercizio-1</TITLE>
+       </HEAD>
+    
+       <style type="text/css">
+         
+          .miediv
+          {
+             position:absolute;
+             border-width:1px;
+             border:solid black;
+          }
+          #text{
+            color:white;
+            font-size: large;
+            text-align: center;
+          }
+    
+       </style>
+    
+    
+        <BODY onLoad="inizia()">
+    
+        <DIV id='A' class='miediv'><p id="text"></p></DIV>
+    
+       </BODY>
+    
+    </HTML>
+    
