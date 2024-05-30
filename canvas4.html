@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spirale di Ulam</title>
+    <style>
+        canvas {
+            border: 1px solid black; /* Aggiunge un bordo nero al canvas per la visibilità */
+        }
+    </style>
+</head>
+<body>
+    <h1>Spirale di Ulam su 25000 numeri</h1>
+    <canvas id="ulamCanvas" width="800" height="800"></canvas> <!-- Definisce il canvas su cui disegnare la spirale -->
+    <script>
+        // Funzione per controllare se un numero è primo
+        function isPrime(num) {
+            if (num <= 1) return false; // I numeri <= 1 non sono primi
+            if (num <= 3) return true;  // I numeri 2 e 3 sono primi
+
+            if (num % 2 === 0 || num % 3 === 0) return false; // Divisibili per 2 o 3 non sono primi
+
+            // Controlla i divisori dal 5 in su
+            for (let i = 5; i * i <= num; i += 6) {
+                if (num % i === 0 || num % (i + 2) === 0) return false;
+            }
+
+            return true; // Se non ha divisori fino alla radice quadrata, è primo
+        }
+
+        // Funzione per disegnare la spirale di Ulam
+        function drawUlamSpiral(n, canvasId) {
+            const canvas = document.getElementById(canvasId); // Ottiene il canvas tramite l'ID
+            const ctx = canvas.getContext('2d'); // Ottiene il contesto 2D per disegnare sul canvas
+            const width = canvas.width; // Larghezza del canvas
+            const height = canvas.height; // Altezza del canvas
+
+            const cellSize = 5; // Dimensione di ogni cella (quadrato)
+            const centerX = Math.floor(width / 2); // Coordinata X del centro del canvas
+            const centerY = Math.floor(height / 2); // Coordinata Y del centro del canvas
+
+            let x = centerX; // Posizione iniziale X
+            let y = centerY; // Posizione iniziale Y
+            let step = 1; // Passo iniziale per la spirale
+            let num = 1; // Numero iniziale
+
+            // Imposta il colore di sfondo del canvas a bianco
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            // Imposta il colore per i numeri primi a nero
+            ctx.fillStyle = 'black';
+
+            // Disegna la spirale di Ulam fino a n numeri
+            while (num <= n) {
+                // Movimento a destra
+                for (let i = 0; i < step; i++) {
+                    if (num > n) break; // Esce se il numero supera n
+                    if (isPrime(num)) { // Controlla se il numero è primo
+                        ctx.fillRect(x, y, cellSize, cellSize); // Disegna un quadrato nero se il numero è primo
+                    }
+                    x += cellSize; // Incrementa la posizione X
+                    num++; // Incrementa il numero
+                }
+                // Movimento in alto
+                for (let i = 0; i < step; i++) {
+                    if (num > n) break;
+                    if (isPrime(num)) {
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                    }
+                    y -= cellSize; // Decrementa la posizione Y
+                    num++;
+                }
+                step++; // Incrementa il passo dopo aver completato un giro
+                // Movimento a sinistra
+                for (let i = 0; i < step; i++) {
+                    if (num > n) break;
+                    if (isPrime(num)) {
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                    }
+                    x -= cellSize; // Decrementa la posizione X
+                    num++;
+                }
+                // Movimento in basso
+                for (let i = 0; i < step; i++) {
+                    if (num > n) break;
+                    if (isPrime(num)) {
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                    }
+                    y += cellSize; // Incrementa la posizione Y
+                    num++;
+                }
+                step++; // Incrementa di nuovo il passo per l'iterazione successiva
+            }
+        }
+
+        // Numero totale di numeri da disporre nella spirale
+        const totalNumbers = 25000;
+
+        // Disegna la spirale di Ulam sul canvas
+        drawUlamSpiral(totalNumbers, 'ulamCanvas');
+    </script>
+</body>
+</html>
