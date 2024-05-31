@@ -11,8 +11,8 @@
     </style>
 </head>
 <body>
-    <h1>Spirale di Ulam su 25000 numeri</h1>
-    <canvas id="ulamCanvas" width="800" height="800"></canvas> <!-- Definisce il canvas su cui disegnare la spirale -->
+    <h1>Spirale di Ulam di 10000 numeri</h1>
+    <canvas id="ulamCanvas" width="500" height="500"></canvas> <!-- Definisce il canvas su cui disegnare la spirale -->
     <script>
         // Funzione per controllare se un numero è primo
         function isPrime(num) {
@@ -93,10 +93,25 @@
                 }
                 step++; // Incrementa di nuovo il passo per l'iterazione successiva
             }
+
+            // Aggiunge un gestore per l'evento di clic del mouse sul canvas
+            canvas.addEventListener('click', function(event) {
+                // Calcola le coordinate del punto rispetto al canvas
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+
+                // Calcola le coordinate del punto rispetto alla griglia della spirale
+                const gridX = Math.floor(mouseX / cellSize);
+                const gridY = Math.floor(mouseY / cellSize);
+
+                // Mostra un alert con le coordinate del punto
+                alert(`Coordinate del punto: (${gridX}, ${gridY})`);
+            });
         }
 
         // Numero totale di numeri da disporre nella spirale
-        const totalNumbers = 25000;
+        const totalNumbers = 10000;
 
         // Disegna la spirale di Ulam sul canvas
         drawUlamSpiral(totalNumbers, 'ulamCanvas');
