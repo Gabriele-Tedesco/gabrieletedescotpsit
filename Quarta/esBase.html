@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +27,28 @@
         border: 2px solid red;   
         display: inline-block; 
         }
-
+        #numbers1 {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #box1 {
+        width: 300px;
+        height: 50px;
+        border: 2px solid red;   
+        display: inline-block; 
+        }  
+       #numbers2 {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }      
+        #box2 {
+         width: 300px;
+        height: 50px;
+        border: 2px solid grey;   
+        display: inline-block;            
+        }
 
 
         </style>
@@ -36,6 +58,11 @@
     <button id="generate-button">Genera Numero Casuale</button>
     <div id="numbers"></div>
     <div id="box"></div>
+    <div id="numbers1"></div>
+    <div id="box1"></div>    
+    <br>
+    <div id="numbers2"></div>
+    <div id="box2"></div> 
 
     <script>
         function isPrime(n) {
@@ -56,10 +83,29 @@
         function updateNumbers() {
             let parity = "";
             let primo = "";
+            let parity1 = "";
+            let primo1 = "";            
             const numbersDiv = document.getElementById('numbers');
+            const numbersDiv1 = document.getElementById('numbers1');
+            const numbersDiv2 = document.getElementById('numbers2');
             const randomNumber = getRandomNumber();
+            const randomNumber1 = getRandomNumber();
             const infoDiv = document.getElementById('box');
-            numbersDiv.textContent = `Numero Casuale: ${randomNumber}`;
+            const infoDiv1 = document.getElementById('box1');
+            const infoDiv2 = document.getElementById('box2');
+            numbersDiv.textContent = `Primo numero Casuale: ${randomNumber}`;
+            numbersDiv1.textContent = `Secondo numero Casuale: ${randomNumber1}`;
+            numbersDiv2.textContent = `Differenze tra primo e secondo numero:`;
+            if(randomNumber>randomNumber1){             
+               infoDiv2.textContent = randomNumber-randomNumber1;             
+            }
+            if(randomNumber1>randomNumber){             
+               infoDiv2.textContent = randomNumber-randomNumber1;             
+            }
+            if(randomNumber==randomNumber1){             
+               infoDiv2.textContent = randomNumber-randomNumber1;            
+            }                        
+            
             if(isPrime(randomNumber)){
                 primo = " primo ";
             }
@@ -73,7 +119,20 @@
                 parity = "Dispari";
             }
             infoDiv.textContent = "Il numero è " + parity + " " + primo;
-
+            
+            if(isPrime(randomNumber1)){
+                primo1 = " primo ";
+            }
+            else{
+                primo1 = " non primo";
+            }
+            if(randomNumber1 % 2 == 0){
+                parity1 = "Pari";
+            }
+            else{
+                parity1 = "Dispari";
+            }
+            infoDiv1.textContent = "Il numero è " + parity1 + " " + primo1;
 
         }
 
