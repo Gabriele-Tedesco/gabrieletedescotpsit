@@ -26,7 +26,7 @@
 
 function printArrayInDivs(arr) {
     const container = document.getElementById('container');
-   
+   //questo codice crea un nuovo div per ogni elemento dell’array arr, assegna la classe box a ciascun div, imposta il contenuto di testo del div sull’elemento corrente dell’array e aggiunge il div al contenitore container. 
     arr.forEach(element => {
         const div = document.createElement('div');
         div.classList.add('box');
@@ -35,7 +35,7 @@ function printArrayInDivs(arr) {
     });
 }
 
-// Esempio di utilizzo
+//Esempio di utilizzo
 const myArray = [1, 2, 3, 4, 5, "ciao", "test"];
 printArrayInDivs(myArray);
 
