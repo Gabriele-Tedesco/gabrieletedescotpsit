@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Array in Box Div</title>
+    <title>Array di Numeri Primi in Box Div</title>
     <style>
-        /*stile del box*/
         .box {
             border: 1px solid red;
             padding: 10px;
@@ -15,32 +14,53 @@
     </style>
 </head>
 <body>
-    <!-- creazione container --> 
-    <div id="container">
 
-        esempio di stampa di un array in quadrati div nell'html
+    <div id="container">
+        <!-- Contenitore per visualizzare i numeri primi -->
     </div>
 
-   
-<script>
+    <script>
+        // Funzione che genera numeri primi fino a un certo limite
+        function generatePrimes(limit) {
+            const primes = [];
+           
+            for (let i = 2; i <= limit; i++) {
+                if (isPrime(i)) {
+                    primes.push(i);
+                }
+            }
+           
+            return primes;
+        }
 
-function printArrayInDivs(arr) {
-    const container = document.getElementById('container');
-   //questo codice crea un nuovo div per ogni elemento dell’array arr, assegna la classe box a ciascun div, imposta il contenuto di testo del div sull’elemento corrente dell’array e aggiunge il div al contenitore container. 
-    arr.forEach(element => {
-        const div = document.createElement('div');
-        div.classList.add('box');
-        div.textContent = element;
-        container.appendChild(div);
-    });
-}
+        // Funzione di utilità per verificare se un numero è primo
+        function isPrime(num) {
+            if (num < 2) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-//Esempio di utilizzo
-const myArray = [1, 2, 3, 4, 5, "ciao", "test"];
-printArrayInDivs(myArray);
+        // Funzione per stampare un array in div
+        function printArrayInDivs(arr) {
+            const container = document.getElementById('container');
+           
+            arr.forEach(element => {
+                const div = document.createElement('div');
+                div.classList.add('box');
+                div.textContent = element;
+                container.appendChild(div);
+            });
+        }
 
-
-</script>
+        // Esempio di utilizzo: generare numeri primi e visualizzarli
+        const n = 100;  // Limite massimo per trovare i numeri primi
+        const primeNumbers = generatePrimes(n);  // Genera numeri primi fino a 'n'
+        printArrayInDivs(primeNumbers);  // Stampa i numeri primi nei div
+    </script>
    
 </body>
 </html>
