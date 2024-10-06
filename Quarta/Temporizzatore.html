@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrazione Numeri Casuali</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #game-container {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        #countdown {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #numbers {
+            font-size: 1.5em;
+            margin: 20px;
+        }
+        #result {
+            font-size: 1.5em;
+            margin: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 1em;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Indovina il numero non estratto</h1>
+    <div id="game-container">
+        <div id="countdown">3</div>
+        <div id="numbers" class="hidden"></div>
+        <div id="result"></div>
+        <input type="number" id="guess" placeholder="Inserisci un numero tra 0 e 10" min="0" max="10">
+        <button onclick="startGame()">Inizia il gioco</button>
+    </div>
+
+    <script>
+        let countdownElement = document.getElementById('countdown');
+        let numbersElement = document.getElementById('numbers');
+        let resultElement = document.getElementById('result');
+        let guessInput = document.getElementById('guess');
+        let score = 0;
+
+        // Funzione per generare numeri casuali unici tra 0 e 10
+        function generateRandomNumbers() {
+            let randomNumbers = new Set();
+            while (randomNumbers.size < 10) {
+                let randomNum = Math.floor(Math.random() * 11);  // Genera un numero tra 0 e 10
+                randomNumbers.add(randomNum);
+            }
+            return [...randomNumbers];
+        }
+
+        // Funzione per avviare il conto alla rovescia
+        function startCountdown(callback) {
+            let count = 3;
+            countdownElement.innerHTML = count;
+
+            let countdownInterval = setInterval(() => {
+                count--;
+                countdownElement.innerHTML = count;
+                
+                if (count === 0) {
+                    clearInterval(countdownInterval);
+                    callback();
+                }
+            }, 1000);
+        }
+
+        // Funzione per gestire l'inizio del gioco
+        function startGame() {
+            resultElement.innerHTML = '';  // Reset del risultato
+            numbersElement.classList.add('hidden');
+            
+            let guess = parseInt(guessInput.value);
+            if (isNaN(guess) || guess < 0 || guess > 10) {
+                alert('Inserisci un numero valido tra 0 e 10.');
+                return;
+            }
+
+            startCountdown(() => {
+                let randomNumbers = generateRandomNumbers();
+                numbersElement.innerHTML = `Numeri estratti: ${randomNumbers.join(', ')}`;
+                numbersElement.classList.remove('hidden');
+
+                // Verifica se il numero inserito dall'utente è tra quelli estratti
+                if (!randomNumbers.includes(guess)) {
+                    score++;
+                    resultElement.innerHTML = `Bravo! Il numero ${guess} non è stato estratto. Punteggio: ${score}`;
+                } else {
+                    resultElement.innerHTML = `Peccato! Il numero ${guess} è stato estratto. Punteggio: ${score}`;
+                }
+                
+                // Estrarre nuovi numeri casuali ogni 5 secondi
+                setTimeout(startGame, 5000);
+            });
+        }
+    </script>
+</body>
+</html>
