@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<LINK rel="stylesheet" href="style.css" type="TEXT/CSS">
+	<SCRIPT src="jquery-1.7.2.min.js" ></SCRIPT>
+    <SCRIPT src="jquery-ui-1.8.21.custom.min.js" ></SCRIPT>
+    <SCRIPT src="script05.js" ></SCRIPT>
+    <script type="text/javascript">
+   	$(document).ready( function() {
+      z=5;
+      for(i=0;i<z;i++)
+      {
+        var a=true;
+   	  	var b=true;
+         $("#d"+i).click( function() {
+
+             nh = parseInt($(this).css('top'));
+             if(a)
+             {
+                nh = nh + 50;
+                $(this).css({ 'top':nh });
+                if(nh==210){
+                	a=false;
+                }
+             } else if(b){
+                nh = nh - 50;
+                $(this).css({ 'top':nh });  
+                if(nh==10){
+                	$(this).css("background-color","red");
+                	b=false;
+                }           	
+             }
+         });
+      }
+
+   });   
+    </script>
+	<title>Es 1 jquery</title>
+</head>
+<body>
+	<!--creare 5 oggetti DIV quadrati blu di lato 30px che possano compiere un percorso avanti-indietro in verticale tra le posizioni 10 e 200; terminato il percorso l'oggetto diventa rosso e blocca anche tutti gli altri.-->
+</body>
+</html>
