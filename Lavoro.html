@@ -155,32 +155,120 @@
   </div>
 
   <script>
-    let a = 0;
-    let n = 0;
+let corsiste = 0; // Numero di corsiste
 
-    function myFunction() {
-      if (a < n) {
+// Selettori per input specifici con il valore impostato di default
+document.querySelectorAll('.form-check-input').forEach((checkbox, index) => {
+    const relatedInput = checkbox.closest('.input-group').querySelector('.form-control');
+
+    // Controlla se è uno dei tre ultimi input per impostare il valore
+    if (index >= document.querySelectorAll('.form-check-input').length - 3) {
+        const valoriPredefiniti = ["Controllo buste paga", "Fotocopie carte di identità + eventuale tessera sanitaria", "Controllo completo moduli"];
+        relatedInput.value = valoriPredefiniti[index - (document.querySelectorAll('.form-check-input').length - 3)];
+    } else {
+        // Per gli altri, lascia solo il placeholder
+        relatedInput.placeholder = "Inserisci la task";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Funzione per salvare lo stato delle checkbox e il contenuto delle task
+    function salvaDati() {
+        const checkboxes = document.querySelectorAll(".form-check-input, .btn-check");
+        const tasks = document.querySelectorAll(".form-control");
+
+        checkboxes.forEach((checkbox, index) => {
+            localStorage.setItem(`checkbox${index}`, checkbox.checked);
+        });
+
+        tasks.forEach((task, index) => {
+            localStorage.setItem(`task${index}`, task.value);
+        });
+
+        // Salva anche il conteggio e il numero di corsiste
+        localStorage.setItem('conteggio', a);
+        localStorage.setItem('corsiste', corsiste);
+    }
+
+    // Funzione per caricare i dati salvati
+    function caricaDati() {
+        const checkboxes = document.querySelectorAll(".form-check-input, .btn-check");
+        const tasks = document.querySelectorAll(".form-control");
+
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.checked = localStorage.getItem(`checkbox${index}`) === 'true';
+        });
+
+        tasks.forEach((task, index) => {
+            task.value = localStorage.getItem(`task${index}`) || '';
+        });
+
+        // Carica il conteggio e il numero di corsiste
+        a = parseInt(localStorage.getItem('conteggio')) || 0;
+        corsiste = parseInt(localStorage.getItem('corsiste')) || 0;
+
+        document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + corsiste;
+    }
+
+    // Carica i dati salvati all'avvio della pagina
+    caricaDati();
+
+    // Aggiungi eventi per salvare i dati al cambiamento
+    document.querySelectorAll(".form-check-input, .btn-check, .form-control").forEach(element => {
+        element.addEventListener("change", salvaDati);
+    });
+});
+
+let a = 0; // Conteggio dei moduli corretti
+
+function myFunction() {
+    if (a < corsiste) {
         a += 1;
-        document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + n;
-      } else {
+        document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + corsiste;
+        salvaDati(); // Salva il conteggio ogni volta che incrementiamo
+    } else {
         alert("Conteggio completato!");
-      }
     }
+}
 
-    function reset() {
-      n = parseInt(prompt("Numero corsiste: "), 10);
-      a = 0;
-      document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + n;
-    }
+function reset() {
+    // Chiedi il numero di corsiste
+    corsiste = parseInt(prompt("Numero corsiste: "), 10);
 
-    function minus() {
-      if (a > 0) {
+    // Ripristina il conteggio dei moduli corretti
+    a = 0; 
+    document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + corsiste;
+
+    // Deseleziona tutte le checkbox
+    const checkboxes = document.querySelectorAll('.form-check-input, .btn-check');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+
+    // Rimuovi i contenuti inseriti dall'utente nei campi di input, mantenendo i valori di base
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach((input, index) => {
+        if (index >= inputs.length - 3) {
+            // Ripristina solo il valore di base per gli ultimi tre input
+            const valoriPredefiniti = ["Controllo buste paga", "Fotocopie carte di identità + eventuale tessera sanitaria", "Controllo completo moduli"];
+            input.value = valoriPredefiniti[index - (inputs.length - 3)];
+        } else {
+            input.value = ""; // Rimuovi i valori inseriti dall'utente
+        }
+    });
+
+    // Salva i dati dopo il reset
+    salvaDati();
+}
+
+function minus() {
+    if (a > 0) {
         a -= 1;
-        document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + n;
-      } else {
+        document.getElementById("demo").innerHTML = "Moduli corretti: " + a + "/" + corsiste;
+        salvaDati(); // Salva il conteggio ogni volta che decrementiamo
+    } else {
         alert("Hai già raggiunto lo 0");
-      }
     }
+}
+
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
