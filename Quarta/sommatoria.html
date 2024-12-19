@@ -4,8 +4,13 @@
     <title>Statistics Page</title>
 </head>
 <body>
-    <h1>Algoritmo FCFS</h1>
-    <div id="output"></div>
+    <h1>Algoritmi di Scheduling</h1>
+    
+    <h2>FCFS (First-Come, First-Served)</h2>
+    <div id="fcfs-output"></div>
+
+    <h2>SJF (Shortest Job First)</h2>
+    <div id="sjf-output"></div>
 
     <script>
         class Statistics {
@@ -37,80 +42,82 @@
                     : sorted[mid];
             }
 
-            static mode(array) {
-                if (!array.length) return null;
-                const frequencyMap = {};
-                array.forEach(num => {
-                    frequencyMap[num] = (frequencyMap[num] || 0) + 1;
-                });
+static mode(array) {
+    if (!array.length) return null;
+    const frequencyMap = {};
+    array.forEach(num => {
+        frequencyMap[num] = (frequencyMap[num] || 0) + 1;
+    });
 
-                const maxFrequency = Math.max(...Object.values(frequencyMap));
-                const modes = Object.keys(frequencyMap)
-                    .filter(key => frequencyMap[key] === maxFrequency)
-                    .map(Number);
+    const maxFrequency = Math.max(...Object.values(frequencyMap));
+    const modes = Object.keys(frequencyMap)
+        .filter(key => frequencyMap[key] === maxFrequency)
+        .map(Number);
 
-                return modes.length === 1 ? modes[0] : modes;
-            }
+    // Se c'è una sola modalità, restituiamo un numero; altrimenti, un array con tutte le modalità
+    return modes.length === 1 ? modes[0] : modes;
+}
         }
 
-        let data = [3, 4, 2, 5, 1, 6, 4, 2, 7];
-        let summary = [];
-        let app;
-        let a = 0;
-        for (let i = 0; i < data.length; i++) {
-            if (i > 0) {
-                a = a + data[i - 1];
-                if (i == data.length - 1) {
-                    a = a + data[i];
+        let data = [3, 4, 2, 5, 1, 6, 4, 2, 7]; // Stesso array per entrambi gli algoritmi
+
+        // Calcolo per FCFS
+        function calculateFCFS(data) {
+            let summary = [];
+            let a = 0;
+            for (let i = 0; i < data.length; i++) {
+                if (i > 0) {
+                    a = a + data[i - 1];
+                    if (i == data.length - 1) {
+                        a = a + data[i];
+                    }
                 }
+                summary[i] = a;
             }
-            summary[i] = a;
+            return summary;
         }
 
-        // Stampa i risultati nella pagina
-        const output = document.getElementById("output");
-        output.innerHTML += '<span><strong>Array "data": </span></strong>' + '[ ' + data + ' ]';
-        output.innerHTML += '<br><br><strong><span>Array con la sommatoria (FCFS) prima di ordinare il vettore "data": </span></strong>' + '[ ' + summary + ' ]';
-        output.innerHTML += `<br><br><br><h3>Risultati delle statistiche sull'array "sommatoria" prima dell'ordinamento:</h3>`;
-        output.innerHTML += `<p>Media: ${Statistics.mean(summary)}</p>`;
-        output.innerHTML += `<p>Varianza: ${Statistics.variance(summary)}</p>`;
-        output.innerHTML += `<p>Deviazione Standard: ${Statistics.standardDeviation(summary)}</p>`;
-        output.innerHTML += `<p>Mediana: ${Statistics.median(summary)}</p>`;
-        output.innerHTML += `<p>Moda: ${Statistics.mode(summary)}</p>`;
-        for (let i = 0; i < data.length - 1; i++) {
-            for (let j = 0; j < data.length - 1 - i; j++) {
-                if (data[j] > data[j + 1]) {
-                    // Scambia gli elementi
-                    let app = data[j];
-                    data[j] = data[j + 1];
-                    data[j + 1] = app;
+        // Calcolo per SJF
+        function calculateSJF(data) {
+            let sortedData = [...data].sort((a, b) => a - b); // Ordina per durata (SJF)
+            let summary = [];
+            let a = 0;
+            for (let i = 0; i < sortedData.length; i++) {
+                if (i > 0) {
+                    a = a + sortedData[i - 1];
+                    if (i == sortedData.length - 1) {
+                        a = a + sortedData[i];
+                    }
                 }
+                summary[i] = a;
             }
+            return { sortedData, summary };
         }
-        a=0;
-        for (let i = 0; i < data.length; i++) {
-            if (i > 0) {
-                a = a + data[i - 1];
-                if (i == data.length - 1) {
-                    a = a + data[i];
-                }
-            }
-            summary[i] = a;
-        }
-        output.innerHTML += '<br><br><span><strong>Array "data" ordinato: </span></strong>' + '[ ' + data + ' ]';
-        output.innerHTML += '<br><br><strong><span>Array con la sommatoria (FCFS) dopo aver ordinato il vettore "data": </span></strong>' + '[ ' + summary + ' ]';
-        output.innerHTML += `<br><br><br><h3>Risultati delle statistiche sull'array "data":</h3>`;
-        output.innerHTML += `<p>Media: ${Statistics.mean(data)}</p>`;
-        output.innerHTML += `<p>Varianza: ${Statistics.variance(data)}</p>`;
-        output.innerHTML += `<p>Deviazione Standard: ${Statistics.standardDeviation(data)}</p>`;
-        output.innerHTML += `<p>Mediana: ${Statistics.median(data)}</p>`;
-        output.innerHTML += `<p>Moda: ${Statistics.mode(data)}</p>`;
-        output.innerHTML += `<br><br><h3>Risultati delle statistiche sull'array "sommatoria" dopo l'ordinamento:</h3>`;
-        output.innerHTML += `<p>Media: ${Statistics.mean(summary)}</p>`;
-        output.innerHTML += `<p>Varianza: ${Statistics.variance(summary)}</p>`;
-        output.innerHTML += `<p>Deviazione Standard: ${Statistics.standardDeviation(summary)}</p>`;
-        output.innerHTML += `<p>Mediana: ${Statistics.median(summary)}</p>`;
-        output.innerHTML += `<p>Moda: ${Statistics.mode(summary)}</p>`;
+
+        // FCFS Output
+        const fcfsSummary = calculateFCFS(data);
+        const fcfsOutput = document.getElementById("fcfs-output");
+        fcfsOutput.innerHTML += `<strong>Array originale (FCFS):</strong> [ ${data} ]<br>`;
+        fcfsOutput.innerHTML += `<strong>Array sommatoria (FCFS):</strong> [ ${fcfsSummary} ]<br>`;
+        fcfsOutput.innerHTML += `<h3>Statistiche FCFS:</h3>`;
+        fcfsOutput.innerHTML += `<p>Media: ${Statistics.mean(fcfsSummary)}</p>`;
+        fcfsOutput.innerHTML += `<p>Varianza: ${Statistics.variance(fcfsSummary)}</p>`;
+        fcfsOutput.innerHTML += `<p>Deviazione Standard: ${Statistics.standardDeviation(fcfsSummary)}</p>`;
+        fcfsOutput.innerHTML += `<p>Mediana: ${Statistics.median(fcfsSummary)}</p>`;
+        fcfsOutput.innerHTML += `<p>Moda: ${Statistics.mode(fcfsSummary)}</p>`;
+
+        // SJF Output
+        const { sortedData, summary: sjfSummary } = calculateSJF(data);
+        const sjfOutput = document.getElementById("sjf-output");
+        sjfOutput.innerHTML += `<strong>Array originale (SJF):</strong> [ ${data} ]<br>`;
+        sjfOutput.innerHTML += `<strong>Array ordinato (SJF):</strong> [ ${sortedData} ]<br>`;
+        sjfOutput.innerHTML += `<strong>Array sommatoria (SJF):</strong> [ ${sjfSummary} ]<br>`;
+        sjfOutput.innerHTML += `<h3>Statistiche SJF:</h3>`;
+        sjfOutput.innerHTML += `<p>Media: ${Statistics.mean(sjfSummary)}</p>`;
+        sjfOutput.innerHTML += `<p>Varianza: ${Statistics.variance(sjfSummary)}</p>`;
+        sjfOutput.innerHTML += `<p>Deviazione Standard: ${Statistics.standardDeviation(sjfSummary)}</p>`;
+        sjfOutput.innerHTML += `<p>Mediana: ${Statistics.median(sjfSummary)}</p>`;
+        sjfOutput.innerHTML += `<p>Moda: ${Statistics.mode(sjfSummary)}</p>`;
     </script>
 </body>
 </html>
