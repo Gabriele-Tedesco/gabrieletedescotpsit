@@ -98,7 +98,7 @@ static mode(array) {
         const fcfsSummary = calculateFCFS(data);
         const fcfsOutput = document.getElementById("fcfs-output");
         fcfsOutput.innerHTML += `<strong>Array originale (FCFS):</strong> [ ${data} ]<br>`;
-        fcfsOutput.innerHTML += `<strong>Array sommatoria (FCFS):</strong> [ ${fcfsSummary} ]<br>`;
+        fcfsOutput.innerHTML += `<strong>Array sommatoria tempi(FCFS):</strong> [ ${fcfsSummary} ]<br>`;
         fcfsOutput.innerHTML += `<h3>Statistiche FCFS:</h3>`;
         fcfsOutput.innerHTML += `<p>Media: ${Statistics.mean(fcfsSummary)}</p>`;
         fcfsOutput.innerHTML += `<p>Varianza: ${Statistics.variance(fcfsSummary)}</p>`;
@@ -111,7 +111,7 @@ static mode(array) {
         const sjfOutput = document.getElementById("sjf-output");
         sjfOutput.innerHTML += `<strong>Array originale (SJF):</strong> [ ${data} ]<br>`;
         sjfOutput.innerHTML += `<strong>Array ordinato (SJF):</strong> [ ${sortedData} ]<br>`;
-        sjfOutput.innerHTML += `<strong>Array sommatoria (SJF):</strong> [ ${sjfSummary} ]<br>`;
+        sjfOutput.innerHTML += `<strong>Array sommatoria tempi(SJF):</strong> [ ${sjfSummary} ]<br>`;
         sjfOutput.innerHTML += `<h3>Statistiche SJF:</h3>`;
         sjfOutput.innerHTML += `<p>Media: ${Statistics.mean(sjfSummary)}</p>`;
         sjfOutput.innerHTML += `<p>Varianza: ${Statistics.variance(sjfSummary)}</p>`;
