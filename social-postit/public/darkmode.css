@@ -1,0 +1,28 @@
+/* darkmode.css */
+.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-mode .navbar {
+    background-color: #1f1f1f !important;
+}
+
+.dark-mode .list-group-item {
+    background-color: #222;
+    border-color: #444;
+    color: #ddd;
+}
+
+.dark-mode a {
+    color: #bb86fc;
+}
+
+.dark-mode .btn-primary {
+    background-color: #6200ea;
+    border-color: #3700b3;
+}
+
+.dark-mode .btn-primary:hover {
+    background-color: #3700b3;
+}
