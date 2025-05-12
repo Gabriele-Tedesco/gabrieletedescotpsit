@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progetto di rete aziendale</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      border-bottom: 2px solid #0d6efd;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table-responsive {
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-5 text-primary">Nuova Relazione Progetto di Rete Aziendale</h1>
+
+    <div class="section">
+      <h2>1. Descrizione del Progetto</h2>
+      <p>Il progetto prevede la realizzazione di un'infrastruttura di rete cablata e wireless in un edificio aziendale composto da uffici, aree comuni, locali tecnici e sale riunioni. L'obiettivo è garantire la connettività stabile per circa 59 host su LAN (più dispositivi aggiuntivi come LIM e stampanti), oltre a supportare fino a 256 dispositivi per i dipendenti e fino a 512 dispositivi per gli ospiti. L'intero sistema sarà basato su switch, router Wi-Fi 6, access point strategici e protezioni tramite canaline per garantire ordine e sicurezza nel cablaggio.</p>
+    </div>
+
+    <div class="section">
+      <h2>2. Elenco Materiali e Budgeting</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead class="table-primary">
+            <tr>
+              <th>Materiale</th>
+              <th>Quantità</th>
+              <th>Costo</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Cavi Ethernet Cat 6 100m</td><td>5</td><td>€ 300</td><td>Collegamento dispositivi agli switch</td></tr>
+            <tr><td>Switch da 16 porte</td><td>3</td><td>€ 120</td><td>Per uffici con 12 postazioni</td></tr>
+            <tr><td>Switch da 8 porte</td><td>3</td><td>€ 40</td><td>Per uffici con 6 postazioni e manager</td></tr>
+            <tr><td>Switch da 2 porte</td><td>1</td><td>€ 9</td><td>Per l’ufficio in mezzo in alto</td></tr>
+            <tr><td>Switch da 4 porte</td><td>1</td><td>€ 13</td><td>Per il penultimo ufficio</td></tr>
+            <tr><td>Stampanti</td><td>5</td><td>€ 1850</td><td>Una per ogni manager + una in area ricreativa</td></tr>
+            <tr><td>LIM</td><td>2</td><td>€ 6000</td><td>1 per ogni sala riunioni</td></tr>
+            <tr><td>Telecamere (360°)</td><td>3</td><td>€ 90</td><td>2 per corridoi, 1 per scale</td></tr>
+            <tr><td>Router Wi-Fi 6</td><td>1</td><td>€ 55</td><td>Per la connessione generale</td></tr>
+            <tr><td>Access Point Wi-Fi</td><td>5</td><td>€ 450</td><td>Copertura wireless aziendale</td></tr>
+            <tr><td>Canalina 2 metri</td><td>110</td><td>€ 251</td><td>Protezione e ordine nei cavi</td></tr>
+            <tr><td>Manodopera (cablaggio e montaggio)</td><td>-</td><td>€ 5000</td><td>Siamo sui 30€/h per 30 ore con 4 tecnici impiantisti 3600€ +35€/h per 20 ore con 2 sistemisti 1400€ </td></tr>
+          </tbody>
+          <tfoot>
+            <tr class="table-success">
+              <th colspan="3" class="text-end">Totale</th>
+              <th>€ 13.727</th>
+            </tr>
+          </tfoot>
+        </table>
+        <p><a href="Appunti.pdf" download>Scarica il PDF</a> per capire il ragionamento che c'è dietro ai materiali</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. Schema della Rete</h2>
+      <img src="MisurePlanimetria.png" class="img-fluid">
+      <br><br>
+      <img src="PlanimetriaCompleta.png" class="img-fluid">
+      <img src="Legenda.png" class="img-fluid">
+    </div>
+
+    <div class="section">
+      <h2>4. Piano IP</h2>
+      <div class="table-responsive">
+<table class="table table-striped table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>Destination</th>
+            <th>Subnet address</th>
+            <th>Netmask</th>
+            <th>Range of addresses</th>
+            <th>Usable IPs</th>
+            <th>Hosts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LAN</td>
+            <td>192.168.1.0/25</td>
+            <td>255.255.255.128</td>
+            <td>192.168.1.0 - 192.168.1.127</td>
+            <td>192.168.1.1 - 192.168.1.126</td>
+            <td>126</td>
+          </tr>
+          <tr>
+            <td>Wi-Fi ospiti</td>
+            <td>192.168.2.0/23</td>
+            <td>255.255.254.0</td>
+            <td>192.168.2.0 - 192.168.3.255</td>
+            <td>192.168.2.1 - 192.168.3.254</td>
+            <td>510</td>
+          </tr>
+          <tr>
+            <td>Wi-Fi dipendenti</td>
+            <td>192.168.0.0/24</td>
+            <td>255.255.255.0</td>
+            <td>192.168.0.0 - 192.168.0.255</td>
+            <td>192.168.0.1 - 192.168.0.254</td>
+            <td>254</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p><a href="SchemaLogico.pdf" download>Scarica il PDF</a> per capire il ragionamento che c'è dietro a questa suddivisione</p>
+    </div>
+
+    <div class="section">
+      <h2>5. Note Finali</h2>
+      <p>Il progetto è stato studiato per garantire modularità, efficienza e scalabilità. È prevista una copertura Wi-Fi estesa e una struttura di rete cablata ottimizzata per prestazioni e manutenzione futura. Il layout delle canaline rispetta criteri di sicurezza e praticità, mentre il bilanciamento tra costi e prestazioni è garantito dalla scelta di materiali e dispositivi professionali.</p>
+    </div>
+  </div>
+
+  <footer class="text-center text-lg-start bg-body-tertiary text-muted">
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+      <em>Created by Gabriele Tedesco & Xinhui Jiang</em>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
