@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Documentazione Tecnica — API REST Monitoraggio Progressi di Allenamento</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --secondary: #1c1c1c;
+      --accent: #6c92b4;
+      --bg: #ffffff;
+      --muted: #666666;
+      --border: #e5e5e5;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--secondary);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 56px;
+      box-sizing: border-box;
+    }
+
+    /* Print-friendly page separation */
+    .page-break {
+      page-break-before: always;
+    }
+
+    /* Header styles */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .brand .logo { 
+      width: 84px; 
+      height: 84px; 
+      background: none; /* niente colore di sfondo */ 
+      border-radius: 8px; 
+      display: grid; 
+      place-items: center; 
+      color: #000; /* testo nero per contrasto */ 
+      font-weight: 700; font-size: 18px; 
+      letter-spacing: 0.6px; 
+      user-select: none; 
+    }
+    .brand .school-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .brand .school-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .brand .school-sub {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Title block */
+    .title-block {
+      margin-top: 32px;
+      border-left: 6px solid var(--primary);
+      padding-left: 16px;
+    }
+    .doc-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+    .doc-subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* Metadata grid */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+      margin-top: 28px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 8px;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .meta-label {
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .meta-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Abstract */
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 8px 0 12px;
+    }
+    .abstract-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .abstract-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fafafa;
+    }
+    .abstract-lang {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .abstract-text {
+      font-size: 15px;
+      color: var(--secondary);
+    }
+    .abstract-text p { margin: 0 0 6px; }
+
+    /* TOC */
+    .toc {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fbfbfb;
+    }
+    .toc h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: var(--primary);
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .toc li {
+      margin: 6px 0;
+    }
+    .toc a {
+      color: var(--secondary);
+      text-decoration: none;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+      color: var(--primary);
+    }
+    .toc .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* Content */
+    .content h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    .content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    .content p {
+      margin: 8px 0;
+    }
+    .content .callout {
+      border-left: 4px solid var(--accent);
+      background: #f5f9ff;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #0f2f4a;
+    }
+
+    /* Lists */
+    .list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .list li {
+      margin: 6px 0;
+    }
+    .list .label {
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Frontespizio -->
+  <section class="page">
+    <div class="brand">
+      <img src="logo.png" class="logo">
+      <div class="school-info">
+        <div class="school-name">Istituto JC Maxwell</div>
+        <div class="school-sub">Documento tecnico — Consegna 1</div>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <h1 class="doc-title">API REST — Monitoraggio Progressi di Allenamento</h1>
+      <p class="doc-subtitle">Definizione teorica, paradigma REST e linee guida per l’analisi dell’andamento</p>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">Cognome</div>
+        <div class="meta-value">Tedesco</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Nome</div>
+        <div class="meta-value">Gabriele</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Classe</div>
+        <div class="meta-value">5B Info</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Data</div>
+        <div class="meta-value">16/12/2025</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Docente</div>
+        <div class="meta-value">Palladino Marco</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">A.S.</div>
+        <div class="meta-value">2025/2026</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section class="page page-break">
+    <h2 class="section-title">Abstract</h2>
+    <div class="abstract-block">
+      <!-- ITA -->
+      <div class="abstract-card">
+        <div class="abstract-lang">Italiano</div>
+        <div class="abstract-text" aria-label="Abstract italiano">
+          <p>Questa documentazione definisce una API REST per il monitoraggio dei progressi di allenamento.</p>
+          <p>L’obiettivo è tracciare nel tempo peso, carichi, ripetizioni e date in modo coerente.</p>
+          <p>Il modello dati privilegia semplicità, integrità e disponibilità per analisi successive.</p>
+          <p>La progettazione segue principi REST: risorse, metodi idempotenti e rappresentazioni chiare.</p>
+          <p>La separazione tra teorico e implementativo consente evoluzione senza rompere compatibilità.</p>
+          <p>Si definiscono convenzioni di versioning, paginazione, filtro e ordinamento delle risorse.</p>
+          <p>Si trattano errori standardizzati, codici HTTP e semantica dei messaggi di risposta.</p>
+          <p>La sicurezza copre autenticazione, autorizzazione, protezione dati e audit di accesso.</p>
+          <p>L’API supporta aggregazioni per andamento e individuazione di plateu o stalli.</p>
+          <p>La componente AI rileva trend, cambi di ritmo e segnali di regressione.</p>
+          <p>Alert mirati avvisano l’utente quando la progressione si arresta per più sessioni.</          p>
+          <p>Il design è orientato a osservabilità: metriche, log e tracciamento richieste.</p>
+          <p>La robustezza si ottiene con contratti stabili e convalida lato server.</p>
+          <p>La privacy tutela dati sensibili, con principi di minimizzazione e retention.</p>
+          <p>Questo primo rilascio copre solo la teoria; il codice verrà aggiunto in seguito.</p>
+        </div>
+      </div>
+
+      <!-- ENG -->
+      <div class="abstract-card">
+        <div class="abstract-lang">English</div>
+        <div class="abstract-text" aria-label="Abstract English">
+          <p>This document defines a REST API for tracking training progress over time.</p>
+          <p>The goal is to consistently record bodyweight, loads, repetitions, and dates.</p>
+          <p>The data model favors simplicity, integrity, and availability for later analysis.</p>
+          <p>Design follows REST principles: resources, idempotent methods, clear representations.</p>
+          <p>The split between theory and implementation allows evolution without breaking compatibility.</p>
+          <p>We specify conventions for versioning, pagination, filtering, and sorting of resources.</p>
+          <p>Error handling standardizes HTTP codes and response semantics across endpoints.</p>
+          <p>Security addresses authentication, authorization, data protection, and access auditing.</p>
+          <p>The API supports aggregations for trend analysis and detection of plateaus.</p>
+          <p>The AI component captures trends, rhythm changes, and regression signals.</p>
+          <p>Targeted alerts notify users when progression stalls across multiple sessions.</p>
+          <p>Design embraces observability: metrics, logs, and request tracing.</p>
+          <p>Robustness comes from stable contracts and server-side validation.</p>
+          <p>Privacy safeguards sensitive data, with minimization and retention principles.</p>
+          <p>This first release is strictly theoretical; implementation will be added later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indice -->
+  <section class="page page-break">
+    <h2 class="section-title">Indice</h2>
+    <div class="toc">
+      <h3>Parte I — Fondamenti teorici</h3>
+      <ul>
+        <li><a href="#contesto-problema">Contesto e problema</a></li>
+        <li><a href="#obiettivi-scope">Obiettivi e scope dell’API</a></li>
+        <li><a href="#principi-rest">Principi REST e progettazione delle risorse</a></li>
+        <li><a href="#modello-dati">Modello dati e semantica</a></li>
+        <li><a href="#versioning">Versioning e compatibilità</a></li>
+        <li><a href="#paginazione-filtri">Paginazione, filtri e ordinamento</a></li>
+        <li><a href="#error-handling">Error handling e codici HTTP</a></li>
+        <li><a href="#sicurezza">Sicurezza, privacy e conformità</a></li>
+        <li><a href="#osservabilita">Osservabilità e qualità del servizio</a></li>
+        <li><a href="#ai-andamento">AI: analisi dell’andamento e alert su stallo</a></li>
+      </ul>
+      <h3>Parte II — Roadmap implementativa (placeholder)</h3>
+      <ul>
+        <li>Endpoint principali (users, sessions, metrics) — codice da aggiungere</li>
+        <li>Contratti JSON e esempi di richieste/risposte — codice da aggiungere</li>
+        <li>Test di integrazione e validazione — codice da aggiungere</li>
+        <li>Deployment e ambienti — dettagli da aggiungere</li>
+      </ul>
+      <div class="hint">Questa prima consegna tratta solo aspetti teorici. La sezione di codice verrà completata successivamente.</div>
+    </div>
+  </section>
+
+  <!-- Contenuto teorico -->
+  <section class="page page-break content">
+    <h2 id="contesto-problema">Contesto e problema</h2>
+    <p>Gli utenti che si allenano necessitano di uno strumento affidabile per misurare progressi e stalli. Spreadsheet e app generiche spesso mancano di una semantica chiara: confondono carichi, ripetizioni e contesto temporale. Una API REST dedicata fornisce un contratto stabile per acquisire, interrogare e analizzare i dati di allenamento nel tempo.</p>
+    <p>Il problema centrale è garantire coerenza: distinguere misure di <em>peso corporeo</em>, <em>carichi</em> utilizzati negli esercizi, <em>ripetizioni</em> per set/sessione e le <em>date</em> delle sessioni. La corretta modellazione abilita analisi robuste e confronti nel lungo periodo.</p>
+
+    <h2 id="obiettivi-scope">Obiettivi e scope dell’API</h2>
+    <ul class="list">
+      <li><span class="label">Obiettivo primario:</span> tracciare i progressi dell’utente nel tempo su peso, carichi, ripetizioni e date.</li>
+      <li><span class="label">Obiettivi secondari:</span> consentire analisi di andamento, individuazione di stallo e generazione di alert.</li>
+      <li><span class="label">Scope:</span> livello server, contratti REST e semantica dei dati; l’app client è out-of-scope in questa consegna.</li>
+      <li><span class="label">Non obiettivi:</span> definizione del codice API, UI, raccomandazioni di allenamento personalizzate.</li>
+    </ul>
+
+    <h2 id="principi-rest">Principi REST e progettazione delle risorse</h2>
+    <p>La progettazione segue i principi REST: risorse identificabili tramite URI, rappresentazioni tipicamente JSON, utilizzo semantico dei metodi HTTP (GET, POST, PUT, PATCH, DELETE), statelessness e idempotenza ove applicabile. La coerenza nella nomenclatura e nei codici di stato semplifica l’integrazione.</p>
+    <p>Risorse di alto livello previste: <strong>users</strong> (profilo utente), <strong>sessions</strong> (sessioni di allenamento con data), <strong>sets</strong> (set con carichi e ripetizioni), <strong>metrics</strong> (misure come peso corporeo), e <strong>analytics</strong> (aggregazioni e trend). Ogni risorsa ha un identificatore stabile e relazioni chiare.</p>
+
+    <h2 id="modello-dati">Modello dati e semantica</h2>
+    <h3>Entità principali</h3>
+    <ul class="list">
+      <li><span class="label">User:</span> profilo minimale per associare dati all’identità dell’utente.</li>
+      <li><span class="label">Session:</span> occorrenza di allenamento con <em>date</em>, note, e contesto.</li>
+      <li><span class="label">Set:</span> elemento atomico di lavoro con <em>carichi</em> e <em>ripetizioni</em>.</li>
+      <li><span class="label">Metric:</span> misure periodiche come <em>peso</em> corporeo, legate a una data/ora.</li>
+      <li><span class="label">Aggregation/Analytics:</span> viste derivate per andamento, medie mobili e plateu.</li>
+    </ul>
+    <h3>Relazioni e integrità</h3>
+    <p>Un <strong>user</strong> ha molte <strong>sessions</strong>; una session contiene molti <strong>sets</strong>. Le <strong>metrics</strong> (peso) possono esistere indipendentemente dalle session, ma sono sempre temporalmente indicizzate. Vincoli di integrità prevengono incongruenze (es. ripetizioni negative, carichi nulli non giustificati).</p>
+    <h3>Tipi, unità e convalida</h3>
+    <ul class="list">
+      <li><span class="label">Peso:</span> numerico con unità (kg), range plausibile e timestamp ISO 8601.</li>
+      <li><span class="label">Carichi:</span> numerico (kg) per esercizio/set; supporto per frazioni e unità.</li>
+      <li><span class="label">Ripetizioni:</span> intero ≥ 0; opzionale RPE/tempo sotto tensione (future estensioni).</li>
+      <li><span class="label">Date:</span> ISO 8601; fuso orario coerente; gestione di clock skew.</li>
+    </ul>
+
+    <h2 id="versioning">Versioning e compatibilità</h2>
+    <p>Per stabilità contrattuale, si adotta versioning esplicito (es. <code>/v1/</code>) con regole di compatibilità: aggiunte sono retrocompatibili, modifiche breaking richiedono nuova major. Deprecazioni sono comunicate tramite header e documentazione.</p>
+
+    <h2 id="paginazione-filtri">Paginazione, filtri e ordinamento</h2>
+    <p>Le liste (sessions, sets, metrics) supportano paginazione (limit/offset o cursor), filtri per intervalli di data, esercizio, e range di carico, e ordinamento (es. per data desc). Questo consente interrogazioni efficienti e riproducibili.</p>
+
+    <h2 id="error-handling">Error handling e codici HTTP</h2>
+    <p>La semantica degli errori adotta codici HTTP standard (4xx per errori client, 5xx per server) e payload strutturati con <em>code</em>, <em>message</em>, e <em>details</em>. Idempotenza su PUT/DELETE riduce inconsistenze; i conflitti (409) segnalano violazioni di vincoli.</p>
+
+    <h2 id="sicurezza">Sicurezza, privacy e conformità</h2>
+    <p>Autenticazione mediante token (es. bearer), autorizzazione per risorse utente, e cifratura in transito. Minimizzazione dei dati: raccogliere solo il necessario per gli obiettivi dichiarati. Policy di retention definite e audit degli accessi per trasparenza.</p>
+
+    <h2 id="osservabilita">Osservabilità e qualità del servizio</h2>
+    <p>Metriche (latenza, error rate), log strutturati e tracing distribuito abilitano diagnosi e miglioramenti continui. SLO e budget di errore orientano le priorità di stabilità. Rate limiting e backoff proteggono l’API da abusi o carichi eccessivi.</p>
+
+    <h2 id="ai-andamento">AI: analisi dell’andamento e alert su stallo</h2>
+    <p>La componente AI esegue analisi temporali su peso, carichi e ripetizioni, calcolando medie mobili, trend per esercizio e rilevando stalli quando la progressione non supera soglie definite per un numero di sessioni consecutive.</p>
+    <p>Gli <strong>alert su stallo</strong> si attivano in presenza di trend piatti o negativi, con soglie configurabili per ciascun utente e esercizio. L’API espone risultati di analytics come risorse consultabili e notificabili, preservando separazione tra dati grezzi e insight derivati.</p>
+
+    <div class="callout">
+      Nota: la logica AI è modulare e potrà evolvere (feature engineering, modelli classici o ML) senza alterare il contratto REST delle risorse di base.
+    </div>
+
+    <div class="footer">
+      Sezioni di endpoint e codice verranno aggiunte nella prossima consegna. Questa versione è dedicata alla definizione teorica.
+    </div>
+  </section>
+</body>
+</html>
