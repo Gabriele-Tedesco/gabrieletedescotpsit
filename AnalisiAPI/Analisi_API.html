@@ -237,7 +237,7 @@
     <div class="brand">
       <img src="logo.png" class="logo">
       <div class="school-info">
-        <div class="school-name">Istituto JC Maxwell</div>
+        <div class="school-name">Istituto J.C. Maxwell</div>
         <div class="school-sub">Documento tecnico — Consegna 1</div>
       </div>
     </div>
@@ -290,10 +290,10 @@
           <p>La separazione tra teorico e implementativo consente evoluzione senza rompere compatibilità.</p>
           <p>Si definiscono convenzioni di versioning, paginazione, filtro e ordinamento delle risorse.</p>
           <p>Si trattano errori standardizzati, codici HTTP e semantica dei messaggi di risposta.</p>
-          <p>La sicurezza copre autenticazione, autorizzazione, protezione dati e audit di accesso.</p>
-          <p>L’API supporta aggregazioni per andamento e individuazione di plateu o stalli.</p>
+          <p>La sicurezza copre autenticazione, autorizzazione, protezione dati e verifica degli accessi</p>
+          <p>L’API supporta aggregazioni per andamento e individuazione di fasi di stallo.</p>
           <p>La componente AI rileva trend, cambi di ritmo e segnali di regressione.</p>
-          <p>Alert mirati avvisano l’utente quando la progressione si arresta per più sessioni.</          p>
+          <p>Alert mirati avvisano l’utente quando la progressione si arresta per più sessioni.</p>
           <p>Il design è orientato a osservabilità: metriche, log e tracciamento richieste.</p>
           <p>La robustezza si ottiene con contratti stabili e convalida lato server.</p>
           <p>La privacy tutela dati sensibili, con principi di minimizzazione e retention.</p>
@@ -378,7 +378,7 @@
       <li><span class="label">Session:</span> occorrenza di allenamento con <em>date</em>, note, e contesto.</li>
       <li><span class="label">Set:</span> elemento atomico di lavoro con <em>carichi</em> e <em>ripetizioni</em>.</li>
       <li><span class="label">Metric:</span> misure periodiche come <em>peso</em> corporeo, legate a una data/ora.</li>
-      <li><span class="label">Aggregation/Analytics:</span> viste derivate per andamento, medie mobili e plateu.</li>
+      <li><span class="label">Aggregation/Analytics:</span> viste derivate per andamento, medie mobili e stalli.</li>
     </ul>
     <h3>Relazioni e integrità</h3>
     <p>Un <strong>user</strong> ha molte <strong>sessions</strong>; una session contiene molti <strong>sets</strong>. Le <strong>metrics</strong> (peso) possono esistere indipendentemente dalle session, ma sono sempre temporalmente indicizzate. Vincoli di integrità prevengono incongruenze (es. ripetizioni negative, carichi nulli non giustificati).</p>
