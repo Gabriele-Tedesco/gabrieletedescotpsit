@@ -5,7 +5,7 @@ const MinutesElm = document.querySelector ('#minutes');
 const SecondsElm = document.querySelector ('#seconds');
 const PanelElm = document.querySelector ('.panel');
 // Qui abbiamo specificato la data
-const EndDate = new Date("december 25 2026");
+const EndDate = new Date("2026-12-25");
 const EndDateInMs = EndDate.getTime();
 
 // Qua abbiamo dei calcoli per trasformare i millisecondi in giorni, ore, minuti e secondi
@@ -32,4 +32,5 @@ function Timer () {
     PanelElm.innerHTML = "<h1>Buon Natale!</h1>"
   }
 }
+
 
