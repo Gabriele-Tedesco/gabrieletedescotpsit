@@ -1,0 +1,2246 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>FinControl Personal - Entrate & Spese</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.15);
+      --accent-blue: #38bdf8;
+      --accent-purple: #6366f1;
+      --danger: #f97373;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --input-bg: #020617;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.8);
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text);
+      font-family: var(--font-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 98vh;
+    }
+
+    header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      backdrop-filter: blur(20px);
+      background: linear-gradient(
+        120deg,
+        rgba(15, 23, 42, 0.9),
+        rgba(30, 64, 175, 0.55),
+        rgba(6, 78, 59, 0.6)
+      );
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, #4ade80, #22c55e, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.55);
+    }
+
+    .logo-text-main {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 16px;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .user-pill span {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .logout-btn {
+      border: none;
+      outline: none;
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 12px;
+      background: rgba(248, 113, 113, 0.1);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .logout-btn:hover {
+      background: rgba(248, 113, 113, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(248, 113, 113, 0.25);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px 0;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .tab-btn {
+      border: none;
+      outline: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), color var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .tab-btn span {
+      font-size: 14px;
+    }
+
+    .tab-btn.active {
+      background: radial-gradient(circle at top left, #22c55e, #16a34a);
+      color: #020617;
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .tab-btn:not(.active):hover {
+      background: rgba(31, 41, 55, 0.95);
+      color: #e5e7eb;
+    }
+
+    .main {
+      flex: 1;
+      padding: 12px 14px 16px;
+      overflow: hidden;
+    }
+
+    .tab-panel {
+      display: none;
+      height: 100%;
+    }
+
+    .tab-panel.active {
+      display: block;
+      height: 100%;
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.7), #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.1), transparent),
+        radial-gradient(circle at bottom left, rgba(52, 211, 153, 0.07), transparent);
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .panel-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    label {
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 9px;
+      font-size: 13px;
+      outline: none;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(34, 197, 94, 0.9);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+      transform: translateY(-0.5px);
+      background: #020617;
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      border-radius: 12px;
+      padding: 9px 14px;
+      background: radial-gradient(circle at top left, #22c55e, #16a34a);
+      color: #020617;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 10px 35px rgba(34, 197, 94, 0.5);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        filter var(--transition-fast), background var(--transition-med);
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 40px rgba(34, 197, 94, 0.65);
+      filter: brightness(1.06);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      transition: background var(--transition-fast), border var(--transition-fast),
+        color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15, 23, 42, 1);
+      border-color: rgba(148, 163, 184, 0.8);
+      color: var(--text);
+      transform: translateY(-0.5px);
+    }
+
+    .filters-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .scroll {
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    tbody tr:hover {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .badge-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(31, 41, 55, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .badge-category-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .dot-expense {
+      background: #f97373;
+    }
+
+    .dot-income {
+      background: #22c55e;
+    }
+
+    .amount-cell {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .amount-negative {
+      color: #fecaca;
+    }
+
+    .amount-positive {
+      color: #bbf7d0;
+    }
+
+    .delete-btn {
+      border: none;
+      background: transparent;
+      color: rgba(248, 113, 113, 0.8);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        color var(--transition-fast);
+    }
+
+    .delete-btn:hover {
+      background: rgba(248, 113, 113, 0.16);
+      color: #fecaca;
+      transform: translateY(-0.5px);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) repeat(2, minmax(0, 2fr));
+      gap: 10px;
+    }
+
+    .summary-card {
+      border-radius: 14px;
+      padding: 9px 10px;
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.25), #020617);
+      border: 1px solid rgba(22, 163, 74, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      box-shadow: 0 12px 30px rgba(22, 163, 74, 0.35);
+    }
+
+    .summary-card.secondary {
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.4), #020617);
+      border-color: rgba(56, 189, 248, 0.8);
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.7);
+    }
+
+    .summary-card.neutral {
+      background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.4), #020617);
+      border-color: rgba(129, 140, 248, 0.85);
+      box-shadow: 0 12px 30px rgba(30, 64, 175, 0.7);
+    }
+
+    .summary-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-value {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .summary-extra {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .analysis-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 3fr);
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .bars-block {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 0;
+    }
+
+    .bars-title {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .bars-container {
+      margin-top: 4px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .bar-label {
+      width: 90px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      position: relative;
+    }
+
+    .bar-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #16a34a, #22c55e);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.35s var(--transition-med);
+    }
+
+    .bar-fill-income {
+      background: linear-gradient(90deg, #38bdf8, #22d3ee, #38bdf8);
+    }
+
+    .bar-value {
+      width: 60px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .analysis-list {
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .analysis-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .analysis-label {
+      color: var(--muted);
+    }
+
+    .analysis-highlight {
+      color: #bbf7d0;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+      margin-right: 4px;
+    }
+
+    .empty-state {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .login-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 26px 24px 22px;
+      flex: 1;
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.5), #020617);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.35), #020617);
+      border-radius: 20px;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 -10%, rgba(56, 189, 248, 0.55), transparent),
+        radial-gradient(circle at 100% 110%, rgba(34, 197, 94, 0.8), transparent);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .login-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .login-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .login-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .login-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .login-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--muted);
+    }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 12px;
+    }
+
+    .login-error {
+      font-size: 12px;
+      color: #fecaca;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .tagline {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .tagline span {
+      color: #a5b4fc;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.85);
+      border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(75, 85, 99, 0.95);
+    }
+
+    @media (max-width: 960px) {
+      .main {
+        max-height: none;
+      }
+      .app-shell {
+        max-height: none;
+      }
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .analysis-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .login-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <!-- HEADER -->
+    <header id="appHeader" style="display: none;">
+      <div class="logo">
+        <div class="logo-icon">€</div>
+        <div>
+          <div class="logo-text-main">FinControl Personal</div>
+          <div class="logo-text-sub">Private income & expense tracker</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="user-pill">
+          <span id="userNameDisplay">Utente</span>
+          <span style="font-size: 10px; color: var(--muted);">/ owner</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Esci</button>
+      </div>
+    </header>
+
+    <!-- LOGIN -->
+    <div class="login-wrapper" id="loginWrapper">
+      <div class="login-card">
+        <div class="login-inner">
+          <div class="login-header">
+            <div>
+              <div class="login-title">Accesso personale</div>
+              <div class="login-subtitle">
+                <span class="badge-dot"></span>Solo tu puoi visualizzare e modificare i dati.
+              </div>
+            </div>
+            <div class="login-badge">Local &nbsp;•&nbsp; Private dashboard</div>
+          </div>
+
+          <div class="login-grid">
+            <div>
+              <div class="form-group">
+                <label for="loginUsername">Nome utente</label>
+                <input
+                  type="text"
+                  id="loginUsername"
+                  autocomplete="username"
+                  placeholder="es. gabriele"
+                />
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  autocomplete="current-password"
+                  placeholder="••••••••"
+                />
+              </div>
+              <button class="btn-primary" id="loginBtn" style="width: 100%; margin-top: 4px;">
+                Entra nel gestionale
+              </button>
+              <div id="loginError" class="login-error" style="display: none;"></div>
+              <div class="hint" style="margin-top: 4px;">
+                Puoi cambiarle nel codice: <code>USERNAME_ALLOWED</code> e <code>PASSWORD_PLAIN</code>.
+              </div>
+            </div>
+            <div style="
+                font-size: 12px;
+                color: var(--muted);
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+              ">
+              <div>
+                • I dati sono salvati nel
+                <span style="color: #bfdbfe;">localStorage</span> del browser.
+              </div>
+              <div>• Nessun backend: uso personale, semplice e diretto.</div>
+              <div>• Gestione di <span style="color: #bbf7d0;">entrate e spese</span> per mese e anno.</div>
+              <div>• Analisi con saldo, tasso di risparmio e categorie principali.</div>
+              <div class="tagline">Pensato per <span>controllare il cashflow</span>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN (TABS + PANELS) -->
+    <div id="mainContainer" style="display: none; flex: 1; display: flex; flex-direction: column;">
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="incomesTab">
+          <span>⬆</span> Entrate
+        </button>
+        <button class="tab-btn" data-tab="expensesTab">
+          <span>⬇</span> Spese
+        </button>
+        <button class="tab-btn" data-tab="analysisTab">
+          <span>📊</span> Analisi
+        </button>
+      </div>
+
+      <main class="main">
+        <!-- TAB ENTRATE -->
+        <section class="tab-panel active" id="incomesTab">
+          <div class="panel">
+            <div class="panel-content">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Entrate</div>
+                  <div class="panel-subtitle">
+                    Registra entrate per data, categoria e importo
+                  </div>
+                </div>
+                <div class="chip">
+                  <span class="badge-dot"></span>
+                  Entrate salvate localmente
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="incomeDate">Data</label>
+                    <input type="date" id="incomeDate" />
+                  </div>
+                  <div class="form-group">
+                    <label for="incomeCategory">Categoria</label>
+                    <select id="incomeCategory">
+                      <option value="Stipendio">Stipendio</option>
+                      <option value="Bonus">Bonus</option>
+                      <option value="Regali">Regali</option>
+                      <option value="Vendite">Vendite</option>
+                      <option value="Interessi">Interessi</option>
+                      <option value="Rimborsi">Rimborsi</option>
+                      <option value="Premi">Premi</option>
+                      <option value="Altro">Altro</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="incomeAmount">Importo (€)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      id="incomeAmount"
+                      placeholder="es. 1500.00"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="incomeDescription">Descrizione</label>
+                    <input
+                      type="text"
+                      id="incomeDescription"
+                      placeholder="es. Stipendio mensile"
+                    />
+                  </div>
+                </div>
+                <button class="btn-primary" id="addIncomeBtn" style="align-self: flex-start;">
+                  + Aggiungi entrata
+                </button>
+              </div>
+
+              <div class="section">
+                <div class="filters-row">
+                  <div class="filters">
+                    <span class="muted">Filtro periodo:</span>
+                    <select id="filterIncomeMonth">
+                      <option value="all">Tutti i mesi</option>
+                      <option value="1">Gennaio</option>
+                      <option value="2">Febbraio</option>
+                      <option value="3">Marzo</option>
+                      <option value="4">Aprile</option>
+                      <option value="5">Maggio</option>
+                      <option value="6">Giugno</option>
+                      <option value="7">Luglio</option>
+                      <option value="8">Agosto</option>
+                      <option value="9">Settembre</option>
+                      <option value="10">Ottobre</option>
+                      <option value="11">Novembre</option>
+                      <option value="12">Dicembre</option>
+                    </select>
+                    <select id="filterIncomeYear"></select>
+                    <select id="filterIncomeCategory">
+                      <option value="all">Tutte le categorie</option>
+                      <option value="Stipendio">Stipendio</option>
+                      <option value="Bonus">Bonus</option>
+                      <option value="Regali">Regali</option>
+                      <option value="Vendite">Vendite</option>
+                      <option value="Interessi">Interessi</option>
+                      <option value="Rimborsi">Rimborsi</option>
+                      <option value="Premi">Premi</option>
+                      <option value="Altro">Altro</option>
+                    </select>
+                  </div>
+                  <button class="btn-secondary" id="resetIncomeFiltersBtn">Reset filtri</button>
+                </div>
+
+                <div class="scroll" style="max-height: 280px;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Categoria</th>
+                        <th>Descrizione</th>
+                        <th>Importo</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="incomesTableBody">
+                      <tr>
+                        <td colspan="5" class="empty-state">Nessuna entrata inserita.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB SPESE -->
+        <section class="tab-panel" id="expensesTab">
+          <div class="panel">
+            <div class="panel-content">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Spese</div>
+                  <div class="panel-subtitle">
+                    Inserimento rapido e vista tabellare per mese/anno
+                  </div>
+                </div>
+                <div class="chip">
+                  <span style="width: 7px; height: 7px; border-radius: 999px; background: #f97373;"></span>
+                  Uscite salvate localmente
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="expenseDate">Data</label>
+                    <input type="date" id="expenseDate" />
+                  </div>
+                  <div class="form-group">
+                    <label for="expenseCategory">Categoria</label>
+                    <select id="expenseCategory">
+                      <option value="Casa">Casa</option>
+                      <option value="Alimentari">Alimentari</option>
+                      <option value="Trasporti">Trasporti</option>
+                      <option value="Svago">Svago</option>
+                      <option value="Salute">Salute</option>
+                      <option value="Bollette">Bollette</option>
+                      <option value="Regali">Regali</option>
+                      <option value="Altro">Altro</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="expenseAmount">Importo (€)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      id="expenseAmount"
+                      placeholder="es. 57.90"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="expenseDescription">Descrizione</label>
+                    <input
+                      type="text"
+                      id="expenseDescription"
+                      placeholder="es. Spesa settimanale"
+                    />
+                  </div>
+                </div>
+                <button class="btn-primary" id="addExpenseBtn" style="align-self: flex-start;">
+                  + Aggiungi spesa
+                </button>
+              </div>
+
+              <div class="section">
+                <div class="filters-row">
+                  <div class="filters">
+                    <span class="muted">Filtro periodo:</span>
+                    <select id="filterExpenseMonth">
+                      <option value="all">Tutti i mesi</option>
+                      <option value="1">Gennaio</option>
+                      <option value="2">Febbraio</option>
+                      <option value="3">Marzo</option>
+                      <option value="4">Aprile</option>
+                      <option value="5">Maggio</option>
+                      <option value="6">Giugno</option>
+                      <option value="7">Luglio</option>
+                      <option value="8">Agosto</option>
+                      <option value="9">Settembre</option>
+                      <option value="10">Ottobre</option>
+                      <option value="11">Novembre</option>
+                      <option value="12">Dicembre</option>
+                    </select>
+                    <select id="filterExpenseYear"></select>
+                    <select id="filterExpenseCategory">
+                      <option value="all">Tutte le categorie</option>
+                      <option value="Casa">Casa</option>
+                      <option value="Alimentari">Alimentari</option>
+                      <option value="Trasporti">Trasporti</option>
+                      <option value="Svago">Svago</option>
+                      <option value="Salute">Salute</option>
+                      <option value="Bollette">Bollette</option>
+                      <option value="Regali">Regali</option>
+                      <option value="Altro">Altro</option>
+                    </select>
+                  </div>
+                  <button class="btn-secondary" id="resetExpenseFiltersBtn">Reset filtri</button>
+                </div>
+
+                <div class="scroll" style="max-height: 280px;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Categoria</th>
+                        <th>Descrizione</th>
+                        <th>Importo</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                      <tr>
+                        <td colspan="5" class="empty-state">Nessuna spesa inserita.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB ANALISI -->
+        <section class="tab-panel" id="analysisTab">
+          <div class="panel">
+            <div class="panel-content">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Analisi</div>
+                  <div class="panel-subtitle">
+                    Saldo, distribuzione entrate/spese e suggerimenti di ottimizzazione
+                  </div>
+                </div>
+                <div class="chip">
+                  Focus su
+                  <span style="color: #bbf7d0; font-weight: 500;">saldo periodo & categorie chiave</span>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="filters-row">
+                  <div class="filters">
+                    <span class="muted">Periodo analisi:</span>
+                    <select id="filterAnalysisMonth">
+                      <option value="all">Tutti i mesi</option>
+                      <option value="1">Gennaio</option>
+                      <option value="2">Febbraio</option>
+                      <option value="3">Marzo</option>
+                      <option value="4">Aprile</option>
+                      <option value="5">Maggio</option>
+                      <option value="6">Giugno</option>
+                      <option value="7">Luglio</option>
+                      <option value="8">Agosto</option>
+                      <option value="9">Settembre</option>
+                      <option value="10">Ottobre</option>
+                      <option value="11">Novembre</option>
+                      <option value="12">Dicembre</option>
+                    </select>
+                    <select id="filterAnalysisYear"></select>
+                  </div>
+                  <button class="btn-secondary" id="resetAnalysisFiltersBtn">
+                    Reset periodo
+                  </button>
+                </div>
+              </div>
+
+              <div class="section">
+                <!-- SUMMARY -->
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <div class="summary-label">Saldo periodo</div>
+                    <div class="summary-value" id="saldoPeriodoDisplay">€ 0,00</div>
+                    <div class="summary-extra" id="saldoPeriodoStatus">
+                      In attesa di dati…
+                    </div>
+                  </div>
+                  <div class="summary-card secondary">
+                    <div class="summary-label">Entrate vs Spese</div>
+                    <div class="summary-value" id="entrateSpeseDisplay">€ 0 / € 0</div>
+                    <div class="summary-extra" id="tassoRisparmioDisplay">
+                      Tasso di risparmio: -
+                    </div>
+                  </div>
+                  <div class="summary-card neutral">
+                    <div class="summary-label">Categorie principali</div>
+                    <div class="summary-value" id="categorieTopDisplay">-</div>
+                    <div class="summary-extra" id="categorieTopDetails">
+                      Entrate e spese principali nel periodo
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section" style="min-height: 0; flex: 1;">
+                <div class="analysis-layout" style="height: 100%;">
+                  <div class="bars-block">
+                    <div class="bars-title">Distribuzione spese per categoria</div>
+                    <div class="bars-container" id="barsSpeseContainer">
+                      <div class="empty-state">
+                        Aggiungi spese per visualizzare la distribuzione.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bars-block">
+                    <div class="bars-title">Distribuzione entrate per categoria</div>
+                    <div class="bars-container" id="barsEntrateContainer">
+                      <div class="empty-state">
+                        Aggiungi entrate per visualizzare la distribuzione.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="analysis-list" id="insightsList">
+                  <div class="analysis-item">
+                    <span class="analysis-label">Stato generale:</span>
+                    <span class="analysis-highlight">In attesa di dati…</span>
+                  </div>
+                  <div class="analysis-item">
+                    <span class="analysis-label">Suggerimento:</span>
+                    <span class="analysis-highlight">
+                      Inserisci entrate e spese reali degli ultimi mesi per un quadro completo.
+                    </span>
+                  </div>
+                </div>
+                <div class="muted" style="margin-top: 2px;">
+                  Tip:
+                  <span style="color: #a5b4fc;">
+                    usa lo stesso periodo su analisi, entrate e spese per incrociare le informazioni.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ========================
+    // CONFIG LOGIN (SEMPLICE)
+    // ========================
+    const USERNAME_ALLOWED = "gabriele"; // cambia se vuoi
+    const PASSWORD_HASH = "a720c64706889a512750de88fad4a4d607d5b4e15b9f2be7c41cbc2c992df40d"; 
+
+    const STORAGE_KEY_USER = "finApp_currentUser_v2";
+    const STORAGE_KEY_EXPENSES = "finApp_expenses_v2";
+    const STORAGE_KEY_INCOMES = "finApp_incomes_v2";
+
+    function formatCurrency(amount) {
+      const n = Number(amount) || 0;
+      return (
+        "€ " +
+        n
+          .toFixed(2)
+          .replace(".", ",")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      );
+    }
+
+    function getMonthName(m) {
+      const months = [
+        "Gennaio",
+        "Febbraio",
+        "Marzo",
+        "Aprile",
+        "Maggio",
+        "Giugno",
+        "Luglio",
+        "Agosto",
+        "Settembre",
+        "Ottobre",
+        "Novembre",
+        "Dicembre",
+      ];
+      return months[m - 1] || "";
+    }
+
+    let state = {
+      user: null,
+      expenses: [],
+      incomes: [],
+      filters: {
+        incomes: { month: "all", year: "all", category: "all" },
+        expenses: { month: "all", year: "all", category: "all" },
+        analysis: { month: "all", year: "all" },
+      },
+    };
+
+    // ELEMENTI DOM
+    const loginWrapper = document.getElementById("loginWrapper");
+    const loginUsernameInput = document.getElementById("loginUsername");
+    const loginPasswordInput = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginError = document.getElementById("loginError");
+
+    const appHeader = document.getElementById("appHeader");
+    const mainContainer = document.getElementById("mainContainer");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userNameDisplay = document.getElementById("userNameDisplay");
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+
+    // Entrate
+    const incomeDateInput = document.getElementById("incomeDate");
+    const incomeCategoryInput = document.getElementById("incomeCategory");
+    const incomeAmountInput = document.getElementById("incomeAmount");
+    const incomeDescriptionInput =
+      document.getElementById("incomeDescription");
+    const addIncomeBtn = document.getElementById("addIncomeBtn");
+
+    const filterIncomeMonth = document.getElementById("filterIncomeMonth");
+    const filterIncomeYear = document.getElementById("filterIncomeYear");
+    const filterIncomeCategory = document.getElementById("filterIncomeCategory");
+    const resetIncomeFiltersBtn = document.getElementById("resetIncomeFiltersBtn");
+    const incomesTableBody = document.getElementById("incomesTableBody");
+
+    // Spese
+    const expenseDateInput = document.getElementById("expenseDate");
+    const expenseCategoryInput = document.getElementById("expenseCategory");
+    const expenseAmountInput = document.getElementById("expenseAmount");
+    const expenseDescriptionInput =
+      document.getElementById("expenseDescription");
+    const addExpenseBtn = document.getElementById("addExpenseBtn");
+
+    const filterExpenseMonth = document.getElementById("filterExpenseMonth");
+    const filterExpenseYear = document.getElementById("filterExpenseYear");
+    const filterExpenseCategory =
+      document.getElementById("filterExpenseCategory");
+    const resetExpenseFiltersBtn = document.getElementById(
+      "resetExpenseFiltersBtn"
+    );
+    const expensesTableBody = document.getElementById("expensesTableBody");
+
+    // Analisi
+    const filterAnalysisMonth =
+      document.getElementById("filterAnalysisMonth");
+    const filterAnalysisYear =
+      document.getElementById("filterAnalysisYear");
+    const resetAnalysisFiltersBtn = document.getElementById(
+      "resetAnalysisFiltersBtn"
+    );
+
+    const saldoPeriodoDisplay = document.getElementById(
+      "saldoPeriodoDisplay"
+    );
+    const saldoPeriodoStatus = document.getElementById("saldoPeriodoStatus");
+    const entrateSpeseDisplay = document.getElementById(
+      "entrateSpeseDisplay"
+    );
+    const tassoRisparmioDisplay = document.getElementById(
+      "tassoRisparmioDisplay"
+    );
+    const categorieTopDisplay = document.getElementById(
+      "categorieTopDisplay"
+    );
+    const categorieTopDetails = document.getElementById(
+      "categorieTopDetails"
+    );
+
+    const barsSpeseContainer = document.getElementById("barsSpeseContainer");
+    const barsEntrateContainer =
+      document.getElementById("barsEntrateContainer");
+    const insightsList = document.getElementById("insightsList");
+
+    // ========================
+    // STORAGE
+    // ========================
+    function loadStateFromStorage() {
+      const storedUser = localStorage.getItem(STORAGE_KEY_USER);
+      const storedExpenses = localStorage.getItem(STORAGE_KEY_EXPENSES);
+      const storedIncomes = localStorage.getItem(STORAGE_KEY_INCOMES);
+
+      if (storedUser) {
+        try {
+          state.user = JSON.parse(storedUser);
+        } catch {
+          state.user = null;
+        }
+      }
+
+      if (storedExpenses) {
+        try {
+          state.expenses = JSON.parse(storedExpenses);
+        } catch {
+          state.expenses = [];
+        }
+      }
+
+      if (storedIncomes) {
+        try {
+          state.incomes = JSON.parse(storedIncomes);
+        } catch {
+          state.incomes = [];
+        }
+      }
+    }
+
+    function saveUserToStorage() {
+      if (state.user) {
+        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(state.user));
+      } else {
+        localStorage.removeItem(STORAGE_KEY_USER);
+      }
+    }
+
+    function saveExpensesToStorage() {
+      localStorage.setItem(
+        STORAGE_KEY_EXPENSES,
+        JSON.stringify(state.expenses)
+      );
+    }
+
+    function saveIncomesToStorage() {
+      localStorage.setItem(STORAGE_KEY_INCOMES, JSON.stringify(state.incomes));
+    }
+
+    
+    async function sha256(text) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+// ========================
+    // LOGIN
+    // ========================
+    function showApp() {
+      loginWrapper.style.display = "none";
+      appHeader.style.display = "flex";
+      mainContainer.style.display = "flex";
+      if (state.user && state.user.username) {
+        userNameDisplay.textContent = state.user.username;
+      }
+      renderYearsFilters();
+      renderIncomes();
+      renderExpenses();
+      updateAnalysis();
+    }
+
+    function showLogin() {
+      loginWrapper.style.display = "flex";
+      appHeader.style.display = "none";
+      mainContainer.style.display = "none";
+      loginUsernameInput.value = "";
+      loginPasswordInput.value = "";
+      loginError.style.display = "none";
+    }
+
+    loginBtn.addEventListener("click", () => {
+      const username = loginUsernameInput.value.trim().toLowerCase();
+      const password = loginPasswordInput.value;
+
+      if (!username || !password) {
+        loginError.textContent = "Inserisci username e password.";
+        loginError.style.display = "block";
+        return;
+      }
+
+      (async () => {
+        const hashedInput = await sha256(password);
+
+        if (
+          username === USERNAME_ALLOWED.toLowerCase() &&
+          hashedInput === PASSWORD_HASH
+        ) {
+          state.user = { username: USERNAME_ALLOWED };
+          saveUserToStorage();
+          loginError.style.display = "none";
+          showApp();
+        } else {
+          loginError.textContent = "Credenziali non valide.";
+          loginError.style.display = "block";
+        }
+      })();
+    });
+
+    loginPasswordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      state.user = null;
+      saveUserToStorage();
+      showLogin();
+    });
+
+    // ========================
+    // TABS
+    // ========================
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tabId = btn.getAttribute("data-tab");
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        tabPanels.forEach((panel) => panel.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(tabId).classList.add("active");
+      });
+    });
+
+    // ========================
+    // UTIL
+    // ========================
+    function isValidDateInput(value) {
+      if (!value) return false;
+      const d = new Date(value);
+      return !isNaN(d.getTime());
+    }
+
+    // ========================
+    // FILTRI ANNI
+    // ========================
+    function renderYearsFilters() {
+      const yearsExpenses = new Set();
+      state.expenses.forEach((e) => yearsExpenses.add(e.year));
+      const yearsIncomes = new Set();
+      state.incomes.forEach((i) => yearsIncomes.add(i.year));
+
+      const allYears = new Set([...yearsExpenses, ...yearsIncomes]);
+      const sortedYears = Array.from(allYears).sort((a, b) => b - a);
+
+      function populateYearSelect(selectEl, storedValue) {
+        selectEl.innerHTML = "";
+        const optAll = document.createElement("option");
+        optAll.value = "all";
+        optAll.textContent = "Tutti gli anni";
+        selectEl.appendChild(optAll);
+
+        sortedYears.forEach((y) => {
+          const opt = document.createElement("option");
+          opt.value = String(y);
+          opt.textContent = y;
+          selectEl.appendChild(opt);
+        });
+
+        selectEl.value = storedValue || "all";
+      }
+
+      populateYearSelect(filterIncomeYear, state.filters.incomes.year);
+      populateYearSelect(filterExpenseYear, state.filters.expenses.year);
+      populateYearSelect(filterAnalysisYear, state.filters.analysis.year);
+    }
+
+    // ========================
+    // ENTRATE
+    // ========================
+    addIncomeBtn.addEventListener("click", () => {
+      const dateValue = incomeDateInput.value;
+      const category = incomeCategoryInput.value;
+      const amount = parseFloat((incomeAmountInput.value || "").replace(",", "."));
+      const description = incomeDescriptionInput.value.trim();
+
+      if (!isValidDateInput(dateValue)) {
+        alert("Inserisci una data valida.");
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        alert("Inserisci un importo valido maggiore di zero.");
+        return;
+      }
+
+      const dateObj = new Date(dateValue);
+      const year = dateObj.getFullYear();
+      const month = dateObj.getMonth() + 1;
+
+      const income = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        date: dateValue,
+        year,
+        month,
+        category,
+        amount,
+        description,
+      };
+
+      state.incomes.push(income);
+      saveIncomesToStorage();
+
+      incomeAmountInput.value = "";
+      incomeDescriptionInput.value = "";
+      if (!incomeDateInput.value) {
+        incomeDateInput.valueAsDate = new Date();
+      }
+
+      renderYearsFilters();
+      renderIncomes();
+      updateAnalysis();
+    });
+
+    filterIncomeMonth.addEventListener("change", () => {
+      state.filters.incomes.month = filterIncomeMonth.value;
+      renderIncomes();
+      updateAnalysis();
+    });
+
+    filterIncomeYear.addEventListener("change", () => {
+      state.filters.incomes.year = filterIncomeYear.value;
+      renderIncomes();
+      updateAnalysis();
+    });
+
+    filterIncomeCategory.addEventListener("change", () => {
+      state.filters.incomes.category = filterIncomeCategory.value;
+      renderIncomes();
+      updateAnalysis();
+    });
+
+    resetIncomeFiltersBtn.addEventListener("click", () => {
+      state.filters.incomes = { month: "all", year: "all", category: "all" };
+      filterIncomeMonth.value = "all";
+      filterIncomeYear.value = "all";
+      filterIncomeCategory.value = "all";
+      renderIncomes();
+      updateAnalysis();
+    });
+
+    function getFilteredIncomes() {
+      return state.incomes.filter((i) => {
+        const matchMonth =
+          state.filters.incomes.month === "all" ||
+          String(i.month) === String(state.filters.incomes.month);
+        const matchYear =
+          state.filters.incomes.year === "all" ||
+          String(i.year) === String(state.filters.incomes.year);
+        const matchCategory =
+          state.filters.incomes.category === "all" ||
+          i.category === state.filters.incomes.category;
+        return matchMonth && matchYear && matchCategory;
+      });
+    }
+
+    function renderIncomes() {
+      const filtered = getFilteredIncomes();
+      incomesTableBody.innerHTML = "";
+
+      if (filtered.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.className = "empty-state";
+        td.textContent = "Nessuna entrata trovata per i filtri selezionati.";
+        tr.appendChild(td);
+        incomesTableBody.appendChild(tr);
+        return;
+      }
+
+      filtered
+        .slice()
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach((i) => {
+          const tr = document.createElement("tr");
+
+          const dateTd = document.createElement("td");
+          const d = new Date(i.date);
+          const formattedDate = d.toLocaleDateString("it-IT", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+          dateTd.textContent = formattedDate;
+          tr.appendChild(dateTd);
+
+          const catTd = document.createElement("td");
+          const catBadge = document.createElement("span");
+          catBadge.className = "badge-category";
+          const dot = document.createElement("span");
+          dot.className = "badge-category-dot dot-income";
+          catBadge.appendChild(dot);
+          const catText = document.createElement("span");
+          catText.textContent = i.category;
+          catBadge.appendChild(catText);
+          catTd.appendChild(catBadge);
+          tr.appendChild(catTd);
+
+          const descTd = document.createElement("td");
+          descTd.textContent = i.description || "-";
+          tr.appendChild(descTd);
+
+          const amountTd = document.createElement("td");
+          amountTd.className = "amount-cell amount-positive";
+          amountTd.textContent = formatCurrency(i.amount);
+          tr.appendChild(amountTd);
+
+          const actionTd = document.createElement("td");
+          const delBtn = document.createElement("button");
+          delBtn.className = "delete-btn";
+          delBtn.textContent = "✕";
+          delBtn.title = "Elimina entrata";
+          delBtn.addEventListener("click", () => {
+            if (confirm("Vuoi davvero eliminare questa entrata?")) {
+              state.incomes = state.incomes.filter((inc) => inc.id !== i.id);
+              saveIncomesToStorage();
+              renderYearsFilters();
+              renderIncomes();
+              updateAnalysis();
+            }
+          });
+          actionTd.appendChild(delBtn);
+          tr.appendChild(actionTd);
+
+          incomesTableBody.appendChild(tr);
+        });
+    }
+
+    // ========================
+    // SPESE
+    // ========================
+    addExpenseBtn.addEventListener("click", () => {
+      const dateValue = expenseDateInput.value;
+      const category = expenseCategoryInput.value;
+      const amount = parseFloat((expenseAmountInput.value || "").replace(",", "."));
+      const description = expenseDescriptionInput.value.trim();
+
+      if (!isValidDateInput(dateValue)) {
+        alert("Inserisci una data valida.");
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        alert("Inserisci un importo valido maggiore di zero.");
+        return;
+      }
+
+      const dateObj = new Date(dateValue);
+      const year = dateObj.getFullYear();
+      const month = dateObj.getMonth() + 1;
+
+      const expense = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        date: dateValue,
+        year,
+        month,
+        category,
+        amount,
+        description,
+      };
+
+      state.expenses.push(expense);
+      saveExpensesToStorage();
+
+      expenseAmountInput.value = "";
+      expenseDescriptionInput.value = "";
+      if (!expenseDateInput.value) {
+        expenseDateInput.valueAsDate = new Date();
+      }
+
+      renderYearsFilters();
+      renderExpenses();
+      updateAnalysis();
+    });
+
+    filterExpenseMonth.addEventListener("change", () => {
+      state.filters.expenses.month = filterExpenseMonth.value;
+      renderExpenses();
+      updateAnalysis();
+    });
+
+    filterExpenseYear.addEventListener("change", () => {
+      state.filters.expenses.year = filterExpenseYear.value;
+      renderExpenses();
+      updateAnalysis();
+    });
+
+    filterExpenseCategory.addEventListener("change", () => {
+      state.filters.expenses.category = filterExpenseCategory.value;
+      renderExpenses();
+      updateAnalysis();
+    });
+
+    resetExpenseFiltersBtn.addEventListener("click", () => {
+      state.filters.expenses = { month: "all", year: "all", category: "all" };
+      filterExpenseMonth.value = "all";
+      filterExpenseYear.value = "all";
+      filterExpenseCategory.value = "all";
+      renderExpenses();
+      updateAnalysis();
+    });
+
+    function getFilteredExpenses() {
+      return state.expenses.filter((e) => {
+        const matchMonth =
+          state.filters.expenses.month === "all" ||
+          String(e.month) === String(state.filters.expenses.month);
+        const matchYear =
+          state.filters.expenses.year === "all" ||
+          String(e.year) === String(state.filters.expenses.year);
+        const matchCategory =
+          state.filters.expenses.category === "all" ||
+          e.category === state.filters.expenses.category;
+        return matchMonth && matchYear && matchCategory;
+      });
+    }
+
+    function renderExpenses() {
+      const filtered = getFilteredExpenses();
+      expensesTableBody.innerHTML = "";
+
+      if (filtered.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.className = "empty-state";
+        td.textContent = "Nessuna spesa trovata per i filtri selezionati.";
+        tr.appendChild(td);
+        expensesTableBody.appendChild(tr);
+        return;
+      }
+
+      filtered
+        .slice()
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach((e) => {
+          const tr = document.createElement("tr");
+
+          const dateTd = document.createElement("td");
+          const d = new Date(e.date);
+          const formattedDate = d.toLocaleDateString("it-IT", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+          dateTd.textContent = formattedDate;
+          tr.appendChild(dateTd);
+
+          const catTd = document.createElement("td");
+          const catBadge = document.createElement("span");
+          catBadge.className = "badge-category";
+          const dot = document.createElement("span");
+          dot.className = "badge-category-dot dot-expense";
+          catBadge.appendChild(dot);
+          const catText = document.createElement("span");
+          catText.textContent = e.category;
+          catBadge.appendChild(catText);
+          catTd.appendChild(catBadge);
+          tr.appendChild(catTd);
+
+          const descTd = document.createElement("td");
+          descTd.textContent = e.description || "-";
+          tr.appendChild(descTd);
+
+          const amountTd = document.createElement("td");
+          amountTd.className = "amount-cell amount-negative";
+          amountTd.textContent = formatCurrency(e.amount);
+          tr.appendChild(amountTd);
+
+          const actionTd = document.createElement("td");
+          const delBtn = document.createElement("button");
+          delBtn.className = "delete-btn";
+          delBtn.textContent = "✕";
+          delBtn.title = "Elimina spesa";
+          delBtn.addEventListener("click", () => {
+            if (confirm("Vuoi davvero eliminare questa spesa?")) {
+              state.expenses = state.expenses.filter(
+                (exp) => exp.id !== e.id
+              );
+              saveExpensesToStorage();
+              renderYearsFilters();
+              renderExpenses();
+              updateAnalysis();
+            }
+          });
+          actionTd.appendChild(delBtn);
+          tr.appendChild(actionTd);
+
+          expensesTableBody.appendChild(tr);
+        });
+    }
+
+    // ========================
+    // ANALISI
+    // ========================
+    filterAnalysisMonth.addEventListener("change", () => {
+      state.filters.analysis.month = filterAnalysisMonth.value;
+      updateAnalysis();
+    });
+
+    filterAnalysisYear.addEventListener("change", () => {
+      state.filters.analysis.year = filterAnalysisYear.value;
+      updateAnalysis();
+    });
+
+    resetAnalysisFiltersBtn.addEventListener("click", () => {
+      state.filters.analysis = { month: "all", year: "all" };
+      filterAnalysisMonth.value = "all";
+      filterAnalysisYear.value = "all";
+      updateAnalysis();
+    });
+
+    function getFilteredForAnalysis(list, type) {
+      const { month, year } = state.filters.analysis;
+      return list.filter((e) => {
+        const matchMonth =
+          month === "all" || String(e.month) === String(month);
+        const matchYear =
+          year === "all" || String(e.year) === String(year);
+        return matchMonth && matchYear;
+      });
+    }
+
+    function updateAnalysis() {
+      const incomes = getFilteredForAnalysis(state.incomes, "income");
+      const expenses = getFilteredForAnalysis(state.expenses, "expense");
+
+      if (incomes.length === 0 && expenses.length === 0) {
+        saldoPeriodoDisplay.textContent = "€ 0,00";
+        saldoPeriodoStatus.textContent =
+          "Nessun movimento per il periodo selezionato.";
+        entrateSpeseDisplay.textContent = "€ 0 / € 0";
+        tassoRisparmioDisplay.textContent = "Tasso di risparmio: -";
+        categorieTopDisplay.textContent = "-";
+        categorieTopDetails.textContent =
+          "Aggiungi entrate e spese per analizzare il periodo.";
+        barsSpeseContainer.innerHTML =
+          '<div class="empty-state">Aggiungi spese per visualizzare la distribuzione.</div>';
+        barsEntrateContainer.innerHTML =
+          '<div class="empty-state">Aggiungi entrate per visualizzare la distribuzione.</div>';
+        insightsList.innerHTML = `
+          <div class="analysis-item">
+            <span class="analysis-label">Stato generale:</span>
+            <span class="analysis-highlight">Nessun dato nel periodo filtrato.</span>
+          </div>
+          <div class="analysis-item">
+            <span class="analysis-label">Suggerimento:</span>
+            <span class="analysis-highlight">Inserisci dati o amplia il periodo per iniziare l'analisi.</span>
+          </div>
+        `;
+        return;
+      }
+
+      const totalIncome = incomes.reduce(
+        (sum, i) => sum + Number(i.amount || 0),
+        0
+      );
+      const totalExpense = expenses.reduce(
+        (sum, e) => sum + Number(e.amount || 0),
+        0
+      );
+      const saldo = totalIncome - totalExpense;
+
+      saldoPeriodoDisplay.textContent = formatCurrency(saldo);
+
+      if (saldo > 0) {
+        saldoPeriodoStatus.textContent =
+          "Saldo positivo: stai accumulando risparmio in questo periodo.";
+        saldoPeriodoDisplay.style.color = "#bbf7d0";
+      } else if (saldo < 0) {
+        saldoPeriodoStatus.textContent =
+          "Saldo negativo: stai spendendo più di quanto incassi.";
+        saldoPeriodoDisplay.style.color = "#fecaca";
+      } else {
+        saldoPeriodoStatus.textContent =
+          "Saldo neutro: entrate e spese si equivalgono.";
+        saldoPeriodoDisplay.style.color = "#e5e7eb";
+      }
+
+      entrateSpeseDisplay.textContent =
+        formatCurrency(totalIncome) + " / " + formatCurrency(totalExpense);
+
+      if (totalIncome > 0) {
+        const savingRate = ((saldo / totalIncome) * 100).toFixed(1);
+        tassoRisparmioDisplay.textContent =
+          "Tasso di risparmio: " + savingRate + " %";
+      } else {
+        tassoRisparmioDisplay.textContent =
+          "Tasso di risparmio: - (nessuna entrata nel periodo)";
+      }
+
+      const byExpenseCat = {};
+      expenses.forEach((e) => {
+        if (!byExpenseCat[e.category]) byExpenseCat[e.category] = 0;
+        byExpenseCat[e.category] += Number(e.amount || 0);
+      });
+      const byIncomeCat = {};
+      incomes.forEach((i) => {
+        if (!byIncomeCat[i.category]) byIncomeCat[i.category] = 0;
+        byIncomeCat[i.category] += Number(i.amount || 0);
+      });
+
+      const expenseCats = Object.keys(byExpenseCat).sort(
+        (a, b) => byExpenseCat[b] - byExpenseCat[a]
+      );
+      const incomeCats = Object.keys(byIncomeCat).sort(
+        (a, b) => byIncomeCat[b] - byIncomeCat[a]
+      );
+
+      const topExpenseCat = expenseCats[0];
+      const topIncomeCat = incomeCats[0];
+
+      if (topExpenseCat || topIncomeCat) {
+        const parts = [];
+        if (topExpenseCat) {
+          const val = byExpenseCat[topExpenseCat];
+          parts.push(
+            "Spese: " +
+              topExpenseCat +
+              " (" +
+              formatCurrency(val) +
+              ")"
+          );
+        }
+        if (topIncomeCat) {
+          const val = byIncomeCat[topIncomeCat];
+          parts.push(
+            "Entrate: " +
+              topIncomeCat +
+              " (" +
+              formatCurrency(val) +
+              ")"
+          );
+        }
+        categorieTopDisplay.textContent =
+          (topExpenseCat || "-") + " / " + (topIncomeCat || "-");
+        categorieTopDetails.textContent = parts.join(" • ");
+      } else {
+        categorieTopDisplay.textContent = "-";
+        categorieTopDetails.textContent =
+          "Nessuna categoria significativa nel periodo.";
+      }
+
+      // BARRE SPESE
+      if (expenseCats.length === 0) {
+        barsSpeseContainer.innerHTML =
+          '<div class="empty-state">Nessuna spesa nel periodo.</div>';
+      } else {
+        barsSpeseContainer.innerHTML = "";
+        const maxExpenseVal = Math.max(
+          ...expenseCats.map((c) => byExpenseCat[c])
+        );
+        expenseCats.forEach((cat) => {
+          const value = byExpenseCat[cat];
+          const pct =
+            totalExpense > 0 ? (value / totalExpense) * 100 : 0;
+          const row = document.createElement("div");
+          row.className = "bar-row";
+
+          const label = document.createElement("div");
+          label.className = "bar-label";
+          label.textContent = cat;
+          row.appendChild(label);
+
+          const track = document.createElement("div");
+          track.className = "bar-track";
+          const fill = document.createElement("div");
+          fill.className = "bar-fill";
+          const targetScale =
+            maxExpenseVal > 0 ? Math.max(0.05, value / maxExpenseVal) : 0;
+          requestAnimationFrame(() => {
+            fill.style.transform = `scaleX(${targetScale})`;
+          });
+          track.appendChild(fill);
+          row.appendChild(track);
+
+          const val = document.createElement("div");
+          val.className = "bar-value";
+          val.textContent = pct.toFixed(1) + " %";
+          row.appendChild(val);
+
+          barsSpeseContainer.appendChild(row);
+        });
+      }
+
+      // BARRE ENTRATE
+      if (incomeCats.length === 0) {
+        barsEntrateContainer.innerHTML =
+          '<div class="empty-state">Nessuna entrata nel periodo.</div>';
+      } else {
+        barsEntrateContainer.innerHTML = "";
+        const maxIncomeVal = Math.max(
+          ...incomeCats.map((c) => byIncomeCat[c])
+        );
+        incomeCats.forEach((cat) => {
+          const value = byIncomeCat[cat];
+          const pct =
+            totalIncome > 0 ? (value / totalIncome) * 100 : 0;
+          const row = document.createElement("div");
+          row.className = "bar-row";
+
+          const label = document.createElement("div");
+          label.className = "bar-label";
+          label.textContent = cat;
+          row.appendChild(label);
+
+          const track = document.createElement("div");
+          track.className = "bar-track";
+          const fill = document.createElement("div");
+          fill.className = "bar-fill bar-fill-income";
+          const targetScale =
+            maxIncomeVal > 0 ? Math.max(0.05, value / maxIncomeVal) : 0;
+          requestAnimationFrame(() => {
+            fill.style.transform = `scaleX(${targetScale})`;
+          });
+          track.appendChild(fill);
+          row.appendChild(track);
+
+          const val = document.createElement("div");
+          val.className = "bar-value";
+          val.textContent = pct.toFixed(1) + " %";
+          row.appendChild(val);
+
+          barsEntrateContainer.appendChild(row);
+        });
+      }
+
+      // INSIGHT
+      const insights = [];
+
+      if (saldo > 0) {
+        insights.push({
+          label: "Saldo",
+          text:
+            "Periodo in attivo: puoi destinare una parte del surplus a risparmio o investimenti.",
+        });
+      } else if (saldo < 0) {
+        insights.push({
+          label: "Saldo",
+          text:
+            "Periodo in passivo: valuta tagli mirati nelle categorie di spesa più pesanti.",
+        });
+      } else {
+        insights.push({
+          label: "Saldo",
+          text:
+            "Saldo neutro: ogni aumento di entrate o piccolo taglio alle spese migliorerà subito la situazione.",
+        });
+      }
+
+      if (topExpenseCat) {
+        const val = byExpenseCat[topExpenseCat];
+        const pct =
+          totalExpense > 0 ? (val / totalExpense) * 100 : 0;
+        insights.push({
+          label: "Categoria spese chiave",
+          text:
+            topExpenseCat +
+            " pesa " +
+            pct.toFixed(1) +
+            "% delle uscite: è il primo posto dove ottimizzare.",
+        });
+      }
+
+      if (topIncomeCat && topIncomeCat === "Stipendio") {
+        insights.push({
+          label: "Entrata principale",
+          text:
+            "Il tuo flusso principale è lo stipendio: proteggilo (es. fondo emergenza equivalente a 3–6 mesi).",
+        });
+      } else if (topIncomeCat) {
+        insights.push({
+          label: "Entrata principale",
+          text:
+            "La voce di entrata dominante è " +
+            topIncomeCat +
+            ": valuta se è stabile o variabile nel tempo.",
+        });
+      }
+
+      if (totalIncome > 0) {
+        const savingRate = saldo / totalIncome;
+        if (savingRate >= 0.3) {
+          insights.push({
+            label: "Tasso di risparmio",
+            text:
+              "Ottimo tasso di risparmio: sei sopra il 30%. Puoi permetterti qualche investimento mirato.",
+          });
+        } else if (savingRate >= 0.1) {
+          insights.push({
+            label: "Tasso di risparmio",
+            text:
+              "Tasso di risparmio discreto (10–30%): con piccoli aggiustamenti puoi migliorarlo ancora.",
+          });
+        } else if (savingRate >= 0) {
+          insights.push({
+            label: "Tasso di risparmio",
+            text:
+              "Tasso di risparmio basso: prova a fissare un obiettivo minimo mensile (es. 10%).",
+          });
+        } else {
+          insights.push({
+            label: "Tasso di risparmio",
+            text:
+              "Tasso di risparmio negativo: stai consumando risorse passate. Priorità assoluta: riportare il saldo in positivo.",
+          });
+        }
+      }
+
+      insightsList.innerHTML = "";
+      insights.forEach((ins) => {
+        const row = document.createElement("div");
+        row.className = "analysis-item";
+        const label = document.createElement("span");
+        label.className = "analysis-label";
+        label.textContent = ins.label + ":";
+        const text = document.createElement("span");
+        text.className = "analysis-highlight";
+        text.textContent = ins.text;
+        row.appendChild(label);
+        row.appendChild(text);
+        insightsList.appendChild(row);
+      });
+    }
+
+    // ========================
+    // INIT
+    // ========================
+    function init() {
+      loadStateFromStorage();
+
+      if (!incomeDateInput.value) {
+        incomeDateInput.valueAsDate = new Date();
+      }
+      if (!expenseDateInput.value) {
+        expenseDateInput.valueAsDate = new Date();
+      }
+
+      if (state.user) {
+        showApp();
+      } else {
+        showLogin();
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
