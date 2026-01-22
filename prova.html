@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestionale presenze corsi</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      padding: 1.5rem 2rem 2rem;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.75rem;
+    }
+
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .app-subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    thead {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    th, td {
+      padding: 0.55rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 18%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 32%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 20%;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 30%;
+    }
+
+    /* Stati */
+    .stato-completato {
+      background: #bbf7d0;
+    }
+
+    .stato-assegnato {
+      background: #fef9c3;
+    }
+
+    .stato-nc {
+      background: #e5e7eb;
+    }
+
+    .stato-rip {
+      background: #fecaca;
+      color: #b91c1c;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-completato {
+      background: #16a34a;
+      color: #ecfdf5;
+    }
+
+    .badge-assegnato {
+      background: #eab308;
+      color: #171717;
+    }
+
+    .badge-nc {
+      background: #6b7280;
+      color: #f9fafb;
+    }
+
+    .badge-rip {
+      background: #b91c1c;
+      color: #fee2e2;
+    }
+
+    .legend {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #4b5563;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid #9ca3af;
+    }
+
+    .legend-completato { background: #bbf7d0; }
+    .legend-assegnato { background: #fef9c3; }
+    .legend-nc { background: #e5e7eb; }
+    .legend-rip { background: #fecaca; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="app-header">
+      <div>
+        <div class="app-title">Registro presenze corsi TUTOR: TEDESCO GABRIELE</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Codice corso</th>
+          <th>Stato</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 2024 -------------------------------------------------------------->
+        <tr class="stato-completato">
+          <td>21/09/2024</td>
+          <td>C-400</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>28/09/2024</td>
+          <td>C-401</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>05/10/2024</td>
+          <td>C-402</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>12/10/2024</td>
+          <td>C-403</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>19/10/2024</td>
+          <td>C-404</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>26/10/2024</td>
+          <td>C-405</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>09/11/2024</td>
+          <td>C-406</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>23/11/2024</td>
+          <td>C-407</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>30/11/2024</td>
+          <td>C-408</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>07/12/2024</td>
+          <td>C-409</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <!-- Unica assenza 2024 -->
+        <tr class="stato-rip">
+          <td>14/12/2024</td>
+          <td>C-410</td>
+          <td>RIP</td>
+          <td><span class="badge badge-rip">assenza</span></td>
+        </tr>
+
+        <!-- 2025: corsi dal 18/01 al 04/10 ------------------------------->
+        <tr class="stato-completato">
+          <td>18/01/2025</td>
+          <td>C-411</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>25/01/2025</td>
+          <td>C-412</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>01/02/2025</td>
+          <td>C-413</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>08/02/2025</td>
+          <td>C-414</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>15/02/2025</td>
+          <td>C-415</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>22/02/2025</td>
+          <td>C-416</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>01/03/2025</td>
+          <td>C-417</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>07/03/2025</td>
+          <td>C-418</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>15/03/2025</td>
+          <td>C-419</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>29/03/2025</td>
+          <td>C-420</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>05/04/2025</td>
+          <td>C-421</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>12/04/2025</td>
+          <td>C-422</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>03/05/2025</td>
+          <td>C-423</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>10/05/2025</td>
+          <td>C-424</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>24/05/2025</td>
+          <td>C-425</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>31/05/2025</td>
+          <td>C-426</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>07/06/2025</td>
+          <td>C-427</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>14/06/2025</td>
+          <td>C-428</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>21/06/2025</td>
+          <td>C-429</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>28/06/2025</td>
+          <td>C-430</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>12/07/2025</td>
+          <td>C-431</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>26/07/2025</td>
+          <td>C-432</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>29/09/2025</td>
+          <td>C-432</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>04/10/2025</td>
+          <td>C-433</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+
+        <!-- Sabati dopo il 4/10/2025 fino al 2° sabato di febbraio 2026 -->
+        <!-- Tutti i sabati prima del 22/01/2026 -> completato -->
+        <tr class="stato-completato">
+          <td>11/10/2025</td>
+          <td>C-434</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>18/10/2025</td>
+          <td>C-435</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>25/10/2025</td>
+          <td>C-436</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>08/11/2025</td>
+          <td>C-437</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>15/11/2025</td>
+          <td>C-438</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>22/11/2025</td>
+          <td>C-439</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>29/11/2025</td>
+          <td>C-440</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>06/12/2025</td>
+          <td>C-441</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>13/12/2025</td>
+          <td>C-442</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>03/01/2026</td>
+          <td>C-443</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>10/01/2026</td>
+          <td>C-444</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+        <tr class="stato-completato">
+          <td>17/01/2026</td>
+          <td>C-445</td>
+          <td>completato</td>
+          <td><span class="badge badge-completato">svolto</span></td>
+        </tr>
+
+        <!-- Dal 22/01 al 31/01/2026 -> assegnato (sabati 24 e 31) -->
+        <tr class="stato-assegnato">
+          <td>24/01/2026</td>
+          <td>C-446</td>
+          <td>assegnato</td>
+          <td><span class="badge badge-assegnato">in programma</span></td>
+        </tr>
+        <tr class="stato-assegnato">
+          <td>31/01/2026</td>
+          <td>C-447</td>
+          <td>assegnato</td>
+          <td><span class="badge badge-assegnato">in programma</span></td>
+        </tr>
+
+        <!-- Restanti due sabati di febbraio -> nc -->
+        <tr class="stato-nc">
+          <td>07/02/2026</td>
+          <td>C-4</td>
+          <td>nc</td>
+          <td><span class="badge badge-nc">non comunicato</span></td>
+        </tr>
+        <tr class="stato-nc">
+          <td>14/02/2026</td>
+          <td>C-4</td>
+          <td>nc</td>
+          <td><span class="badge badge-nc">non comunicato</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
