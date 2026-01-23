@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore d (RSA)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .formula-box {
+            background-color: #fff9c4; /* Colore simile all'evidenziatore nell'immagine */
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 1px dashed #fbc02d;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Assicura che il padding non aumenti la larghezza */
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 20px;
+            border-top: 2px solid #eee;
+            padding-top: 10px;
+        }
+
+        .result-item {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #d32f2f;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Trova <em>d</em> (RSA)</h2>
+    
+    <div class="formula-box">
+        d = (k &middot; m + 1) / e
+    </div>
+
+    <div class="input-group">
+        <label for="valM">Inserisci m (totiente):</label>
+        <input type="number" id="valM" placeholder="Es. 20" min="1">
+    </div>
+
+    <div class="input-group">
+        <label for="valE">Inserisci e (esponente pubblico):</label>
+        <input type="number" id="valE" placeholder="Es. 3" min="1">
+    </div>
+
+    <button onclick="calcolaD()">Trova i primi 5 risultati interi</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    function calcolaD() {
+        // 1. Recupero i valori dagli input
+        const m = parseInt(document.getElementById('valM').value);
+        const e = parseInt(document.getElementById('valE').value);
+        const resultsDiv = document.getElementById('results');
+
+        // Pulisco i risultati precedenti
+        resultsDiv.innerHTML = "";
+
+        // 2. Validazione base
+        if (isNaN(m) || isNaN(e) || m <= 0 || e <= 0) {
+            resultsDiv.innerHTML = '<p class="error">Per favore inserisci numeri interi positivi validi.</p>';
+            return;
+        }
+
+        let soluzioniTrovate = 0;
+        let k = 1; // k appartiene ai Naturali, partiamo da 1
+        let outputHtml = "<h3>Risultati trovati:</h3>";
+
+        // Limite di sicurezza per evitare loop infiniti se non esistono soluzioni (es. m ed e non sono coprimi)
+        const maxIterazioni = 100000; 
+
+        // 3. Algoritmo di ricerca
+        while (soluzioniTrovate < 5 && k < maxIterazioni) {
+            
+            // Applichiamo la formula dell'immagine: (k * m + 1)
+            let numeratore = (k * m) + 1;
+
+            // Controlliamo se il risultato della divisione per 'e' è un numero INTERO
+            // Usiamo l'operatore modulo (%) per vedere se il resto è 0
+            if (numeratore % e === 0) {
+                let d = numeratore / e;
+                
+                // Aggiungiamo il risultato alla lista
+                outputHtml += `
+                    <div class="result-item">
+                        <strong>Soluzione #${soluzioniTrovate + 1}</strong><br>
+                        Con k = ${k}: <br>
+                        (${k} &middot; ${m} + 1) / ${e} = <strong>${d}</strong>
+                    </div>
+                `;
+                
+                soluzioniTrovate++;
+            }
+
+            k++;
+        }
+
+        // 4. Gestione caso nessun risultato o pochi risultati
+        if (soluzioniTrovate === 0) {
+            outputHtml += `<p class="error">Nessun valore intero trovato nelle prime ${maxIterazioni} iterazioni. Verifica che 'm' ed 'e' siano coprimi.</p>`;
+        } else if (soluzioniTrovate < 5) {
+             outputHtml += `<p>Attenzione: trovate solo ${soluzioniTrovate} soluzioni prima del limite di sicurezza.</p>`;
+        }
+
+        resultsDiv.innerHTML = outputHtml;
+    }
+</script>
+
+</body>
+</html>
