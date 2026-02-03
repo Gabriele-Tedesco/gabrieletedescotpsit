@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Postit</title>
+    <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/darkmode.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Postit</a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><span class="nav-link">👤 <%= username %></span></li>
+            <li class="nav-item">
+                <button class="btn btn-outline-secondary" id="theme-toggle">🌙 / ☀️</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h3 class="mt-4">Crea un Post</h3>
+
+    <form action="/post" method="POST">
+        <textarea class="form-control" name="content" rows="3" placeholder="Scrivi un post..." required></textarea>
+
+        <label class="mt-2">Durata:</label>
+        <select class="form-control" name="timer">
+            <option value="unlimited">Illimitato</option>
+            <option value="300000">5 minuti</option>
+            <option value="1800000">30 minuti</option>
+            <option value="3600000">1 ora</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary mt-3">Pubblica</button>
+    </form>
+
+    <!-- CHAT -->
+    <h3 class="mt-5">Chat in tempo reale</h3>
+
+    <textarea id="chatArea" class="form-control" rows="6" readonly></textarea>
+
+    <div class="input-group mt-2">
+        <input type="text" id="chatText" class="form-control" placeholder="Scrivi un messaggio...">
+        <button class="btn btn-success" onclick="inviaChat()">Invia</button>
+    </div>
+
+    <!-- POST -->
+    <h3 class="mt-5">Ultimi Post</h3>
+    <ul class="list-group">
+        <% posts.forEach(post => { %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                
+                <div>
+                    <strong><%= post.username %></strong>
+                    <small><%= new Date(post.date).toLocaleString() %></small>
+                    <p><%= post.content %></p>
+                </div>
+
+                <% if (post.username === username) { %>
+                    <a href="/delete-post/<%= post.id %>" class="btn btn-danger btn-sm">
+                        Elimina
+                    </a>
+                <% } %>
+
+            </li>
+        <% }) %>
+    </ul>
+
+</div>
+
+<script>
+    // WEBSOCKET CHAT
+    const ws = new WebSocket(location.origin.replace(/^http/, 'ws'));
+
+    ws.onmessage = event => {
+        const data = JSON.parse(event.data);
+        let testo = "";
+
+        data.forEach(msg => {
+            testo += msg.time + " - " + msg.username + ": " + msg.text + "\n";
+        });
+
+        const area = document.getElementById("chatArea");
+        area.value = testo;
+        area.scrollTop = area.scrollHeight;
+    };
+
+    function inviaChat() {
+        const text = document.getElementById("chatText").value.trim();
+        if (!text) return;
+
+        ws.send(JSON.stringify({
+            username: "<%= username %>",
+            text: text
+        }));
+
+        document.getElementById("chatText").value = "";
+    }
+</script>
+
+</body>
+</html>
