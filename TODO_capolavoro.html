@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist Progetto Database</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.section {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+.progress-container {
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 20px;
+    width: 0%;
+    background: #4CAF50;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    line-height: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Checklist Progetto Database</h1>
+
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar">0%</div>
+</div>
+
+<div class="section">
+<h2>FASE 1 – Scelta Scenario</h2>
+<label><input type="checkbox"> Scegli lo scenario (es. studenti, biblioteca, e-commerce)</label>
+<label><input type="checkbox"> Scrivi descrizione del problema (1 pagina)</label>
+<label><input type="checkbox"> Definisci entità principali</label>
+</div>
+
+<div class="section">
+<h2>FASE 2 – Progettazione Relazionale</h2>
+<label><input type="checkbox"> Disegna schema E-R</label>
+<label><input type="checkbox"> Crea schema logico (3–5 tabelle)</label>
+<label><input type="checkbox"> Versione normalizzata (3NF)</label>
+<label><input type="checkbox"> Versione denormalizzata</label>
+</div>
+
+<div class="section">
+<h2>FASE 3 – Implementazione MySQL</h2>
+<label><input type="checkbox"> Crea database</label>
+<label><input type="checkbox"> Crea tabelle</label>
+<label><input type="checkbox"> Inserisci 500–1000 record</label>
+<label><input type="checkbox"> Test INSERT</label>
+<label><input type="checkbox"> Test SELECT WHERE</label>
+<label><input type="checkbox"> Test JOIN</label>
+<label><input type="checkbox"> Salva tempi su Excel</label>
+</div>
+
+<div class="section">
+<h2>FASE 4 – Implementazione MongoDB</h2>
+<label><input type="checkbox"> Crea database MongoDB</label>
+<label><input type="checkbox"> Crea collection</label>
+<label><input type="checkbox"> Inserisci documenti (stesso numero record)</label>
+<label><input type="checkbox"> Test insertMany()</label>
+<label><input type="checkbox"> Test find() con filtro</label>
+<label><input type="checkbox"> Registra tempi</label>
+</div>
+
+<div class="section">
+<h2>FASE 5 – Analisi Finale</h2>
+<label><input type="checkbox"> Confronto normalizzato vs denormalizzato</label>
+<label><input type="checkbox"> Confronto relazionale vs MongoDB</label>
+<label><input type="checkbox"> Grafici a barre</label>
+<label><input type="checkbox"> Scrivi conclusioni</label>
+<label><input type="checkbox"> Prepara presentazione</label>
+</div>
+
+<script>
+const checkboxes = document.querySelectorAll("input[type='checkbox']");
+const progressBar = document.getElementById("progressBar");
+
+function updateProgress() {
+    const total = checkboxes.length;
+    const checked = document.querySelectorAll("input[type='checkbox']:checked").length;
+    const percent = Math.round((checked / total) * 100);
+    progressBar.style.width = percent + "%";
+    progressBar.textContent = percent + "%";
+    localStorage.setItem("progressState", JSON.stringify([...checkboxes].map(cb => cb.checked)));
+}
+
+function loadProgress() {
+    const saved = JSON.parse(localStorage.getItem("progressState"));
+    if (saved) {
+        checkboxes.forEach((cb, i) => cb.checked = saved[i]);
+    }
+    updateProgress();
+}
+
+checkboxes.forEach(cb => cb.addEventListener("change", updateProgress));
+
+loadProgress();
+</script>
+
+</body>
+</html>
