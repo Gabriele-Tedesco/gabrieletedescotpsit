@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Test prestazionale ed analisi delle differenze dei vari DBMS</title>
+    <style>
+        :root {
+            --primary: #1f4e79;
+            --secondary: #555;
+            --light: #f5f5f5;
+            --border: #ddd;
+            --accent: #c0504d;
+            --font-main: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Contenitore del logo nel frontespizio */
+        .front-logo {
+            width: 100%;
+            text-align: center;
+            margin-top: 20mm;
+        }
+
+        /* Immagine del logo */
+        .front-logo img {
+            width: 70mm;              /* Dimensione consigliata per stampa */
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); /* Effetto elegante */
+        }
+
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            color: #222;
+            line-height: 1.5;
+        }
+
+        body {
+            background: #fafafa;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 10mm auto;
+            background: #fff;
+            padding: 25mm 25mm 30mm 25mm;
+            box-shadow: 0 0 5px rgba(0,0,0,0.15);
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 4px;
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin-top: 18px;
+        }
+
+        p {
+            margin: 6px 0 10px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .mt-large {
+            margin-top: 40px;
+        }
+
+        .mt-medium {
+            margin-top: 20px;
+        }
+
+        .small {
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .front-title {
+            margin-top: 20mm;
+            text-align: center;
+        }
+
+        .front-title h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .front-subtitle {
+            font-size: 16px;
+            color: var(--secondary);
+            margin-bottom: 40px;
+        }
+
+        .front-info {
+            margin-top: 40mm;
+            font-size: 14px;
+        }
+
+        .front-info p {
+            margin: 4px 0;
+        }
+
+        .abstract-box {
+            border-left: 4px solid var(--accent);
+            background: #fcfcfc;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+
+        .abstract-title {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .toc {
+            margin-top: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 4px 0;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 16px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--light);
+            font-weight: 600;
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-top: 4px;
+        }
+
+        .highlight {
+            background: #fff8e5;
+            border-left: 3px solid #f0b400;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            margin: 8px 0 12px;
+        }
+
+        .summary-box {
+            background: #f7fbff;
+            border: 1px solid #d0e3ff;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            background: var(--light);
+            color: var(--secondary);
+            margin-left: 4px;
+        }
+
+        .badge-good { background: #e2f0d9; color: #2f6b1f; }
+        .badge-medium { background: #fff2cc; color: #8a6d1f; }
+        .badge-bad { background: #f8d7da; color: #842029; }
+
+        .conclusion-box {
+            border-top: 2px solid var(--primary);
+            margin-top: 16px;
+            padding-top: 8px;
+        }
+
+        .code {
+            font-family: "Consolas", "Fira Code", monospace;
+            font-size: 0.9rem;
+            background: #f7f7f7;
+            border: 1px solid #e0e0e0;
+            padding: 6px 8px;
+            border-radius: 3px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<!-- PAGINA 1 – FRONTE SPIZIO -->
+<div class="page">
+    <div class="center small">
+        <p>Istituto Tecnico Industriale</p>
+        <p><strong>Indirizzo Informatica</strong></p>
+    </div>
+    <div class="front-logo">
+        <img src="logo.png" alt="Logo della scuola">
+    </div>
+    <div class="front-title">
+        <h1>Test prestazionale ed analisi delle differenze delle varie tipologie di database</h1>
+        <div class="front-subtitle">
+            Confronto tra MySQL 3NF, MySQL denormalizzato (0NF) e MongoDB
+        </div>
+    </div>
+
+    <div class="front-info">
+        <p><strong>Studente:</strong> Tedesco Gabriele</p>
+        <p><strong>Classe:</strong> 5B Info</p>
+        <p><strong>Materia:</strong> Informatica</p>
+        <p><strong>Anno scolastico:</strong> 2025/2026</p>
+        <p><strong>Data:</strong> 20/02/2026</p>
+    </div>
+</div>
+
+<!-- PAGINA 2 – ABSTRACT + INDICE -->
+<div class="page">
+    <h2>Abstract</h2>
+    <div class="abstract-box">
+        <div class="abstract-title">Sintesi del progetto</div>
+        <p>
+            Questo lavoro analizza in modo sperimentale le differenze prestazionali tra tre modelli di gestione dei dati:
+            un database relazionale normalizzato in terza forma normale (3NF), una versione denormalizzata (0NF) e un
+            database NoSQL documentale basato su MongoDB. Lo scenario scelto è la gestione di studenti, corsi e voti,
+            modellato in modo coerente nei tre sistemi.
+        </p>
+        <p>
+            Per ciascun modello sono stati eseguiti test di <strong>INSERT</strong>, <strong>SELECT semplice</strong>,
+            <strong>SELECT complessa</strong> (con JOIN o pipeline) e <strong>SELECT di gruppo</strong>, su tre diverse
+            dimensioni di dataset (1×, 5×, 10×). I risultati mostrano che il database normalizzato è generalmente il più
+            efficiente nelle operazioni di lettura, MongoDB si colloca in posizione intermedia, mentre il modello
+            denormalizzato risulta il più lento a causa della forte ridondanza.
+        </p>
+        <p>
+            Il progetto ha permesso di confrontare in modo scientifico i diversi approcci alla modellazione dei dati,
+            evidenziando i compromessi tra normalizzazione, denormalizzazione e modello documentale.
+        </p>
+    </div>
+
+    <h2>Indice</h2>
+    <div class="toc">
+        <ul>
+            <li><a href="#introduzione">1. Introduzione</a></li>
+            <li><a href="#scenario">2. Scenario: studenti, corsi, voti</a></li>
+            <li><a href="#modello-3nf">3. Modello relazionale normalizzato (3NF)</a></li>
+            <li><a href="#modello-0nf">4. Modello relazionale denormalizzato (0NF)</a></li>
+            <li><a href="#mongodb-teoria">5. MongoDB: modello documentale</a></li>
+            <li><a href="#metodologia">6. Metodologia dei test prestazionali</a></li>
+            <li><a href="#risultati">7. Risultati sperimentali</a></li>
+            <li><a href="#analisi">8. Analisi e confronto</a></li>
+            <li><a href="#sviluppi-futuri">9. Sviluppi futuri</a></li>
+            <li><a href="#conclusioni">10. Conclusioni</a></li>
+            <li><a href="#glossario">11. Glossario dei termini tecnici</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- PAGINA 3 – INTRODUZIONE + SCENARIO -->
+<div class="page" id="introduzione">
+    <h2>1. Introduzione</h2>
+    <p>
+        Nel contesto dell’informatica moderna, la scelta del modello di database ha un impatto diretto sulle prestazioni,
+        sulla scalabilità e sulla manutenibilità dei sistemi. Questo elaborato nasce con l’obiettivo di confrontare in modo
+        concreto tre approcci diversi:
+    </p>
+    <ul>
+        <li><strong>Database relazionale normalizzato (3NF)</strong></li>
+        <li><strong>Database relazionale denormalizzato (0NF)</strong></li>
+        <li><strong>Database NoSQL documentale (MongoDB)</strong></li>
+    </ul>
+    <p>
+        Il confronto non è solo teorico, ma supportato da test prestazionali reali, eseguiti su uno scenario comune e
+        controllato. Come riportato nella relazione di progetto, lo scenario scelto è:
+    </p>
+    <div class="code">
+Scenario scelto: Gestione studenti - corsi - voti
+    </div>
+
+    <h2 id="scenario">2. Scenario: gestione studenti - corsi - voti</h2>
+    <p>
+        Lo scenario rappresenta un sistema scolastico semplificato, in cui è necessario gestire:
+    </p>
+    <ul>
+        <li><strong>Studenti</strong>: dati anagrafici e classe</li>
+        <li><strong>Corsi</strong>: materie e docenti</li>
+        <li><strong>Iscrizioni</strong>: relazione molti-a-molti tra studenti e corsi</li>
+        <li><strong>Voti</strong>: valutazioni degli studenti nei vari corsi</li>
+    </ul>
+    <p>
+        Questo scenario è stato modellato in tre modi diversi: una versione normalizzata in 3NF, una versione
+        completamente denormalizzata e una versione documentale in MongoDB.
+    </p>
+</div>
+
+<!-- PAGINA 4 – MODELLO 3NF -->
+<div class="page" id="modello-3nf">
+    <h2>3. Modello relazionale normalizzato (3NF)</h2>
+
+    <h3>3.1 Struttura delle tabelle</h3>
+
+    <h4>Tabella STUDENTE</h4>
+    <p>Contiene i dati anagrafici degli studenti.</p>
+    <table>
+        <tr><th>Attributo</th><th>Tipo</th><th>Note</th></tr>
+        <tr><td>id_studente</td><td>INT PK</td><td>chiave primaria</td></tr>
+        <tr><td>nome</td><td>VARCHAR(50)</td><td></td></tr>
+        <tr><td>cognome</td><td>VARCHAR(50)</td><td></td></tr>
+        <tr><td>data_nascita</td><td>DATE</td><td></td></tr>
+        <tr><td>classe</td><td>VARCHAR(10)</td><td>es. "5A INF"</td></tr>
+    </table>
+
+    <h4>Tabella CORSO</h4>
+    <p>Contiene i corsi/materie.</p>
+    <table>
+        <tr><th>Attributo</th><th>Tipo</th><th>Note</th></tr>
+        <tr><td>id_corso</td><td>INT PK</td><td></td></tr>
+        <tr><td>nome_corso</td><td>VARCHAR(50)</td><td>es. "TPSIT", "Informatica"</td></tr>
+        <tr><td>docente</td><td>VARCHAR(50)</td><td></td></tr>
+    </table>
+
+    <h4>Tabella ISCRIZIONE</h4>
+    <p>Tabella ponte per la relazione molti-a-molti Studente–Corso.</p>
+    <table>
+        <tr><th>Attributo</th><th>Tipo</th><th>Note</th></tr>
+        <tr><td>id_studente</td><td>INT FK → STUDENTE</td><td></td></tr>
+        <tr><td>id_corso</td><td>INT FK → CORSO</td><td></td></tr>
+        <tr><td>PRIMARY KEY (id_studente, id_corso)</td><td></td><td></td></tr>
+    </table>
+
+    <h4>Tabella VOTO</h4>
+    <p>Contiene i voti degli studenti nei corsi.</p>
+    <table>
+        <tr><th>Attributo</th><th>Tipo</th><th>Note</th></tr>
+        <tr><td>id_voto</td><td>INT PK</td><td></td></tr>
+        <tr><td>id_studente</td><td>INT FK</td><td></td></tr>
+        <tr><td>id_corso</td><td>INT FK</td><td></td></tr>
+        <tr><td>voto</td><td>INT</td><td>1–10</td></tr>
+        <tr><td>data_voto</td><td>DATE</td><td></td></tr>
+    </table>
+
+    <h3>3.2 Motivazione della 3NF</h3>
+    <ul>
+        <li>Ogni tabella ha una sola chiave primaria.</li>
+        <li>Ogni attributo dipende solo dalla chiave.</li>
+        <li>Nessuna dipendenza transitiva.</li>
+        <li>Nessuna ridondanza inutile.</li>
+    </ul>
+
+    <div class="summary-box">
+        <strong>Schema E-R (descrizione testuale)</strong><br>
+        STUDENTE (1) – (N) ISCRIZIONE (N) – (1) CORSO<br>
+        STUDENTE (1) – (N) VOTO<br>
+        CORSO (1) – (N) VOTO
+    </div>
+</div>
+
+<!-- PAGINA 5 – MODELLO 0NF -->
+<div class="page" id="modello-0nf">
+    <h2>4. Modello relazionale denormalizzato (0NF)</h2>
+
+    <h3>4.1 Tabella STUDENTE_COMPLETO</h3>
+    <p>
+        Nella versione denormalizzata tutte le informazioni sono state unite in un’unica tabella
+        <strong>Studente_Completo</strong>.
+    </p>
+    <table>
+        <tr><th>Attributo</th><th>Tipo</th><th>Origine</th></tr>
+        <tr><td>id_studente</td><td>INT</td><td>Studente</td></tr>
+        <tr><td>nome</td><td>VARCHAR</td><td>Studente</td></tr>
+        <tr><td>cognome</td><td>VARCHAR</td><td>Studente</td></tr>
+        <tr><td>classe</td><td>VARCHAR</td><td>Studente</td></tr>
+        <tr><td>id_corso</td><td>INT</td><td>Corso</td></tr>
+        <tr><td>nome_corso</td><td>VARCHAR</td><td>Corso</td></tr>
+        <tr><td>docente</td><td>VARCHAR</td><td>Corso</td></tr>
+        <tr><td>id_voto</td><td>INT</td><td>Voto</td></tr>
+        <tr><td>voto</td><td>INT</td><td>Voto</td></tr>
+        <tr><td>data_voto</td><td>DATE</td><td>Voto</td></tr>
+    </table>
+
+    <h3>4.2 Caratteristiche del modello denormalizzato</h3>
+    <ul>
+        <li><strong>Ridondanza elevata</strong>: il nome dello studente è ripetuto per ogni voto.</li>
+        <li><strong>Zero JOIN</strong>: tutte le informazioni sono già nella stessa riga.</li>
+        <li><strong>Perfetto per confrontare prestazioni</strong>, ma poco efficiente in termini di spazio.</li>
+    </ul>
+
+    <div class="highlight">
+        Nel modello denormalizzato la SELECT complessa coincide con una SELECT semplice, perché la tabella contiene
+        già tutte le informazioni duplicate. La query restituisce lo stesso risultato della JOIN nel modello 3NF,
+        ma con un costo maggiore dovuto alla ridondanza.
+    </div>
+</div>
+
+<!-- PAGINA 6 – MONGODB TEORIA -->
+<div class="page" id="mongodb-teoria">
+    <h2>5. MongoDB: modello documentale</h2>
+
+    <h3>5.1 Cos’è MongoDB</h3>
+    <p>
+        MongoDB è un database NoSQL di tipo documentale. A differenza dei database relazionali, che memorizzano i dati
+        in tabelle, MongoDB memorizza tutto in documenti JSON all’interno di collezioni. Un documento è, ad esempio:
+    </p>
+    <div class="code">
+{
+  "nome": "Luca",
+  "cognome": "Rossi",
+  "classe": "5A INF"
+}
+    </div>
+    <p>È molto simile a un oggetto JavaScript.</p>
+
+    <h3>5.2 Struttura di MongoDB</h3>
+    <ul>
+        <li><strong>Database</strong></li>
+        <li><strong>Collection</strong> (equivalente a una tabella)</li>
+        <li><strong>Document</strong> (equivalente a una riga)</li>
+        <li><strong>Field</strong> (equivalente a una colonna)</li>
+    </ul>
+
+    <h3>5.3 Caratteristiche principali</h3>
+    <ul>
+        <li><strong>Schema flessibile</strong>: ogni documento può avere campi diversi.</li>
+        <li><strong>Alta velocità nelle operazioni di scrittura</strong>: niente vincoli, niente JOIN.</li>
+        <li><strong>Scalabilità orizzontale</strong>: supporto allo sharding su più server.</li>
+        <li><strong>Documenti annidati</strong>: dati correlati nello stesso documento.</li>
+    </ul>
+
+    <div class="code">
+{
+  "nome": "Luca",
+  "cognome": "Rossi",
+  "voti": [
+    { "corso": "Informatica", "voto": 8 },
+    { "corso": "TPSIT", "voto": 7 }
+  ]
+}
+    </div>
+
+    <h3>5.4 Differenze con un database relazionale</h3>
+    <table>
+        <tr><th>Relazionale (MySQL)</th><th>MongoDB (NoSQL)</th></tr>
+        <tr><td>Tabelle</td><td>Collezioni</td></tr>
+        <tr><td>Righe</td><td>Documenti</td></tr>
+        <tr><td>Colonne</td><td>Campi</td></tr>
+        <tr><td>JOIN</td><td>Documenti annidati</td></tr>
+        <tr><td>Schema rigido</td><td>Schema flessibile</td></tr>
+        <tr><td>Vincoli (PK, FK)</td><td>Nessun vincolo</td></tr>
+        <tr><td>SQL</td><td>Query JSON-like</td></tr>
+    </table>
+
+    <div class="summary-box">
+        MongoDB è un database NoSQL documentale che non utilizza tabelle e relazioni come i sistemi relazionali,
+        ma memorizza i dati in documenti JSON flessibili. Il principio fondamentale è che i dati correlati devono
+        essere salvati insieme nello stesso documento, evitando normalizzazione e JOIN.
+    </div>
+</div>
+
+<!-- PAGINA 7 – METODOLOGIA -->
+<div class="page" id="metodologia">
+    <h2>6. Metodologia dei test prestazionali</h2>
+
+    <h3>6.1 Tipologie di query testate</h3>
+    <p>Per confrontare i tre modelli sono state scelte tre categorie di query:</p>
+    <ul>
+        <li><strong>SELECT semplice</strong>: ricerca di uno studente per id.</li>
+        <li><strong>SELECT complessa</strong>: ricostruzione dello studente con corsi e voti (JOIN / pipeline).</li>
+        <li><strong>SELECT di gruppo</strong>: elenco degli studenti iscritti a un corso.</li>
+    </ul>
+    <div class="highlight">
+        “Ho scelto tre categorie di query: una semplice, una complessa con JOIN/aggregate e una di gruppo.
+        Queste tre tipologie coprono i casi d'uso reali e permettono di confrontare in modo scientifico i tre modelli.”
+    </div>
+
+    <h3>6.2 Dimensioni del dataset</h3>
+    <p>
+        I test sono stati eseguiti su tre dimensioni di dataset, indicate come:
+    </p>
+    <ul>
+        <li><strong>Primo gruppo</strong>: circa 1000 studenti</li>
+        <li><strong>Secondo gruppo</strong>: circa 5000 studenti</li>
+        <li><strong>Terzo gruppo</strong>: circa 10000 studenti</li>
+    </ul>
+    <p>
+        Per ogni gruppo sono stati generati anche i corsi, le iscrizioni e i voti in modo coerente tra i tre modelli.
+    </p>
+
+    <h3>6.3 Modalità di misurazione</h3>
+    <ul>
+        <li>Ogni test è stato eseguito <strong>10 volte</strong> nel caso degli INSERT e <strong>100 volte</strong> nel caso dei SELECT. Durante le prove preliminari ho osservato una maggiore variabilità nei tempi delle SELECT rispetto agli INSERT, dovuta alla presenza di cache, ottimizzazioni interne del DBMS e fluttuazioni nell’accesso ai dati. Per garantire una media più stabile e statisticamente significativa, ho quindi aumentato il numero di esecuzioni delle SELECT a 100.</li>
+        <li>È stato calcolato il <strong>tempo medio</strong> in millisecondi.</li>
+        <li>Per gli INSERT è stato misurato il tempo totale per inserire l’intero dataset.</li>
+        <li>I risultati sono stati raccolti in un file Excel e organizzati per tipo di query e dimensione del dataset.</li>
+    </ul>
+
+    <div class="highlight">
+        “Ho organizzato i risultati in tre fogli Excel separati, uno per ogni dimensione del dataset (1×, 5×, 10×).
+        Questo perché ogni dimensione rappresenta un diverso scenario di carico, e tenerli separati permette di
+        analizzare chiaramente come scala ogni modello di database.”
+    </div>
+</div>
+
+<!-- PAGINA 8 – RISULTATI: INSERT + SELECT SEMPLICE -->
+<div class="page" id="risultati">
+    <h2>7. Risultati sperimentali</h2>
+
+    <h3>7.1 INSERT</h3>
+    <table>
+        <tr>
+            <th>Database</th>
+            <th>Operazione</th>
+            <th>Numero record</th>
+            <th>Tempo medio (ms)</th>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>insertMany studenti_completo</td>
+            <td>1000</td>
+            <td>49.75</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>INSERT su Studente, Corso, Iscrizione, Voto</td>
+            <td>1000 studenti, 20 corsi, 3000 iscrizioni, 3000 voti</td>
+            <td>617.10</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>INSERT su Studente_Completo</td>
+            <td>3000</td>
+            <td>304.15</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>insertMany studenti_completo</td>
+            <td>5000</td>
+            <td>84.20</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>INSERT</td>
+            <td>5000 studenti, 100 corsi, 15000 iscrizioni, 15000 voti</td>
+            <td>1427.70</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>INSERT</td>
+            <td>15000</td>
+            <td>3040.70</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>insertMany studenti_completo</td>
+            <td>10000</td>
+            <td>175.20</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>INSERT</td>
+            <td>10000 studenti, 200 corsi, 30000 iscrizioni, 30000 voti</td>
+            <td>2433.55</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>INSERT</td>
+            <td>30000</td>
+            <td>6281.30</td>
+        </tr>
+    </table>
+    <div class="note">
+        Nel database normalizzato l’inserimento dei dati richiede più operazioni perché le informazioni sono distribuite
+        su più tabelle. Nel database denormalizzato e in MongoDB lo stesso contenuto informativo viene inserito in un’unica
+        struttura. Il tempo medio è calcolato su 10 esecuzioni dello stesso INSERT.
+    </div>
+
+    <h3>7.2 SELECT semplice</h3>
+    <p>Ricerca di uno studente per <code>id_studente</code>.</p>
+    <table>
+        <tr>
+            <th>Database</th>
+            <th>Query</th>
+            <th>Dimensione dataset</th>
+            <th>Tempo medio (ms)</th>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find_one({"id_studente": 1})</td>
+            <td>1000 studenti</td>
+            <td>1.151</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>SELECT * FROM Studente WHERE id_studente = %s</td>
+            <td>1000 studenti, 20 corsi, 3000 iscrizioni, 3000 voti</td>
+            <td>0.25</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>3000 righe</td>
+            <td>2.40</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find_one({"id_studente": 1})</td>
+            <td>5000 studenti</td>
+            <td>3.482</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>SELECT * FROM Studente WHERE id_studente = %s</td>
+            <td>5000 studenti, 100 corsi, 15000 iscrizioni, 15000 voti</td>
+            <td>0.40</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>15000 righe</td>
+            <td>9.114</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find_one({"id_studente": 1})</td>
+            <td>10000 studenti</td>
+            <td>6.352</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>SELECT * FROM Studente WHERE id_studente = %s</td>
+            <td>10000 studenti, 200 corsi, 30000 iscrizioni, 30000 voti</td>
+            <td>0.57</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>30000 righe</td>
+            <td>21.061</td>
+        </tr>
+    </table>
+</div>
+
+<!-- PAGINA 9 – RISULTATI: SELECT COMPLESSA + GRUPPO -->
+<div class="page">
+    <h3>7.3 SELECT complessa</h3>
+    <p>
+        Ricostruzione dello studente con corsi e voti. In 3NF tramite JOIN, in MongoDB tramite pipeline con
+        <code>$match</code> e <code>$unwind</code>, in 0NF tramite SELECT sulla tabella denormalizzata.
+    </p>
+    <table>
+        <tr>
+            <th>Database</th>
+            <th>Query</th>
+            <th>Dimensione dataset</th>
+            <th>Tempo medio (ms)</th>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>pipeline: $match + $unwind corsi + $unwind corsi.voti</td>
+            <td>1000 studenti</td>
+            <td>1.471</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN tra Studente, Iscrizione, Corso, Voto</td>
+            <td>1000 studenti, 20 corsi, 3000 iscrizioni, 3000 voti</td>
+            <td>0.29</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>3000 righe</td>
+            <td>2.40</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>pipeline: $match + $unwind corsi + $unwind corsi.voti</td>
+            <td>5000 studenti</td>
+            <td>3.431</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN completa</td>
+            <td>5000 studenti, 100 corsi, 15000 iscrizioni, 15000 voti</td>
+            <td>0.37</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>15000 righe</td>
+            <td>9.114</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>pipeline: $match + $unwind corsi + $unwind corsi.voti</td>
+            <td>10000 studenti</td>
+            <td>6.520</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN completa</td>
+            <td>10000 studenti, 200 corsi, 30000 iscrizioni, 30000 voti</td>
+            <td>0.63</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_studente = %s</td>
+            <td>30000 righe</td>
+            <td>21.061</td>
+        </tr>
+    </table>
+
+    <h3>7.4 SELECT di gruppo</h3>
+    <p>Elenco degli studenti iscritti a un determinato corso.</p>
+    <table>
+        <tr>
+            <th>Database</th>
+            <th>Query</th>
+            <th>Dimensione dataset</th>
+            <th>Tempo medio (ms)</th>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find({"corsi.id_corso": id_corso})</td>
+            <td>1000 studenti</td>
+            <td>3.314</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN Studente–Iscrizione filtrando per id_corso</td>
+            <td>1000 studenti, 20 corsi, 3000 iscrizioni, 3000 voti</td>
+            <td>1.56</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_corso = %s</td>
+            <td>3000 righe</td>
+            <td>3.651</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find({"corsi.id_corso": id_corso})</td>
+            <td>5000 studenti</td>
+            <td>7.914</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN Studente–Iscrizione</td>
+            <td>5000 studenti, 100 corsi, 15000 iscrizioni, 15000 voti</td>
+            <td>1.822</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_corso = %s</td>
+            <td>15000 righe</td>
+            <td>9.232</td>
+        </tr>
+        <tr>
+            <td>MongoDB</td>
+            <td>col.find({"corsi.id_corso": id_corso})</td>
+            <td>10000 studenti</td>
+            <td>13.243</td>
+        </tr>
+        <tr>
+            <td>MySQL 3NF</td>
+            <td>JOIN Studente–Iscrizione</td>
+            <td>10000 studenti, 200 corsi, 30000 iscrizioni, 30000 voti</td>
+            <td>2.05</td>
+        </tr>
+        <tr>
+            <td>MySQL 0NF</td>
+            <td>SELECT * FROM Studente_Completo WHERE id_corso = %s</td>
+            <td>30000 righe</td>
+            <td>14.865</td>
+        </tr>
+    </table>
+</div>
+
+<!-- PAGINA 10 – ANALISI + RIEPILOGO -->
+<div class="page" id="analisi">
+    <h2>8. Analisi e confronto</h2>
+
+    <h3>8.1 Riepilogo qualitativo</h3>
+    <table>
+        <tr>
+            <th>Test</th>
+            <th>MySQL 3NF</th>
+            <th>MySQL 0NF</th>
+            <th>MongoDB</th>
+        </tr>
+        <tr>
+            <td>INSERT</td>
+            <td>Molto lento (vincoli + normalizzazione)</td>
+            <td>Molto lento (tabelle enormi)</td>
+            <td>Molto veloce (struttura a documenti)</td>
+        </tr>
+        <tr>
+            <td>SELECT semplice</td>
+            <td>Ottimo (lookup su PK)</td>
+            <td>Scarso (righe pesanti)</td>
+            <td>Buono (indice + documento unico)</td>
+        </tr>
+        <tr>
+            <td>SELECT complessa</td>
+            <td>Ottimo (JOIN indicizzate)</td>
+            <td>Scarso (stessa query della semplice, tabella enorme)</td>
+            <td>Buono (pipeline moderata)</td>
+        </tr>
+        <tr>
+            <td>SELECT di gruppo</td>
+            <td>Ottimo (JOIN su poche righe)</td>
+            <td>Pessimo (molte righe duplicate)</td>
+            <td>Discreto (ricerca su array)</td>
+        </tr>
+    </table>
+
+    <h3>8.2 Gerarchia delle prestazioni</h3>
+    <p>
+        Dai risultati emerge una gerarchia chiara e stabile, che non cambia al variare della complessità delle query:
+    </p>
+    <ul>
+        <li><strong>MySQL 3NF</strong> → generalmente il più veloce nelle letture.</li>
+        <li><strong>MongoDB</strong> → prestazioni intermedie, soprattutto buone nelle INSERT.</li>
+        <li><strong>MySQL 0NF</strong> → il più lento, penalizzato dalla ridondanza.</li>
+    </ul>
+
+    <div class="summary-box">
+        Nel database normalizzato la JOIN è molto efficiente e cresce poco perché lavora su poche righe indicizzate.
+        Nel modello denormalizzato il tempo cresce molto perché la tabella è grande e ridondante. In MongoDB la ricerca
+        su array è più costosa della SELECT semplice, ma scala comunque meglio della 0NF.
+    </div>
+</div>
+
+<!--Sviluppi futuri-->
+<div class="page" id="sviluppi-futuri">
+    <h2>9. Sviluppi futuri</h2>
+
+    <p>
+        Il progetto attuale fornisce una base solida per comprendere le differenze prestazionali tra un database
+        relazionale normalizzato (3NF), un modello denormalizzato (0NF) e un database NoSQL documentale come MongoDB.
+        Tuttavia, esistono diversi sviluppi futuri che permetterebbero di ampliare l’analisi, renderla più completa
+        e avvicinarla agli scenari reali tipici del mondo aziendale.
+    </p>
+
+    <h3>9.1 Estendere il confronto ad altri DBMS utilizzati in produzione</h3>
+    <p>
+        Un primo sviluppo naturale consiste nell’includere nel confronto altri DBMS ampiamente utilizzati in contesti
+        enterprise, come:
+    </p>
+    <ul>
+        <li><strong>PostgreSQL</strong>, noto per le ottimizzazioni sulle query complesse e le estensioni avanzate.</li>
+        <li><strong>Oracle Database</strong> e <strong>Microsoft SQL Server</strong>, spesso impiegati in sistemi
+            mission‑critical.</li>
+        <li><strong>Redis</strong>, <strong>Cassandra</strong>, <strong>DynamoDB</strong>, rappresentativi di modelli
+            NoSQL diversi (key‑value, wide‑column, distributed document store).</li>
+    </ul>
+    <p>
+        Questo permetterebbe di confrontare non solo i modelli teorici, ma anche tecnologie reali utilizzate dalle aziende,
+        evidenziando punti di forza e limiti in scenari più vari.
+    </p>
+
+    <h3>9.2 Aumentare la complessità e la varietà delle query</h3>
+    <p>
+        Il progetto si concentra su tre categorie fondamentali di query (semplice, complessa, di gruppo), sufficienti
+        per evidenziare le differenze architetturali tra i modelli. In uno sviluppo futuro si potrebbero introdurre:
+    </p>
+    <ul>
+        <li>JOIN annidate e subquery correlate.</li>
+        <li>Funzioni di aggregazione avanzate e query analitiche (es. window functions nei relazionali).</li>
+        <li>Pipeline MongoDB più articolate, con più stadi di trasformazione e filtraggio.</li>
+    </ul>
+    <p>
+        Questo permetterebbe di osservare come i diversi DBMS si comportano in presenza di carichi più simili a quelli
+        di applicazioni reali complesse.
+    </p>
+
+    <h3>9.3 Utilizzare dataset più grandi e hardware dedicato</h3>
+    <p>
+        I test sono stati eseguiti su dataset di dimensioni compatibili con l’hardware a disposizione. Un possibile
+        sviluppo consiste nell’aumentare ulteriormente il numero di record (milioni o decine di milioni), per analizzare:
+    </p>
+    <ul>
+        <li>La saturazione della memoria RAM e il ruolo della cache.</li>
+        <li>Il degrado delle prestazioni degli indici al crescere del dataset.</li>
+        <li>Il comportamento dei motori di storage sotto carico prolungato.</li>
+    </ul>
+    <p>
+        Per questo tipo di analisi sarebbe necessario disporre di risorse computazionali maggiori (server dedicati,
+        ambienti cloud o cluster), superando i limiti della macchina utilizzata in questo progetto.
+    </p>
+
+    <h3>9.4 Analisi teorica dell’andamento dei tempi</h3>
+    <p>
+        Un ulteriore sviluppo potrebbe essere l’integrazione di un’analisi teorica più rigorosa dell’andamento dei tempi
+        di risposta al crescere del dataset, basata su concetti come complessità degli algoritmi di ricerca, costi di I/O,
+        caching e struttura degli indici (ad esempio B‑tree). Questo richiederebbe:
+    </p>
+    <ul>
+        <li>Dataset molto più grandi per validare i modelli teorici.</li>
+        <li>Un ambiente di test più avanzato, con risorse dedicate.</li>
+        <li>Il supporto di fonti tecniche e testi specialistici.</li>
+    </ul>
+    <p>
+        Per questi motivi questa analisi viene lasciata come sviluppo futuro e non è stata inclusa nella versione attuale
+        del progetto.
+    </p>
+
+    <h3>9.5 Test di concorrenza e scalabilità orizzontale</h3>
+    <p>
+        Infine, sarebbe interessante introdurre test che misurino il comportamento dei DBMS in presenza di accessi
+        concorrenti e scenari distribuiti, ad esempio:
+    </p>
+    <ul>
+        <li>Simulazione di più utenti simultanei con operazioni di lettura e scrittura.</li>
+        <li>Analisi di lock, contention e tempi di attesa nei database relazionali.</li>
+        <li>Valutazione della scalabilità orizzontale tramite replica e sharding nei sistemi NoSQL.</li>
+    </ul>
+    <p>
+        Questo tipo di test avvicinerebbe ulteriormente il progetto alle esigenze reali delle applicazioni moderne,
+        che devono gestire grandi volumi di dati e molti utenti contemporaneamente.
+    </p>
+</div>
+
+<!-- PAGINA 11 – CONCLUSIONI -->
+<div class="page" id="conclusioni">
+    <h2>10. Conclusioni</h2>
+
+    <div class="conclusion-box">
+        <p>
+            L’analisi sperimentale ha mostrato come la struttura dei dati influenzi in modo diretto e significativo
+            le prestazioni dei diversi DBMS. Il modello relazionale normalizzato (3NF) si è dimostrato il più efficiente
+            nelle operazioni di lettura, grazie alla presenza di tabelle leggere, indici ben definiti e JOIN ottimizzate.
+            Questo conferma che la normalizzazione rimane la scelta ideale quando è necessario garantire coerenza,
+            integrità referenziale e query complesse su dati fortemente correlati.
+        </p>
+
+        <p>
+            MongoDB, con il suo modello documentale, ha evidenziato prestazioni eccellenti nelle operazioni di scrittura
+            e tempi di lettura competitivi, soprattutto quando i dati correlati sono contenuti nello stesso documento.
+            La sua natura schema‑less e la scalabilità orizzontale lo rendono particolarmente adatto a contesti in cui
+            la struttura dei dati evolve rapidamente, oppure quando è necessario gestire grandi volumi di informazioni
+            distribuite su più nodi.
+        </p>
+
+        <p>
+            Il modello denormalizzato (0NF), pur eliminando completamente le JOIN, ha mostrato limiti evidenti dovuti
+            alla forte ridondanza e alla dimensione elevata delle tabelle. Questo approccio può risultare utile solo in
+            scenari molto specifici, come sistemi di caching, report statici o data warehouse ottimizzati per letture
+            sequenziali, ma non rappresenta una soluzione sostenibile per applicazioni generali o sistemi in evoluzione.
+        </p>
+
+        <p>
+            In sintesi, la scelta del modello dipende dal contesto applicativo:
+        </p>
+
+        <ul>
+            <li><strong>Database relazionale 3NF</strong> — ideale per sistemi gestionali, applicazioni con dati strutturati,
+                forte integrità referenziale e query complesse.</li>
+            <li><strong>Database NoSQL documentale</strong> — preferibile quando servono flessibilità, scalabilità
+                orizzontale e prestazioni elevate su grandi volumi di dati semi‑strutturati.</li>
+            <li><strong>Modello denormalizzato</strong> — utilizzabile solo in casi particolari, dove la ridondanza è
+                accettabile e si privilegia la velocità di lettura su dataset statici.</li>
+        </ul>
+
+        <p>
+            Il progetto ha permesso di confrontare in modo concreto tre filosofie di gestione dei dati, evidenziando
+            come non esista un “vincitore assoluto”, ma piuttosto un modello più adatto a seconda delle esigenze.
+            Questa consapevolezza rappresenta uno degli obiettivi principali del lavoro svolto.
+        </p>
+    </div>
+</div>
+
+<!--Glossario dei termini tecnici-->
+<div class="page" id="glossario">
+    <h2>11. Glossario dei termini tecnici</h2>
+
+    <p>Questa sezione raccoglie i principali termini tecnici utilizzati nella documentazione, con una definizione chiara e sintetica utile alla comprensione del progetto.</p>
+
+    <ul>
+        <li><strong>3NF (Terza Forma Normale)</strong> — livello di normalizzazione dei database relazionali che elimina ridondanze e dipendenze non necessarie, garantendo che ogni attributo dipenda solo dalla chiave primaria.</li>
+
+        <li><strong>0NF (Zero Normal Form)</strong> — modello completamente denormalizzato in cui i dati sono memorizzati senza alcuna suddivisione logica, con forte ridondanza e assenza di vincoli.</li>
+
+        <li><strong>Dipendenza transitiva</strong> — situazione in cui un attributo dipende da un altro attributo non chiave, violando la 3NF e introducendo ridondanza.</li>
+
+        <li><strong>Ridondanza</strong> — duplicazione non necessaria dei dati, che aumenta lo spazio occupato e può generare inconsistenze.</li>
+
+        <li><strong>JOIN</strong> — operazione dei database relazionali che combina righe di tabelle diverse sulla base di una relazione logica (chiavi primarie/esterne).</li>
+
+        <li><strong>Indice</strong> — struttura dati (tipicamente un B‑tree) che accelera le ricerche riducendo il numero di letture necessarie.</li>
+
+        <li><strong>B‑tree</strong> — struttura ad albero bilanciato utilizzata dagli indici dei DBMS per garantire ricerche efficienti con complessità logaritmica.</li>
+
+        <li><strong>Query plan</strong> — strategia scelta dal DBMS per eseguire una query, determinata dal query optimizer in base agli indici e alle statistiche.</li>
+
+        <li><strong>Pipeline MongoDB</strong> — sequenza di operazioni (stages) che trasformano i documenti, simile a una serie di funzioni di aggregazione.</li>
+
+        <li><strong>$unwind</strong> — "spacchetta" un array trasformando ogni suo elemento in un documento autonomo; serve a rendere i dati annidati pronti per essere filtrati o raggruppati singolarmente.</li>
+
+        <li><strong>Document store</strong> — modello NoSQL in cui i dati sono memorizzati come documenti JSON/BSON, senza schema rigido.</li>
+
+        <li><strong>Schema flessibile</strong> — caratteristica dei database NoSQL che permette ai documenti di avere campi diversi senza modificare la struttura globale.</li>
+
+        <li><strong>Sharding</strong> — tecnica di scalabilità orizzontale che distribuisce i dati su più server (shard) per aumentare capacità e prestazioni.</li>
+
+        <li><strong>Scalabilità orizzontale</strong> — capacità di aumentare le prestazioni aggiungendo nuovi nodi al sistema, tipica dei database NoSQL.</li>
+
+        <li><strong>Scalabilità verticale</strong> — aumento delle prestazioni potenziando l’hardware di un singolo server (CPU, RAM, SSD).</li>
+
+        <li><strong>Cache del DBMS</strong> — memoria utilizzata dal motore del database per velocizzare l’accesso ai dati più usati.</li>
+
+        <li><strong>Integrità referenziale</strong> — garanzia che le relazioni tra tabelle rimangano coerenti (es. una FK non può puntare a un record inesistente).</li>
+
+        <li><strong>Denormalizzazione</strong> — tecnica che consiste nel duplicare dati per evitare JOIN e velocizzare alcune letture, a scapito della coerenza.</li>
+    </ul>
+</div>
+
+</body>
+</html>
