@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown per la fine delle superiori</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Permanent+Marker&family=Orbitron:wght@400;700;900&display=swap');
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* STILE CUPO (default) */
+        body.angry-mode {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            color: #4a4a4a;
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #660000;
+            border: 3px solid #330000;
+            box-shadow: inset 0 0 50px #330000;
+        }
+
+        body.angry-mode::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(139, 0, 0, 0.05) 0px,
+                rgba(139, 0, 0, 0.05) 10px,
+                rgba(100, 0, 0, 0.08) 10px,
+                rgba(100, 0, 0, 0.08) 20px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        body.angry-mode .container {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #330000;
+            box-shadow: 0 0 30px #660000, inset 0 0 20px #330000;
+            backdrop-filter: blur(3px);
+        }
+
+        body.angry-mode h1 {
+            color: #8b0000;
+            font-family: 'Creepster', cursive;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #8b0000;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        body.angry-mode .timer-unit {
+            color: #660000;
+            border-bottom: 2px solid #8b0000;
+        }
+
+        body.angry-mode .number {
+            color: #ff4444;
+            text-shadow: 0 0 15px #ff0000;
+            font-weight: 900;
+        }
+
+        body.angry-mode .label {
+            color: #8b0000;
+        }
+
+        /* STILE TRANSIZIONE (10 giorni o meno) */
+        body.hopeful-mode {
+            background: linear-gradient(135deg, #2b1a1a 0%, #4a2a2a 50%, #2b1a1a 100%);
+            color: #b8860b;
+            text-shadow: 0 0 10px #ffaa00, 0 0 20px #ff6600;
+            border: 3px solid #b8860b;
+            box-shadow: inset 0 0 50px #b8860b;
+        }
+
+        body.hopeful-mode::before {
+            content: '⚡';
+            position: fixed;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(15deg);
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            animation: spark 2s infinite;
+        }
+
+        body.hopeful-mode .container {
+            background: rgba(30, 20, 20, 0.9);
+            border: 2px solid #b8860b;
+            box-shadow: 0 0 40px #ffaa00, inset 0 0 30px #b8860b;
+        }
+
+        body.hopeful-mode h1 {
+            color: #ffaa00;
+            font-family: 'Permanent Marker', cursive;
+            animation: bounce 1s infinite;
+        }
+
+        /* STILE FINE (esplosione di gioia) - SARÀ UNA SORPRESA! */
+        /* Non lo vedrai finché non finisce la scuola */
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            transition: all 0.5s ease;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .timer-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .number {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .quote {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            padding: 20px;
+            border-top: 1px solid currentColor;
+            border-bottom: 1px solid currentColor;
+            font-style: italic;
+        }
+
+        .quote i {
+            display: block;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        .pain-meter {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .pain-bar {
+            height: 30px;
+            background: rgba(139, 0, 0, 0.3);
+            border-radius: 15px;
+            margin: 10px 0;
+            overflow: hidden;
+            border: 1px solid currentColor;
+        }
+
+        .pain-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff4444, #8b0000);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px #ff0000;
+        }
+
+        .skull {
+            font-size: 3rem;
+            opacity: 0.5;
+            margin: 20px 0;
+            animation: skullFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes skullFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0.1; transform: rotate(15deg) scale(1); }
+            50% { opacity: 0.3; transform: rotate(15deg) scale(1.1); }
+        }
+
+        @media (max-width: 600px) {
+            .number {
+                font-size: 3rem;
+            }
+            
+            .timer-block {
+                min-width: 80px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Frasi d'odio casuali */
+        .hate-phrases {
+            font-size: 1rem;
+            margin-top: 20px;
+            min-height: 60px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="angry-mode">
+    <div class="container">
+        <h1 id="main-title">🖤 ODIO LA SCUOLA 🖤</h1>
+        
+        <div class="subtitle" id="subtitle">
+            Ogni giorno qui è un giorno rubato alla vita
+        </div>
+
+        <div class="timer">
+            <div class="timer-block">
+                <span class="number" id="days">00</span>
+                <span class="label">GIORNI</span>
+            </div>
+            <div class="timer-block">
+                <span class="number" id="hours">00</span>
+                <span class="label">ORE</span>
+            </div>
+            <div class="timer-block">
+                <span class="number" id="minutes">00</span>
+                <span class="label">MINUTI</span>
+            </div>
+            <div class="timer-block">
+                <span class="number" id="seconds">00</span>
+                <span class="label">SECONDI</span>
+            </div>
+        </div>
+
+        <div class="pain-meter">
+            <div>LIVELLO DI SOFFERENZA</div>
+            <div class="pain-bar">
+                <div class="pain-fill" id="painFill"></div>
+            </div>
+            <div id="painPercentage">100%</div>
+        </div>
+
+        <div class="quote" id="quote">
+            "La scuola è la prigione dei sogni"
+            <i>- Uno studente qualunque</i>
+        </div>
+
+        <div class="skull" id="skull">💀</div>
+
+        <div class="hate-phrases" id="hatePhrase">
+            Oggi come ieri, domani come oggi...
+        </div>
+    </div>
+
+    <script>
+        // Data di fine scuola: 10 giugno 2026
+        const endDate = new Date('June 10, 2026 00:00:00').getTime();
+        
+        // Frasi d'odio casuali
+        const hatePhrases = [
+            "La scuola è l'unico posto dove paghi per essere infelice",
+            "8 ore al giorno a guardare l'orologio",
+            "Studi cose che dimenticherai domani",
+            "La campanella suona sempre troppo tardi",
+            "Banchi scomodi, prof peggio",
+            "Il sabato non arriva mai",
+            "Compiti = tempo di vita rubato",
+            "La noia è l'unica materia obbligatoria",
+            "Più anni passi qui, più odi la vita",
+            "Benvenuti nell'anticamera dell'inferno"
+        ];
+
+        // Frasi di speranza (quando manca poco)
+        const hopePhrases = [
+            "Si vede la luce!",
+            "Forse ne valeva la pena?",
+            "Manca sempre meno!",
+            "La libertà si avvicina",
+            "Resisti, manca poco!",
+            "Ce l'abbiamo quasi fatta!",
+            "Ancora un piccolo sforzo",
+            "La fine è vicina!"
+        ];
+
+        const body = document.body;
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const painFill = document.getElementById('painFill');
+        const painPercentage = document.getElementById('painPercentage');
+        const hatePhraseEl = document.getElementById('hatePhrase');
+        const mainTitle = document.getElementById('main-title');
+        const subtitle = document.getElementById('subtitle');
+        const quote = document.getElementById('quote');
+        const skull = document.getElementById('skull');
+
+        let currentMode = 'angry';
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            if (distance < 0) {
+                // SCUOLA FINITA - QUI LA SORPRESA!
+                handleSchoolEnd();
+                return;
+            }
+
+            // Calcoli
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Aggiorna i numeri
+            daysEl.textContent = days.toString().padStart(2, '0');
+            hoursEl.textContent = hours.toString().padStart(2, '0');
+            minutesEl.textContent = minutes.toString().padStart(2, '0');
+            secondsEl.textContent = seconds.toString().padStart(2, '0');
+
+            // Calcola percentuale di dolore (tempo trascorso da inizio anno scolastico?)
+            // Usiamo un calcolo approssimativo per il livello di sofferenza
+            const totalSchoolDays = 365; // approssimativo
+            const daysPassed = Math.max(0, totalSchoolDays - days);
+            const painLevel = Math.min(100, Math.round((daysPassed / totalSchoolDays) * 100));
+            
+            painFill.style.width = painLevel + '%';
+            painPercentage.textContent = painLevel + '%';
+
+            // Cambia stile in base ai giorni rimanenti
+            if (days <= 10 && days > 0) {
+                // Manca poco - stile più felice
+                if (currentMode !== 'hopeful') {
+                    body.classList.remove('angry-mode');
+                    body.classList.add('hopeful-mode');
+                    currentMode = 'hopeful';
+                    
+                    // Cambia frasi e contenuti
+                    mainTitle.textContent = '⚡ LA FINE È VICINA! ⚡';
+                    subtitle.textContent = 'Ancora ' + days + ' giorni di sofferenza... poi la libertà!';
+                    quote.innerHTML = '"La luce in fondo al tunnel non è un treno!"<i> - Finalmente</i>';
+                    skull.innerHTML = '🌟';
+                    
+                    // Frasi più positive
+                    const randomHope = hopePhrases[Math.floor(Math.random() * hopePhrases.length)];
+                    hatePhraseEl.textContent = randomHope;
+                }
+            } else if (days > 10) {
+                // Stile cupo normale
+                if (currentMode !== 'angry') {
+                    body.classList.remove('hopeful-mode');
+                    body.classList.add('angry-mode');
+                    currentMode = 'angry';
+                    
+                    mainTitle.textContent = '🖤 ODIO LA SCUOLA 🖤';
+                    subtitle.textContent = 'Ogni giorno qui è un giorno rubato alla vita';
+                    quote.innerHTML = '"La scuola è la prigione dei sogni"<i> - Uno studente qualunque</i>';
+                    skull.innerHTML = '💀';
+                }
+                
+                // Cambia frase d'odio ogni tanto
+                if (seconds % 10 === 0) { // ogni 10 secondi circa
+                    const randomPhrase = hatePhrases[Math.floor(Math.random() * hatePhrases.length)];
+                    hatePhraseEl.textContent = randomPhrase;
+                }
+            }
+        }
+
+        function handleSchoolEnd() {
+            // QUI LA SORPRESA FINALE!
+            // Visto che non vuoi vederla, ho preparato qualcosa di spettacolare
+            
+            body.classList.remove('angry-mode', 'hopeful-mode');
+            
+            // Crea un nuovo stile dinamico per la sorpresa
+            const style = document.createElement('style');
+            style.textContent = `
+                body {
+                    background: linear-gradient(135deg, #ffd700, #ffa500, #ff69b4, #00ff00);
+                    background-size: 400% 400%;
+                    animation: party 0.5s ease infinite;
+                    color: white;
+                    text-shadow: 0 0 20px rgba(255,255,255,0.8);
+                }
+                
+                @keyframes party {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                
+                .container {
+                    background: rgba(0,0,0,0.7);
+                    border: 5px solid gold;
+                    animation: spin 2s infinite;
+                    transform-style: preserve-3d;
+                }
+                
+                @keyframes spin {
+                    0%, 100% { transform: rotate(0deg) scale(1); }
+                    25% { transform: rotate(5deg) scale(1.1); }
+                    75% { transform: rotate(-5deg) scale(0.9); }
+                }
+                
+                .number {
+                    animation: explode 0.5s infinite;
+                    display: inline-block;
+                }
+                
+                @keyframes explode {
+                    0%, 100% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(2); opacity: 0.5; }
+                }
+                
+                .timer-block {
+                    animation: bounce 0.3s infinite;
+                }
+                
+                h1 {
+                    font-size: 4rem;
+                    animation: rainbow 0.1s infinite;
+                }
+                
+                @keyframes rainbow {
+                    0% { color: red; }
+                    20% { color: orange; }
+                    40% { color: yellow; }
+                    60% { color: green; }
+                    80% { color: blue; }
+                    100% { color: purple; }
+                }
+                
+                .confetti {
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: red;
+                    animation: confetti 3s infinite;
+                }
+                
+                @keyframes confetti {
+                    0% { transform: translateY(-100vh) rotate(0deg); }
+                    100% { transform: translateY(100vh) rotate(720deg); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Aggiungi confetti animati
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+            }
+
+            // Cambia i contenuti
+            mainTitle.innerHTML = '🎉 🎉 🎉 LIBERTÀ! 🎉 🎉 🎉';
+            subtitle.textContent = 'CE L\'HAI FATTA! FINITE LE SUPERIORI!';
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            
+            quote.innerHTML = '"LA SCUOLA È FINITAAAAAAAA!"<i> - Esultanza generale</i>';
+            skull.innerHTML = '🎊 🎉 🎊';
+            hatePhraseEl.innerHTML = '🎈 FINALMENTE! GODITI LA VITA! 🎈';
+            painFill.style.width = '0%';
+            painPercentage.textContent = '0% - FINITOOO!';
+            
+            // Aggiungi suono? Non posso ma l'immaginazione...
+        }
+
+        // Aggiorna ogni secondo
+        setInterval(updateCountdown, 1000);
+        
+        // Prima esecuzione
+        updateCountdown();
+
+        // Aggiungi effetto di typing per le frasi d'odio ogni tanto
+        setInterval(() => {
+            if (currentMode === 'angry') {
+                const randomPhrase = hatePhrases[Math.floor(Math.random() * hatePhrases.length)];
+                hatePhraseEl.style.opacity = '0';
+                setTimeout(() => {
+                    hatePhraseEl.textContent = randomPhrase;
+                    hatePhraseEl.style.opacity = '0.7';
+                }, 200);
+            }
+        }, 8000);
+    </script>
+</body>
+</html>
