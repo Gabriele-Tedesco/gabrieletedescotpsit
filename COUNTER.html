@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fine ciclo | 10.06.2026</title>
+    <title>conto alla rovescia | 10.06.2026</title>
     <style>
         * {
             margin: 0;
@@ -11,124 +11,165 @@
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.8s ease, color 0.8s ease;
-            padding: 2rem;
+            transition: background-color 0.6s ease, color 0.6s ease;
+            padding: 1.5rem;
         }
 
-        /* STILE BASE - CUPO MA PROFESSIONALE */
+        /* STILE BASE - CUPO, CON PERSONALITÀ */
         body.default-mode {
-            background-color: #0c0c0c;
-            color: #e5e5e5;
+            background: #0f0f0f;
+            color: #ececec;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 880px;
             width: 100%;
-            padding: 3rem;
-            border-radius: 4px;
-            transition: all 0.8s ease;
+            padding: 3.5rem;
+            border-radius: 24px;
+            transition: all 0.6s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         body.default-mode .container {
-            background-color: #1a1a1a;
-            border-left: 3px solid #404040;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: #1a1a1a;
+            border: 1px solid #2c2c2c;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Effetto texture sottile */
+        body.default-mode .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.01) 2px,
+                rgba(255, 255, 255, 0.01) 6px
+            );
+            pointer-events: none;
         }
 
         .header {
-            margin-bottom: 4rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
         }
 
         .header h1 {
-            font-weight: 400;
-            font-size: 2.5rem;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 3rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            line-height: 1.1;
         }
 
         body.default-mode .header h1 {
-            color: #808080;
+            color: #f0f0f0;
         }
 
         .header .subtitle {
-            font-weight: 300;
-            font-size: 0.9rem;
+            font-weight: 350;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.3em;
+            opacity: 0.5;
         }
 
-        body.default-mode .header .subtitle {
-            color: #4d4d4d;
+        /* Citazione d'apertura */
+        .opening-quote {
+            font-size: 1.1rem;
+            font-weight: 300;
+            font-style: italic;
+            margin: 2rem 0 3rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            line-height: 1.6;
+        }
+
+        body.default-mode .opening-quote {
+            border-color: #2a2a2a;
+            color: #b0b0b0;
         }
 
         .timer-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
-            margin: 3rem 0;
+            margin: 3.5rem 0;
         }
 
         .timer-block {
             text-align: center;
+            padding: 1.2rem 0;
+            position: relative;
+        }
+
+        body.default-mode .timer-block {
+            border-bottom: 1px solid #2a2a2a;
         }
 
         .number {
-            font-size: 3.5rem;
-            font-weight: 300;
+            font-size: 4rem;
+            font-weight: 500;
             line-height: 1;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+            font-feature-settings: "tnum";
         }
 
         body.default-mode .number {
-            color: #d4d4d4;
+            color: #ffffff;
         }
 
         .label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-weight: 400;
+            letter-spacing: 0.25em;
+            font-weight: 350;
         }
 
         body.default-mode .label {
-            color: #666;
+            color: #6b6b6b;
         }
 
         .progress-section {
-            margin: 3rem 0;
-            padding: 1.5rem 0;
-            border-top: 1px solid #333;
-            border-bottom: 1px solid #333;
+            margin: 3rem 0 2.5rem;
+            padding: 1.2rem 0;
         }
 
-        .progress-label {
+        .progress-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.75rem;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            font-weight: 350;
         }
 
-        body.default-mode .progress-label {
-            color: #737373;
+        body.default-mode .progress-header {
+            color: #8a8a8a;
         }
 
-        .progress-bar {
-            height: 2px;
+        .progress-bar-container {
+            height: 4px;
             width: 100%;
-            background-color: #333;
-            position: relative;
+            background-color: #2a2a2a;
+            border-radius: 2px;
+            overflow: hidden;
         }
 
         .progress-fill {
@@ -138,63 +179,100 @@
         }
 
         body.default-mode .progress-fill {
-            background-color: #737373;
+            background-color: #9b9b9b;
         }
 
         .quote-section {
-            margin: 2rem 0;
-            min-height: 4rem;
+            margin: 3rem 0 2rem;
+            padding: 1.2rem;
+            text-align: center;
         }
 
         .quote-section p {
-            font-size: 1rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            opacity: 0.7;
+            font-size: 1.2rem;
+            font-weight: 320;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .footer-note {
-            margin-top: 3rem;
+        body.default-mode .quote-section p {
+            color: #c4c4c4;
+        }
+
+        .quote-author {
+            margin-top: 1rem;
             font-size: 0.8rem;
-            text-align: right;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
         }
 
-        body.default-mode .footer-note {
-            color: #404040;
+        body.default-mode .quote-author {
+            color: #5a5a5a;
         }
 
-        /* STILE TRANSIZIONE (ULTIMI 10 GIORNI) - PIÙ LUMINOSO MA SEMPRE SOBRIO */
+        .footer {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            padding-top: 1.5rem;
+        }
+
+        body.default-mode .footer {
+            border-top: 1px solid #2a2a2a;
+            color: #6b6b6b;
+        }
+
+        .footer-left {
+            font-weight: 350;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-right {
+            font-weight: 400;
+        }
+
+        body.default-mode .footer-right {
+            color: #a0a0a0;
+        }
+
+        /* STILE TRANSIZIONE - ULTIMI 10 GIORNI (più luminoso ma con carattere) */
         body.transition-mode {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
+            background: #1c1c1e;
+            color: #f5f5f7;
         }
 
         body.transition-mode .container {
-            background-color: #262626;
-            border-left: 3px solid #8a8a8a;
-            box-shadow: 0 25px 50px -12px rgba(160, 160, 160, 0.1);
-        }
-
-        body.transition-mode .header h1 {
-            color: #b3b3b3;
-        }
-
-        body.transition-mode .number {
-            color: #f5f5f5;
+            background: #262628;
+            border: 1px solid #3a3a3c;
+            box-shadow: 0 30px 60px -15px rgba(255, 255, 255, 0.05);
         }
 
         body.transition-mode .progress-fill {
-            background-color: #a3a3a3;
+            background: #d4d4d4;
         }
 
-        /* STILE FINE - SORPRESA PROFESSIONALE */
-        /* Non lo vedrai, ma sarà elegante, non pacchiano */
+        body.transition-mode .number {
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
 
-        @media (max-width: 600px) {
+        body.transition-mode .opening-quote {
+            border-color: #3a3a3c;
+        }
+
+        body.transition-mode .quote-section p {
+            color: #e0e0e0;
+        }
+
+        /* STILE FINE - SORPRESA (sarà elegante ma diverso) */
+
+        @media (max-width: 700px) {
             .timer-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
+                gap: 2rem 1rem;
             }
             
             .container {
@@ -202,11 +280,11 @@
             }
             
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.4rem;
             }
             
             .number {
-                font-size: 2.5rem;
+                font-size: 3.2rem;
             }
         }
     </style>
@@ -215,7 +293,11 @@
     <div class="container">
         <div class="header">
             <h1 id="mainTitle">10.06.2026</h1>
-            <div class="subtitle" id="statusText">ciclo in corso</div>
+            <div class="subtitle" id="statusText">attualmente: dentro</div>
+        </div>
+
+        <div class="opening-quote" id="openingQuote">
+            "L'istruzione è l'arma più potente che puoi usare per cambiare il mondo.<br>Peccato che il mondo, intanto, lo stai guardando da una finestra."
         </div>
 
         <div class="timer-grid">
@@ -238,27 +320,29 @@
         </div>
 
         <div class="progress-section">
-            <div class="progress-label">
-                <span>percorso</span>
+            <div class="progress-header">
+                <span>percorso compiuto</span>
                 <span id="progressPercentage">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
 
         <div class="quote-section">
-            <p id="dailyPhrase">// in attesa</p>
+            <p id="dailyPhrase">Ogni giorno che passa è un giorno che non tornerà.</p>
+            <div class="quote-author" id="quoteAuthor">— anonimo</div>
         </div>
 
-        <div class="footer-note" id="footerNote">
-            fine ciclo prevista: 10.06.2026
+        <div class="footer">
+            <div class="footer-left" id="footerLeft">superiori italiane</div>
+            <div class="footer-right" id="footerRight">10 giugno 2026</div>
         </div>
     </div>
 
     <script>
         const endDate = new Date('June 10, 2026 00:00:00').getTime();
-        const startDate = new Date('September 15, 2025').getTime(); // inizio anno scolastico approssimativo
+        const startDate = new Date('September 15, 2025').getTime();
         
         const body = document.body;
         const daysEl = document.getElementById('days');
@@ -270,17 +354,28 @@
         const mainTitle = document.getElementById('mainTitle');
         const statusText = document.getElementById('statusText');
         const dailyPhrase = document.getElementById('dailyPhrase');
-        const footerNote = document.getElementById('footerNote');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+        const footerLeft = document.getElementById('footerLeft');
+        const footerRight = document.getElementById('footerRight');
+        const openingQuote = document.getElementById('openingQuote');
 
-        // Frasi più sobrie, quasi documentaristiche
+        // Frasi con tono disilluso, a volte amaro, mai gridato
         const phrases = [
-            "il tempo è l'unica risorsa non rinnovabile",
-            "ogni giorno è un giorno in meno",
-            "l'attesa è la forma più sottile di pazienza",
-            "si trascorre più tempo a prepararsi che a vivere",
-            "il sistema richiede tempo, il tempo richiede vita",
-            "l'istruzione è necessaria, la durata è discutibile",
-            "si esce diversi da come si è entrati, non sempre in meglio"
+            { text: "Passi anni a prepararti per la vita, ma intanto la vita non la vivi.", author: "studente 5ª" },
+            { text: "Il problema non è la scuola. Il problema sono i secondi che si accumulano.", author: "N. Carr" },
+            { text: "Dieci giugno. Sembra lontano, ma arriva sempre. Il problema è quello che ci arrivi.", author: "anonimo" },
+            { text: "Studi per il futuro. Peccato che il futuro sia sempre 'dopo la scuola'.", author: "F. Pessoa" },
+            { text: "Non è l'attesa che logora. È la ripetizione.", author: "E. Cioran" },
+            { text: "La campanella segna il tempo. Il tempo che potevi usare per altro.", author: "studente" },
+            { text: "La noia delle superiori è un'assenza così prolungata che diventa presenza.", author: "G. Perec" }
+        ];
+
+        // Frasi per gli ultimi 10 giorni (leggermente più luminose)
+        const finalPhrases = [
+            { text: "Manca poco. Ma sembra sempre tantissimo.", author: "paziente" },
+            { text: "La fine è vicina. E forse ne è valsa la pena.", author: "speranzoso" },
+            { text: "Ultimo giro. Poi si scende.", author: "giostraio" },
+            { text: "Resisti. Manca una manciata di giorni.", author: "voce interiore" }
         ];
 
         function updateCountdown() {
@@ -299,86 +394,105 @@
 
             daysEl.textContent = days.toString().padStart(2, '0');
             hoursEl.textContent = hours.toString().padStart(2, '0');
-            minutes.textContent = minutes.toString().padStart(2, '0');
+            minutesEl.textContent = minutes.toString().padStart(2, '0');
             secondsEl.textContent = seconds.toString().padStart(2, '0');
 
-            // Calcolo percentuale (più realistico)
+            // Calcolo percentuale
             const totalDuration = endDate - startDate;
             const elapsed = now - startDate;
             let percent = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-            percent = Math.round(percent * 10) / 10; // un decimale
+            percent = Math.round(percent * 10) / 10;
             
             progressFill.style.width = percent + '%';
             progressPercentage.textContent = percent + '%';
 
-            // Gestione stili in base ai giorni
+            // Gestione stili e contenuti in base ai giorni
             if (days <= 10 && days > 0) {
-                // Ultimi 10 giorni - stile più luminoso ma professionale
+                // ULTIMI 10 GIORNI - stile più luminoso, frasi diverse
                 if (!body.classList.contains('transition-mode')) {
                     body.classList.remove('default-mode');
                     body.classList.add('transition-mode');
                     
-                    mainTitle.textContent = 'conclusione ciclo';
+                    mainTitle.textContent = 'verso il 10.06.2026';
                     statusText.textContent = 'fase finale';
-                    dailyPhrase.textContent = '// ' + days + ' giorni al termine';
-                    footerNote.textContent = 'ultima fase';
+                    openingQuote.innerHTML = '"Ancora ' + days + ' giorni. Poi si chiude."';
+                    footerLeft.textContent = 'ultimi giorni';
                 }
-            } else if (days > 10) {
-                // Stile normale
+
+                // Frasi speciali per gli ultimi giorni
+                if (seconds % 20 === 0 || seconds % 20 === 1) { // ogni ~20 secondi
+                    const phraseSet = days <= 5 ? finalPhrases : phrases; // mischiamo
+                    const randomPhrase = (days <= 3 ? finalPhrases : phraseSet)[
+                        Math.floor(Math.random() * (days <= 3 ? finalPhrases.length : phraseSet.length))
+                    ];
+                    dailyPhrase.textContent = randomPhrase.text;
+                    quoteAuthor.textContent = '— ' + randomPhrase.author;
+                }
+            } 
+            else if (days > 10) {
+                // STILE NORMALE
                 if (!body.classList.contains('default-mode')) {
                     body.classList.remove('transition-mode');
                     body.classList.add('default-mode');
                     
                     mainTitle.textContent = '10.06.2026';
-                    statusText.textContent = 'ciclo in corso';
-                    footerNote.textContent = 'fine ciclo prevista: 10.06.2026';
+                    statusText.textContent = 'attualmente: dentro';
+                    openingQuote.innerHTML = '"L\'istruzione è l\'arma più potente che puoi usare per cambiare il mondo.<br>Peccato che il mondo, intanto, lo stai guardando da una finestra."';
+                    footerLeft.textContent = 'superiori italiane';
                 }
-                
-                // Cambia frase ogni tanto
-                if (seconds % 15 === 0) {
+
+                // Cambia frase ogni tanto (più rarefatto)
+                if (seconds % 25 === 0) {
                     const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-                    dailyPhrase.textContent = '// ' + randomPhrase;
+                    dailyPhrase.textContent = randomPhrase.text;
+                    quoteAuthor.textContent = '— ' + randomPhrase.author;
                 }
             }
         }
 
         function handleEnd() {
+            // Stile finale - professionale ma con personalità
             body.classList.remove('default-mode', 'transition-mode');
             
-            // Stile finale - professionale ma diverso
             const style = document.createElement('style');
             style.textContent = `
                 body {
-                    background-color: #f5f5f5;
+                    background: #e5e5e5;
                     color: #1a1a1a;
                 }
                 .container {
-                    background-color: #ffffff;
-                    border-left: 3px solid #1a1a1a;
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-                }
-                .header h1 {
-                    color: #1a1a1a;
+                    background: #ffffff;
+                    border: 1px solid #d0d0d0;
+                    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
                 }
                 .number {
-                    color: #333333;
+                    color: #1a1a1a;
                 }
                 .progress-fill {
-                    background-color: #1a1a1a;
+                    background: #1a1a1a;
+                }
+                .quote-section p {
+                    color: #333;
+                }
+                .footer {
+                    border-top-color: #d0d0d0;
                 }
             `;
             document.head.appendChild(style);
             
-            mainTitle.textContent = 'ciclo concluso';
-            statusText.textContent = 'termine';
+            mainTitle.textContent = 'fine.';
+            statusText.textContent = 'termine ciclo';
+            openingQuote.innerHTML = '"La scuola è finita. Ora inizia il resto."';
             daysEl.textContent = '00';
             hoursEl.textContent = '00';
             minutesEl.textContent = '00';
             secondsEl.textContent = '00';
-            dailyPhrase.textContent = '// si esce diversi da come si è entrati';
+            dailyPhrase.textContent = 'Si esce diversi da come si è entrati.';
+            quoteAuthor.textContent = '— ex studente';
             progressFill.style.width = '100%';
             progressPercentage.textContent = '100%';
-            footerNote.textContent = '10.06.2026';
+            footerLeft.textContent = '10 giugno 2026';
+            footerRight.textContent = 'concluso';
         }
 
         setInterval(updateCountdown, 1000);
