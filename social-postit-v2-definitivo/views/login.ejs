@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Social Postit</title>
+    <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/darkmode.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Torna alla home</a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <button class="btn btn-outline-secondary" id="theme-toggle">🌙 / ☀️</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <img src="/img/Login.png" class="img-fluid">
+        <form action="/login" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nome Utente</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Accedi</button>
+        </form>
+        <p class="mt-3">Non hai un account? <a href="/register">Registrati</a></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const themeToggle = document.getElementById("theme-toggle");
+            const body = document.body;
+
+            if (localStorage.getItem("theme") === "dark") {
+                body.classList.add("dark-mode");
+            }
+
+            themeToggle.addEventListener("click", () => {
+                body.classList.toggle("dark-mode");
+
+                if (body.classList.contains("dark-mode")) {
+                    localStorage.setItem("theme", "dark");
+                } else {
+                    localStorage.setItem("theme", "light");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
