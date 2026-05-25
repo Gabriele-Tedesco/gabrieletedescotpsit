@@ -180,23 +180,33 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    /* Apre il submenu su hover (desktop) */
+    /* Il submenu si apre solo via JS (click), sia desktop che mobile */
+    .dropdown-submenu > .dropdown-menu.show {
+      display: block;
+      animation: fadeInRight 0.25s ease;
+    }
+
+    /* Su desktop: pannello a destra */
     @media (min-width: 992px) {
-      .dropdown-submenu:hover > .dropdown-menu {
-        display: block;
+      .dropdown-submenu > .dropdown-menu.show {
+        top: 0;
+        left: calc(100% + 4px);
+        margin-top: -10px;
       }
-      .dropdown-submenu:hover > .dropdown-item::after {
+      /* Freccia ruotata quando aperto */
+      .dropdown-submenu.open > .dropdown-item::after {
         transform: translateY(-50%) rotate(90deg);
       }
     }
 
-    /* Su mobile si apre via JS (click) */
-    .dropdown-submenu > .dropdown-menu.show {
-      display: block;
-      left: 0;
-      top: 100%;
-      margin-left: 0;
-      margin-top: 4px;
+    /* Su mobile: pannello sotto */
+    @media (max-width: 991px) {
+      .dropdown-submenu > .dropdown-menu.show {
+        left: 0;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 4px;
+      }
     }
 
     /* ── Hero ── */
@@ -534,18 +544,22 @@
 
   window.addEventListener('load', () => { animateCounter(); checkDropdownScroll(); });
 
-  /* ── Submenu: toggle su click (mobile / tastiera) ── */
+  /* ── Submenu: click universale (desktop + mobile) ── */
   document.querySelectorAll('.dropdown-submenu > .dropdown-item').forEach(trigger => {
     trigger.addEventListener('click', function (e) {
-      // Su desktop il hover gestisce già tutto; su mobile serve il click
-      if (window.innerWidth < 992) {
-        e.preventDefault();
-        e.stopPropagation();
-        const submenu = this.nextElementSibling;
-        const isOpen = submenu.classList.contains('show');
-        // Chiudi tutti gli altri submenu aperti
-        document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(m => m.classList.remove('show'));
-        if (!isOpen) submenu.classList.add('show');
+      e.preventDefault();
+      e.stopPropagation();
+      const parent  = this.closest('.dropdown-submenu');
+      const submenu = this.nextElementSibling;
+      const isOpen  = parent.classList.contains('open');
+      // Chiudi tutti gli altri submenu aperti allo stesso livello
+      document.querySelectorAll('.dropdown-submenu.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.dropdown-menu').classList.remove('show');
+      });
+      if (!isOpen) {
+        parent.classList.add('open');
+        submenu.classList.add('show');
       }
     });
   });
@@ -553,7 +567,10 @@
   /* ── Chiudi submenu quando si chiude il dropdown padre ── */
   document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(toggle => {
     toggle.addEventListener('hidden.bs.dropdown', () => {
-      document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(m => m.classList.remove('show'));
+      document.querySelectorAll('.dropdown-submenu.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.dropdown-menu').classList.remove('show');
+      });
     });
   });
 </script>
