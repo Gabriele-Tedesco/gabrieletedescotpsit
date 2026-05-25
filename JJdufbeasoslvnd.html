@@ -80,7 +80,7 @@
       transform: scaleX(1);
     }
 
-    /* Dropdown styling avanzato */
+    /* Dropdown styling avanzato con SCROLL */
     .nav-link.dropdown-toggle {
       font-weight: 600;
       color: #2d3748 !important;
@@ -107,6 +107,25 @@
       padding: 10px;
       margin-top: 10px;
       animation: fadeInUp 0.3s ease;
+      /* IMPORTANTE: Scroll per liste lunghe */
+      max-height: 70vh;
+      overflow-y: auto;
+      min-width: 280px;
+    }
+
+    /* Scrollbar personalizzata per i dropdown */
+    .dropdown-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-track {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
     }
 
     @keyframes fadeInUp {
@@ -122,10 +141,23 @@
 
     .dropdown-item {
       border-radius: 10px;
-      padding: 10px 20px;
-      transition: all 0.3s ease;
+      padding: 8px 20px;
+      transition: all 0.2s ease;
       font-weight: 500;
       color: #2d3748;
+      white-space: nowrap;
+    }
+
+    /* Per schermi piccoli, permettiamo wrap del testo */
+    @media (max-width: 768px) {
+      .dropdown-item {
+        white-space: normal;
+        font-size: 0.9rem;
+      }
+      .dropdown-menu {
+        min-width: 250px;
+        max-height: 60vh;
+      }
     }
 
     .dropdown-item:hover {
@@ -198,7 +230,7 @@
       animation: fadeIn 1s ease;
     }
 
-    /* Statistiche fittizie decorative */
+    /* Statistiche */
     .stats {
       display: flex;
       justify-content: center;
@@ -247,7 +279,7 @@
       color: #ffd700;
     }
 
-    /* Scrollbar personalizzata */
+    /* Scrollbar personalizzata generale */
     ::-webkit-scrollbar {
       width: 10px;
     }
@@ -297,14 +329,22 @@
       z-index: 1;
     }
 
-    /* Animazione pulse per il brand */
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.7;
-      }
+    /* Indicatore di scroll nei dropdown (opzionale) */
+    .dropdown-menu:after {
+      content: '';
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: linear-gradient(to top, rgba(255,255,255,0.9), transparent);
+      pointer-events: none;
+      border-radius: 0 0 15px 15px;
+      display: none;
+    }
+
+    .dropdown-menu.has-scroll:after {
+      display: block;
     }
   </style>
 </head>
@@ -512,7 +552,31 @@
     }
   }
   
-  window.addEventListener('load', animateCounter);
+  // Aggiunge classe "has-scroll" ai dropdown che necessitano scroll
+  function checkDropdownScroll() {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      if (menu.scrollHeight > menu.clientHeight) {
+        menu.classList.add('has-scroll');
+      } else {
+        menu.classList.remove('has-scroll');
+      }
+    });
+  }
+  
+  window.addEventListener('load', () => {
+    animateCounter();
+    checkDropdownScroll();
+  });
+  
+  // Richeck quando i dropdown si aprono (per sicurezza)
+  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('shown.bs.dropdown', function() {
+      const menu = this.nextElementSibling;
+      if (menu && menu.scrollHeight > menu.clientHeight) {
+        menu.classList.add('has-scroll');
+      }
+    });
+  });
 </script>
 
 </body>
