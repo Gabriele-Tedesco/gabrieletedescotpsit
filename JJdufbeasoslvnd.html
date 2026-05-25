@@ -354,7 +354,7 @@
                  ═══════════════════════════════════════════ -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button"
-                 data-bs-toggle="dropdown" aria-expanded="false">
+                 data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                 <i class="fas fa-graduation-cap"></i> Progetti scuole superiori
               </a>
 
@@ -561,7 +561,8 @@
 
   /* ── Mobile: accordion per le colonne del mega menu ── */
   document.querySelectorAll('.mega-col-header').forEach(header => {
-    header.addEventListener('click', function () {
+    header.addEventListener('click', function (e) {
+      e.stopPropagation(); // impedisce a Bootstrap di chiudere il dropdown
       if (window.innerWidth >= 992) return; // solo mobile
       const colId  = 'col-' + this.dataset.col;
       const body   = document.getElementById(colId);
