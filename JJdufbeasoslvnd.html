@@ -6,19 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Font Awesome per icone -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- Google Fonts: Font più moderni -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', 'Space Grotesk', sans-serif;
@@ -28,7 +20,6 @@
       overflow-x: hidden;
     }
 
-    /* Effetto particelle animate */
     body::before {
       content: '';
       position: fixed;
@@ -42,13 +33,17 @@
       z-index: 0;
     }
 
-    /* Navbar personalizzata */
+    /* ── Navbar ── */
+    .navbar-container {
+      position: relative;
+      z-index: 1000;
+    }
+
     .navbar {
       background: rgba(255, 255, 255, 0.98) !important;
       backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
       border-radius: 0 0 20px 20px;
-      margin-top: 0;
       transition: all 0.3s ease;
     }
 
@@ -62,83 +57,64 @@
       color: transparent !important;
       letter-spacing: -0.5px;
       position: relative;
+      white-space: nowrap;
     }
 
     .navbar-brand::after {
       content: '';
       position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 100%;
-      height: 3px;
+      bottom: -5px; left: 0;
+      width: 100%; height: 3px;
       background: linear-gradient(90deg, #667eea, #764ba2);
       transform: scaleX(0);
       transition: transform 0.3s ease;
     }
+    .navbar-brand:hover::after { transform: scaleX(1); }
 
-    .navbar-brand:hover::after {
-      transform: scaleX(1);
-    }
-
-    /* Dropdown styling avanzato con SCROLL */
+    /* ── Top-level nav links ── */
     .nav-link.dropdown-toggle {
       font-weight: 600;
       color: #2d3748 !important;
       transition: all 0.3s ease;
       position: relative;
-      margin: 0 5px;
+      margin: 0 3px;
       border-radius: 10px;
-      padding: 10px 18px !important;
+      padding: 8px 14px !important;
+      white-space: nowrap;
+      font-size: 0.92rem;
     }
 
-    .nav-link.dropdown-toggle:hover {
+    .nav-link.dropdown-toggle:hover,
+    .dropdown.show > .nav-link.dropdown-toggle {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white !important;
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.3);
     }
 
+    /* ── Dropdown menu (primo livello) ── */
     .dropdown-menu {
       border: none;
-      background: rgba(255, 255, 255, 0.98);
+      background: rgba(255,255,255,0.98);
       backdrop-filter: blur(10px);
       border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       padding: 10px;
       margin-top: 10px;
       animation: fadeInUp 0.3s ease;
-      /* IMPORTANTE: Scroll per liste lunghe */
       max-height: 70vh;
       overflow-y: auto;
-      min-width: 280px;
-      /* FIX: z-index esplicito per stare sopra hero e footer */
+      min-width: 260px;
       z-index: 9999 !important;
     }
 
-    /* Scrollbar personalizzata per i dropdown */
-    .dropdown-menu::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .dropdown-menu::-webkit-scrollbar-track {
-      background: rgba(102, 126, 234, 0.1);
-      border-radius: 10px;
-    }
-
-    .dropdown-menu::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border-radius: 10px;
-    }
+    .dropdown-menu::-webkit-scrollbar { width: 6px; }
+    .dropdown-menu::-webkit-scrollbar-track { background: rgba(102,126,234,0.1); border-radius: 10px; }
+    .dropdown-menu::-webkit-scrollbar-thumb { background: linear-gradient(135deg,#667eea,#764ba2); border-radius: 10px; }
 
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .dropdown-item {
@@ -150,32 +126,80 @@
       white-space: nowrap;
     }
 
-    /* Per schermi piccoli, permettiamo wrap del testo */
-    @media (max-width: 768px) {
-      .dropdown-item {
-        white-space: normal;
-        font-size: 0.9rem;
-      }
-      .dropdown-menu {
-        min-width: 250px;
-        max-height: 60vh;
-      }
-    }
-
     .dropdown-item:hover {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       transform: translateX(5px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 5px 15px rgba(102,126,234,0.3);
     }
 
     .dropdown-divider {
       margin: 8px 0;
       background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
       height: 2px;
+      border: none;
     }
 
-    /* Hero section aggiuntiva */
+    /* ══════════════════════════════════════════
+       DROPDOWN-SUBMENU  (terza / quarta / quinta)
+       ══════════════════════════════════════════ */
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    /* La freccia laterale sul trigger del submenu */
+    .dropdown-submenu > .dropdown-item::after {
+      content: '\f054'; /* fa-chevron-right */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.7rem;
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.2s ease;
+    }
+
+    .dropdown-submenu > .dropdown-item {
+      position: relative;
+      padding-right: 36px; /* spazio per la freccia */
+    }
+
+    /* Il pannello del submenu */
+    .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -10px;
+      margin-left: 6px;
+      display: none;
+      animation: fadeInRight 0.25s ease;
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(-10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Apre il submenu su hover (desktop) */
+    @media (min-width: 992px) {
+      .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+      }
+      .dropdown-submenu:hover > .dropdown-item::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+    }
+
+    /* Su mobile si apre via JS (click) */
+    .dropdown-submenu > .dropdown-menu.show {
+      display: block;
+      left: 0;
+      top: 100%;
+      margin-left: 0;
+      margin-top: 4px;
+    }
+
+    /* ── Hero ── */
     .hero-section {
       text-align: center;
       padding: 60px 20px 40px;
@@ -201,26 +225,15 @@
     }
 
     @keyframes slideInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-50px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
-    /* Badge decorativo */
     .badge-custom {
       display: inline-block;
       background: rgba(255,255,255,0.2);
@@ -232,7 +245,6 @@
       animation: fadeIn 1s ease;
     }
 
-    /* Statistiche */
     .stats {
       display: flex;
       justify-content: center;
@@ -241,23 +253,11 @@
       flex-wrap: wrap;
     }
 
-    .stat-item {
-      text-align: center;
-      animation: fadeInUp 1s ease;
-    }
+    .stat-item { text-align: center; animation: fadeInUp 1s ease; }
+    .stat-number { font-size: 2rem; font-weight: 700; display: block; }
+    .stat-label  { font-size: 0.9rem; opacity: 0.9; }
 
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    /* Footer */
+    /* ── Footer ── */
     .footer {
       text-align: center;
       padding: 30px;
@@ -276,173 +276,143 @@
       display: inline-block;
     }
 
-    .social-links a:hover {
-      transform: translateY(-3px) scale(1.1);
-      color: #ffd700;
-    }
+    .social-links a:hover { transform: translateY(-3px) scale(1.1); color: #ffd700; }
 
-    /* Scrollbar personalizzata generale */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
+    /* ── Scrollbar globale ── */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg,#667eea,#764ba2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg,#764ba2,#667eea); }
 
-    ::-webkit-scrollbar-track {
-      background: rgba(255,255,255,0.1);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(135deg, #764ba2, #667eea);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-section h1 {
-        font-size: 2rem;
+    /* ── Responsive ── */
+    @media (max-width: 991px) {
+      .hero-section h1 { font-size: 2rem; }
+      .stats { gap: 20px; }
+      .stat-number { font-size: 1.5rem; }
+      .navbar-brand { font-size: 1.3rem; }
+      .dropdown-item { white-space: normal; font-size: 0.9rem; }
+      .dropdown-menu { min-width: 240px; max-height: 60vh; }
+      /* su mobile il submenu sta sotto, non a destra */
+      .dropdown-submenu > .dropdown-menu {
+        left: 0; top: 100%;
+        margin-left: 0; margin-top: 4px;
       }
-      
-      .stats {
-        gap: 20px;
-      }
-      
-      .stat-number {
-        font-size: 1.5rem;
-      }
-      
-      .navbar-brand {
-        font-size: 1.3rem;
-      }
-    }
-
-    /* Effetto glow per i dropdown aperti */
-    .dropdown.show .dropdown-toggle {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white !important;
-      box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-    }
-
-    /* FIX PRINCIPALE: il container del navbar deve avere z-index molto alto
-       per evitare che hero-section e footer si sovrappongano al dropdown */
-    .navbar-container {
-      position: relative;
-      z-index: 1000;
-    }
-
-    /* Indicatore di scroll nei dropdown (opzionale) */
-    .dropdown-menu:after {
-      content: '';
-      position: sticky;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 30px;
-      background: linear-gradient(to top, rgba(255,255,255,0.9), transparent);
-      pointer-events: none;
-      border-radius: 0 0 15px 15px;
-      display: none;
-    }
-
-    .dropdown-menu.has-scroll:after {
-      display: block;
     }
   </style>
 </head>
 <body>
 
-<!-- FIX: wrapper dedicato con z-index alto, separato dal .container generico -->
 <div class="navbar-container">
-  <div class="container">
+  <div class="container-fluid px-3">
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <i class="fas fa-code"></i> Gabriele Tedesco
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <div class="collapse navbar-collapse" id="navbarMain">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <!-- ═══════════════════════════════════════
+                 MEGA ITEM: Progetti scuole superiori
+                 (contiene 3 submenu annidati)
+                 ═══════════════════════════════════════ -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-folder-open"></i> Progetti di terza
+                <i class="fas fa-graduation-cap"></i> Progetti scuole superiori
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleFlipCard.html"><i class="fas fa-id-card"></i> Flip Card</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizifor.html"><i class="fas fa-code"></i> Esercizi for</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrielemoveimage.html"><i class="fas fa-arrows-alt"></i> Move Image</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleSumoClick.html"><i class="fas fa-gamepad"></i> Sumo click</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizio3.html"><i class="fas fa-calculator"></i> Esercizio 3</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizio4.html"><i class="fas fa-chart-line"></i> Esercizio 4</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_simulazione_1.html"><i class="fas fa-laptop-code"></i> Simulazione_1</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/es_mathrandom.html"><i class="fas fa-random"></i> Esercizio Math.random()</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/es-wattaggi.html"><i class="fas fa-bolt"></i> Esercizio Wattaggi</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-1-verifica.html"><i class="fas fa-check-circle"></i> Esercizio 1 verifica</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-2-verifica.html"><i class="fas fa-check-double"></i> Esercizio 2 verifica</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-3-verifica.html"><i class="fas fa-star"></i> Esercizio 3 verifica</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/SushiRestaurant.html"><i class="fas fa-utensils"></i> Sushi Restaurant</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/bar-v1.html"><i class="fas fa-glass-martini-alt"></i> Bar v1</a></li>  
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-gym/gym.html"><i class="fas fa-dumbbell"></i> Gym project</a></li> 
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/desmosedici/Es-2-bootstrap.html"><i class="fas fa-motorcycle"></i> Ducati</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/bar-v1-1.html"><i class="fas fa-wine-glass-alt"></i> Bar v1.1</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/array.html"><i class="fas fa-smile"></i> Array di frasi simpatiche</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/cover/Es_array_bootstrap.html"><i class="fas fa-chart-bar"></i> Analisi numerica</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_1_temporizzatore.html"><i class="fas fa-hourglass-half"></i> Esempio 1 temporizzatore</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_2_temporizzatore.html"><i class="fas fa-hourglass-start"></i> Esempio 2 temporizzatore</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_3_temporizzatore.html"><i class="fas fa-hourglass-end"></i> Esempio 3 temporizzatore</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_4_temporizzatore.html"><i class="fas fa-stopwatch"></i> Esercizio 4 temporizzatore</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_RandomSquare.html"><i class="fas fa-border-all"></i> Esercizio quadrati randomici</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es1-test-js.html"><i class="fab fa-js"></i> Esercizio 1 verifica js</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es2-test-js.html"><i class="fab fa-js-square"></i> Esercizio 2 verifica js</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas1.html"><i class="fas fa-paint-brush"></i> Esercizio 1 canvas</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas2.html"><i class="fas fa-palette"></i> Esercizio 2 canvas</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas3.html"><i class="fas fa-draw-polygon"></i> Esercizio 3 canvas</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas4.html"><i class="fas fa-shapes"></i> Esercizio 4 canvas</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/STEAM_WHO/index.html"><i class="fas fa-robot"></i> Akinator</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
+
+                <!-- ── Terza (submenu) ── -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item" href="#" onclick="return false;">
+                    <i class="fas fa-folder-open"></i> Progetti di terza
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleFlipCard.html"><i class="fas fa-id-card"></i> Flip Card</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizifor.html"><i class="fas fa-code"></i> Esercizi for</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrielemoveimage.html"><i class="fas fa-arrows-alt"></i> Move Image</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleSumoClick.html"><i class="fas fa-gamepad"></i> Sumo click</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizio3.html"><i class="fas fa-calculator"></i> Esercizio 3</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/gabrieleesercizio4.html"><i class="fas fa-chart-line"></i> Esercizio 4</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_simulazione_1.html"><i class="fas fa-laptop-code"></i> Simulazione_1</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/es_mathrandom.html"><i class="fas fa-random"></i> Esercizio Math.random()</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/es-wattaggi.html"><i class="fas fa-bolt"></i> Esercizio Wattaggi</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-1-verifica.html"><i class="fas fa-check-circle"></i> Esercizio 1 verifica</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-2-verifica.html"><i class="fas fa-check-double"></i> Esercizio 2 verifica</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-3-verifica.html"><i class="fas fa-star"></i> Esercizio 3 verifica</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/SushiRestaurant.html"><i class="fas fa-utensils"></i> Sushi Restaurant</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/bar-v1.html"><i class="fas fa-glass-martini-alt"></i> Bar v1</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es-gym/gym.html"><i class="fas fa-dumbbell"></i> Gym project</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/desmosedici/Es-2-bootstrap.html"><i class="fas fa-motorcycle"></i> Ducati</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/bar-v1-1.html"><i class="fas fa-wine-glass-alt"></i> Bar v1.1</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/array.html"><i class="fas fa-smile"></i> Array di frasi simpatiche</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/cover/Es_array_bootstrap.html"><i class="fas fa-chart-bar"></i> Analisi numerica</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_1_temporizzatore.html"><i class="fas fa-hourglass-half"></i> Esempio 1 temporizzatore</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_2_temporizzatore.html"><i class="fas fa-hourglass-start"></i> Esempio 2 temporizzatore</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_3_temporizzatore.html"><i class="fas fa-hourglass-end"></i> Esempio 3 temporizzatore</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_4_temporizzatore.html"><i class="fas fa-stopwatch"></i> Esercizio 4 temporizzatore</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es_RandomSquare.html"><i class="fas fa-border-all"></i> Esercizio quadrati randomici</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es1-test-js.html"><i class="fab fa-js"></i> Esercizio 1 verifica js</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Es2-test-js.html"><i class="fab fa-js-square"></i> Esercizio 2 verifica js</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas1.html"><i class="fas fa-paint-brush"></i> Esercizio 1 canvas</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas2.html"><i class="fas fa-palette"></i> Esercizio 2 canvas</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas3.html"><i class="fas fa-draw-polygon"></i> Esercizio 3 canvas</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/canvas4.html"><i class="fas fa-shapes"></i> Esercizio 4 canvas</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/STEAM_WHO/index.html"><i class="fas fa-robot"></i> Akinator</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
+                  </ul>
+                </li>
+
+                <!-- ── Quarta (submenu) ── -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item" href="#" onclick="return false;">
+                    <i class="fas fa-folder-open"></i> Progetti di quarta
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/esBase.html"><i class="fas fa-terminal"></i> Es base</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/EsArray.html"><i class="fas fa-table"></i> Es base array</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/Temporizzatore.html"><i class="fas fa-clock"></i> Temporizzatore</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/jquery_es1/es1jquery.html"><i class="fab fa-js"></i> Es 1 jquery</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/sommatoria.html"><i class="fas fa-chart-simple"></i> Es algoritmo FCFS</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/looney-tunes-videogame/looney%20tunes%20videogame/welcome.html"><i class="fas fa-gamepad"></i> Videogioco</a></li>
+                    <li><a class="dropdown-item" href="https://github.com/Gabriele-Tedesco/gabrieletedescotpsit/tree/af30b84dc7c0bd2f7d937643d8ba3de6717e6bc3/social-postit"><i class="fas fa-sticky-note"></i> Social-postit</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/ProgettoReti.html"><i class="fas fa-network-wired"></i> Progetto di sistemi e reti</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/NuovaPlanimetria/NuovaPlanimetria.html"><i class="fas fa-building"></i> Progetto di rete aziendale</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
+                  </ul>
+                </li>
+
+                <!-- ── Quinta (submenu) ── -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item" href="#" onclick="return false;">
+                    <i class="fas fa-folder-open"></i> Progetti di quinta
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Tiny_city/index.html"><i class="fas fa-city"></i> Tiny city</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/scheduling.html"><i class="fas fa-calendar-alt"></i> Scheduling</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/schedulingGantt.html"><i class="fas fa-chart-gantt"></i> Scheduling con lo schema di Gantt</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/AnalisiAPI/Analisi_API.html"><i class="fas fa-api"></i> Analisi API</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/calcolo_d_RSA.html"><i class="fas fa-lock"></i> Algoritmo per calcolo "d" nel teorema di RSA</a></li>
+                    <li><a class="dropdown-item" href="https://github.com/Gabriele-Tedesco/gabrieletedescotpsit/tree/main/social-postit-v2-definitivo"><i class="fas fa-sticky-note"></i> Social postit definitivo</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/TODO_capolavoro.html"><i class="fas fa-tasks"></i> todo-list capolavoro</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/capolavoro/relazione_capolavoro.html"><i class="fas fa-file-alt"></i> Documentazione capolavoro</a></li>
+                    <li><a class="dropdown-item" href="https://www.canva.com/design/DAHCQSDgvk4/Jg1YD8JmTVSabCDFnR8K2A/view?utm_content=DAHCQSDgvk4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hadf631fda6"><i class="fas fa-chalkboard"></i> Presentazione capolavoro</a></li>
+                    <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/COUNTER.html"><i class="fas fa-heartbeat"></i> Resisti e soffri</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
+                  </ul>
+                </li>
+
               </ul>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-folder-open"></i> Progetti di quarta
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/esBase.html"><i class="fas fa-terminal"></i> Es base</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/EsArray.html"><i class="fas fa-table"></i> Es base array</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/Temporizzatore.html"><i class="fas fa-clock"></i> Temporizzatore</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/jquery_es1/es1jquery.html"><i class="fab fa-js"></i> Es 1 jquery</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/sommatoria.html"><i class="fas fa-chart-simple"></i> Es algoritmo FCFS</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/looney-tunes-videogame/looney%20tunes%20videogame/welcome.html"><i class="fas fa-gamepad"></i> Videogioco</a></li>
-                <li><a class="dropdown-item" href="https://github.com/Gabriele-Tedesco/gabrieletedescotpsit/tree/af30b84dc7c0bd2f7d937643d8ba3de6717e6bc3/social-postit"><i class="fas fa-sticky-note"></i> Social-postit</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/ProgettoReti.html"><i class="fas fa-network-wired"></i> Progetto di sistemi e reti</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Quarta/NuovaPlanimetria/NuovaPlanimetria.html"><i class="fas fa-building"></i> Progetto di rete aziendale</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-folder-open"></i> Progetti di quinta
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/Tiny_city/index.html"><i class="fas fa-city"></i> Tiny city</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/scheduling.html"><i class="fas fa-calendar-alt"></i> Scheduling</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/schedulingGantt.html"><i class="fas fa-chart-gantt"></i> Scheduling con lo schema di Gantt</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/AnalisiAPI/Analisi_API.html"><i class="fas fa-api"></i> Analisi API</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/calcolo_d_RSA.html"><i class="fas fa-lock"></i> Algoritmo per calcolo "d" nel teorema di RSA</a></li> 
-                <li><a class="dropdown-item" href="https://github.com/Gabriele-Tedesco/gabrieletedescotpsit/tree/main/social-postit-v2-definitivo"><i class="fas fa-sticky-note"></i> Social postit definitivo</a></li> 
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/TODO_capolavoro.html"><i class="fas fa-tasks"></i> todo-list capolavoro</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/capolavoro/relazione_capolavoro.html"><i class="fas fa-file-alt"></i> Documentazione capolavoro</a></li>
-                <li><a class="dropdown-item" href="https://www.canva.com/design/DAHCQSDgvk4/Jg1YD8JmTVSabCDFnR8K2A/view?utm_content=DAHCQSDgvk4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hadf631fda6"><i class="fas fa-chalkboard"></i> Presentazione capolavoro</a></li>
-                <li><a class="dropdown-item" href="https://gabriele-tedesco.github.io/gabrieletedescotpsit/COUNTER.html"><i class="fas fa-heartbeat"></i> Resisti e soffri</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
-              </ul>
-            </li>        
+
+            <!-- ── Grafica ── -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-palette"></i> Grafica
@@ -456,7 +426,9 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
               </ul>
-            </li>    
+            </li>
+
+            <!-- ── Esercizi personali ── -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-user-graduate"></i> Esercizi personali
@@ -472,7 +444,9 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#"><i class="fas fa-ellipsis-h"></i> Something else here</a></li>
               </ul>
-            </li>        
+            </li>
+
+            <!-- ── Oracle ── -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fab fa-oracle"></i> Oracle
@@ -486,7 +460,8 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="https://oracleapex.com/ords/r/apex/workspace-sign-in/oracle-apex-sign-in?session=100300188578050"><i class="fas fa-sign-in-alt"></i> Something else here</a></li>
               </ul>
-            </li>         
+            </li>
+
           </ul>
         </div>
       </div>
@@ -494,7 +469,7 @@
   </div>
 </div>
 
-<!-- Hero Section aggiunta per stile -->
+<!-- Hero Section -->
 <div class="hero-section">
   <div class="badge-custom">
     <i class="fas fa-code"></i> Full Stack Developer Portfolio
@@ -519,68 +494,66 @@
   </div>
 </div>
 
-<!-- Footer elegante -->
+<!-- Footer -->
 <div class="footer">
   <div class="social-links">
     <a href="https://github.com/Gabriele-Tedesco/gabrieletedescotpsit" target="_blank"><i class="fab fa-github"></i></a>
     <a href="https://www.linkedin.com/in/gabriele-tedesco-b10b28229/" target="_blank"><i class="fab fa-linkedin"></i></a>
   </div>
-  <p style="margin-top: 20px; font-size: 0.9rem;">
+  <p style="margin-top:20px;font-size:0.9rem;">
     <i class="fas fa-copyright"></i> 2024 Gabriele Tedesco - Creative Developer Portfolio
   </p>
 </div>
 
 <script>
-  // Contatore animato per i progetti (effetto visivo)
+  /* ── Contatore animato ── */
   function animateCounter() {
-    const allDropdownItems = document.querySelectorAll('.dropdown-item');
-    let totalProjects = 0;
-    
-    allDropdownItems.forEach(item => {
+    const items = document.querySelectorAll('.dropdown-item');
+    let total = 0;
+    items.forEach(item => {
       const href = item.getAttribute('href');
-      if (href && href.startsWith('http') && !href.includes('something') && !href.includes('#') && !href.includes('github.com')) {
-        totalProjects++;
-      }
+      if (href && href.startsWith('http') && !href.includes('#') && !href.includes('github.com')) total++;
     });
-    
-    const counterElement = document.getElementById('progettiCounter');
-    if (counterElement) {
-      let current = 0;
-      const increment = Math.ceil(totalProjects / 50);
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= totalProjects) {
-          current = totalProjects;
-          clearInterval(timer);
-        }
-        counterElement.textContent = current;
-      }, 20);
-    }
+    const el = document.getElementById('progettiCounter');
+    if (!el) return;
+    let current = 0;
+    const inc = Math.ceil(total / 50);
+    const timer = setInterval(() => {
+      current += inc;
+      if (current >= total) { current = total; clearInterval(timer); }
+      el.textContent = current;
+    }, 20);
   }
-  
-  // Aggiunge classe "has-scroll" ai dropdown che necessitano scroll
+
+  /* ── Scroll hint nei dropdown ── */
   function checkDropdownScroll() {
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
-      if (menu.scrollHeight > menu.clientHeight) {
-        menu.classList.add('has-scroll');
-      } else {
-        menu.classList.remove('has-scroll');
-      }
+      menu.classList.toggle('has-scroll', menu.scrollHeight > menu.clientHeight);
     });
   }
-  
-  window.addEventListener('load', () => {
-    animateCounter();
-    checkDropdownScroll();
-  });
-  
-  // Richeck quando i dropdown si aprono (per sicurezza)
-  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-    toggle.addEventListener('shown.bs.dropdown', function() {
-      const menu = this.nextElementSibling;
-      if (menu && menu.scrollHeight > menu.clientHeight) {
-        menu.classList.add('has-scroll');
+
+  window.addEventListener('load', () => { animateCounter(); checkDropdownScroll(); });
+
+  /* ── Submenu: toggle su click (mobile / tastiera) ── */
+  document.querySelectorAll('.dropdown-submenu > .dropdown-item').forEach(trigger => {
+    trigger.addEventListener('click', function (e) {
+      // Su desktop il hover gestisce già tutto; su mobile serve il click
+      if (window.innerWidth < 992) {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = this.nextElementSibling;
+        const isOpen = submenu.classList.contains('show');
+        // Chiudi tutti gli altri submenu aperti
+        document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        if (!isOpen) submenu.classList.add('show');
       }
+    });
+  });
+
+  /* ── Chiudi submenu quando si chiude il dropdown padre ── */
+  document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(toggle => {
+    toggle.addEventListener('hidden.bs.dropdown', () => {
+      document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(m => m.classList.remove('show'));
     });
   });
 </script>
