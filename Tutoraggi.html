@@ -118,6 +118,29 @@
     margin-top:6px;
   }
 
+  .tally-scope{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .tally-scope-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+
+  .group-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:var(--red);
+    border:1px solid var(--red);
+    border-radius:3px;
+    padding:1px 5px;
+    white-space:nowrap;
+  }
+
   /* ---------- Toolbar ---------- */
   .toolbar{
     display:flex;
@@ -468,6 +491,12 @@
         <div class="tally-label">non svolti</div>
       </div>
     </div>
+
+    <div class="tally-scope">
+      <button class="chip active" id="scopeCurrent" data-scope="current">gruppo attuale</button>
+      <button class="chip" id="scopeAll" data-scope="all">totale generale</button>
+      <span class="tally-scope-label" id="tallyScopeInfo"></span>
+    </div>
   </header>
 
   <div class="toolbar">
@@ -524,6 +553,14 @@
         <label>nota (facoltativa)</label>
         <input type="text" id="fieldNote" placeholder="es. regalo, sostituzione…">
       </div>
+      <div class="field">
+        <label class="checkbox-row" style="display:flex;">
+          <input type="checkbox" id="fieldGroupStart"> questo corso segna l'inizio di un nuovo gruppo
+        </label>
+        <div style="font-size:11.5px; color:var(--ink-soft); margin-top:6px; font-family:'IBM Plex Mono', monospace;">
+          si spunta da solo sui codici tipo C-100, C-200… ma puoi cambiarlo quando vuoi
+        </div>
+      </div>
       <input type="hidden" id="fieldId">
       <div class="modal-actions">
         <button type="button" class="btn ghost" id="btnDelete" style="margin-right:auto; display:none; border-color:var(--red); color:var(--red);">elimina</button>
@@ -544,6 +581,39 @@
   let data = load();
   let activeYear = 'all';
   let editingStatus = 'done';
+  let tallyScope = 'current'; // 'current' | 'all'
+
+  function isGroupStartCode(code){
+    return /^C-?0*[1-9]00$/i.test((code||'').trim());
+  }
+
+  function numFromCode(code){
+    const m = /^C-?(\d+)$/i.exec((code||'').trim());
+    return m ? parseInt(m[1],10) : null;
+  }
+
+  // Ordina i corsi svolti per numero di codice (fallback data) e li divide
+  // in gruppi ogni volta che trova un corso marcato come "inizio nuovo gruppo".
+  function computeGroups(){
+    const done = data.filter(e => e.status !== 'skipped');
+    const sorted = done.slice().sort((a,b) => {
+      const na = numFromCode(a.code), nb = numFromCode(b.code);
+      if(na!==null && nb!==null) return na-nb;
+      return (a.date||'').localeCompare(b.date||'');
+    });
+    const groups = [];
+    let current = [];
+    sorted.forEach((e, i) => {
+      if(i>0 && e.groupStart){
+        groups.push(current);
+        current = [];
+      }
+      current.push(e);
+    });
+    if(current.length) groups.push(current);
+    if(groups.length===0) groups.push([]);
+    return groups;
+  }
 
   function load(){
     try{
@@ -667,17 +737,32 @@
     }
 
     // stats
+    const groups = computeGroups();
+    const currentGroup = groups[groups.length-1];
     const doneAll = data.filter(e=>e.status!=='skipped');
-    const paidAll = doneAll.filter(e=>e.paid);
-    document.getElementById('statTotal').textContent = doneAll.length;
-    document.getElementById('statPaid').textContent = paidAll.length;
-    document.getElementById('statUnpaid').textContent = doneAll.length - paidAll.length;
+    const scopeEntries = tallyScope === 'current' ? currentGroup : doneAll;
+    const paidScope = scopeEntries.filter(e=>e.paid);
+    document.getElementById('statTotal').textContent = scopeEntries.length;
+    document.getElementById('statPaid').textContent = paidScope.length;
+    document.getElementById('statUnpaid').textContent = scopeEntries.length - paidScope.length;
     document.getElementById('statSkipped').textContent = skipped.length;
+
+    document.getElementById('scopeCurrent').classList.toggle('active', tallyScope==='current');
+    document.getElementById('scopeAll').classList.toggle('active', tallyScope==='all');
+
+    const infoEl = document.getElementById('tallyScopeInfo');
+    if(tallyScope==='current' && groups.length>1){
+      infoEl.textContent = `gruppo n. ${groups.length} — iniziato da ${currentGroup[0] ? currentGroup[0].code : '—'}`;
+    } else if(tallyScope==='current'){
+      infoEl.textContent = '';
+    } else {
+      infoEl.textContent = `${groups.length} gruppi in totale`;
+    }
   }
 
   function rowHtml(e){
     return `<div class="entry-row" data-id="${e.id}">
-      <div class="code-cell">${escapeHtml(e.code)}</div>
+      <div class="code-cell">${escapeHtml(e.code)} ${e.groupStart ? '<span class="group-tag">nuovo gruppo</span>' : ''}</div>
       <div class="date-cell">${fmtDate(e.date)}</div>
       <div class="note-cell">${escapeHtml(e.note||'')}</div>
       <div class="status-pill ${e.paid?'paid':'unpaid'}" title="clicca per cambiare">${e.paid? 'pagato' : 'da pagare'}</div>
@@ -698,6 +783,10 @@
     showToast(e.paid ? 'Segnato come pagato' : 'Segnato come da pagare');
   }
 
+  // ---------- Scope toggle (gruppo attuale / totale generale) ----------
+  document.getElementById('scopeCurrent').addEventListener('click', () => { tallyScope='current'; render(); });
+  document.getElementById('scopeAll').addEventListener('click', () => { tallyScope='all'; render(); });
+
   // ---------- Modal handling ----------
   const overlay = document.getElementById('overlay');
   const form = document.getElementById('entryForm');
@@ -715,8 +804,11 @@
     opt.addEventListener('click', () => setStatus(opt.dataset.status));
   });
 
+  let groupCheckboxTouched = false;
+
   function openModal(id){
     form.reset();
+    groupCheckboxTouched = false;
     document.getElementById('fieldId').value = id || '';
     if(id){
       const e = data.find(x=>x.id===id);
@@ -725,11 +817,15 @@
       document.getElementById('fieldDate').value = e.date || '';
       document.getElementById('fieldPaid').checked = !!e.paid;
       document.getElementById('fieldNote').value = e.note || '';
+      document.getElementById('fieldGroupStart').checked = !!e.groupStart;
+      groupCheckboxTouched = true; // non sovrascrivere una scelta già salvata
       setStatus(e.status === 'skipped' ? 'skipped' : 'done');
       btnDelete.style.display = 'inline-block';
     } else {
       document.getElementById('modalTitle').textContent = 'Nuovo corso';
-      document.getElementById('fieldCode').value = suggestNextCode();
+      const nextCode = suggestNextCode();
+      document.getElementById('fieldCode').value = nextCode;
+      document.getElementById('fieldGroupStart').checked = isGroupStartCode(nextCode);
       document.getElementById('fieldDate').value = new Date().toISOString().slice(0,10);
       setStatus('done');
       btnDelete.style.display = 'none';
@@ -737,6 +833,15 @@
     overlay.classList.remove('hidden');
     setTimeout(()=> document.getElementById('fieldCode').focus(), 50);
   }
+
+  // Se l'utente cambia manualmente il codice (per un corso nuovo), aggiorna
+  // in automatico la spunta "nuovo gruppo" finché l'utente non la tocca lui stesso.
+  document.getElementById('fieldGroupStart').addEventListener('change', () => { groupCheckboxTouched = true; });
+  document.getElementById('fieldCode').addEventListener('input', (ev) => {
+    if(document.getElementById('fieldId').value) return; // solo per corsi nuovi
+    if(groupCheckboxTouched) return;
+    document.getElementById('fieldGroupStart').checked = isGroupStartCode(ev.target.value);
+  });
 
   function closeModal(){ overlay.classList.add('hidden'); }
 
@@ -762,12 +867,13 @@
     const dateVal = document.getElementById('fieldDate').value;
     const paid = document.getElementById('fieldPaid').checked;
     const note = document.getElementById('fieldNote').value.trim();
+    const groupStart = document.getElementById('fieldGroupStart').checked;
 
     if(id){
       const e = data.find(x=>x.id===id);
-      Object.assign(e, { code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus });
+      Object.assign(e, { code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus, groupStart });
     } else {
-      data.push({ id: uid(), code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus });
+      data.push({ id: uid(), code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus, groupStart });
     }
     save();
     render();
