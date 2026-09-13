@@ -619,7 +619,11 @@
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return [];
-      return JSON.parse(raw);
+      const arr = JSON.parse(raw);
+      // compatibilità con dati salvati prima dell'introduzione di "seq":
+      // l'ordine nell'array riflette l'ordine di inserimento originale.
+      arr.forEach((e,i) => { if(typeof e.seq !== 'number') e.seq = i; });
+      return arr;
     }catch(e){
       console.error('Errore lettura dati', e);
       return [];
@@ -633,13 +637,23 @@
 
   function uid(){ return 'e_' + Math.random().toString(36).slice(2,10); }
 
+  // Il prossimo codice si basa sull'ULTIMO corso realmente inserito (per ordine
+  // di inserimento, non per valore numerico) + 1. Così se un giorno inserisci
+  // tu stesso un codice più basso per iniziare un nuovo gruppo (es. C-100 dopo
+  // un C-435), il conteggio riparte da lì (C-101, C-102...) anche se in passato
+  // erano già stati usati numeri più alti.
+  function nextSeq(){
+    return data.reduce((m,e)=> Math.max(m, (typeof e.seq==='number'?e.seq:0)), 0) + 1;
+  }
+
   function suggestNextCode(){
-    let max = 399;
+    let lastEntry = null;
     data.forEach(e => {
-      const m = /^C-?(\d+)$/i.exec((e.code||'').trim());
-      if(m){ const n = parseInt(m[1],10); if(n>max) max = n; }
+      if(numFromCode(e.code) === null) return;
+      if(!lastEntry || (e.seq||0) > (lastEntry.seq||0)) lastEntry = e;
     });
-    return 'C-' + (max+1);
+    if(!lastEntry) return 'C-1';
+    return 'C-' + (numFromCode(lastEntry.code) + 1);
   }
 
   function fmtDate(iso){
@@ -873,7 +887,7 @@
       const e = data.find(x=>x.id===id);
       Object.assign(e, { code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus, groupStart });
     } else {
-      data.push({ id: uid(), code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus, groupStart });
+      data.push({ id: uid(), code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus, groupStart, seq: nextSeq() });
     }
     save();
     render();
@@ -902,7 +916,11 @@
         const imported = JSON.parse(reader.result);
         if(!Array.isArray(imported)) throw new Error('formato non valido');
         if(confirm(`Importare ${imported.length} corsi? Verranno aggiunti al registro attuale (i duplicati non vengono controllati).`)){
-          imported.forEach(e => { if(!e.id) e.id = uid(); data.push(e); });
+          imported.forEach(e => {
+            if(!e.id) e.id = uid();
+            if(typeof e.seq !== 'number') e.seq = nextSeq();
+            data.push(e);
+          });
           save(); render();
           showToast('Backup importato');
         }
