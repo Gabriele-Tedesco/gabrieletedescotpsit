@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro Tutoraggi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #eef2e8;
+    --paper-2: #e6ebde;
+    --grid: rgba(46,74,42,0.09);
+    --ink: #202b1d;
+    --ink-soft: #4b5a44;
+    --red: #ac3b2e;
+    --red-soft: rgba(172,59,46,0.15);
+    --green: #2f6b3c;
+    --green-soft: rgba(47,107,60,0.12);
+    --amber: #b57620;
+    --amber-soft: rgba(181,118,32,0.14);
+    --line: rgba(32,43,29,0.14);
+    --shadow: 0 10px 30px rgba(32,43,29,0.10);
+    --radius: 3px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{ margin:0; padding:0; }
+
+  body{
+    background:
+      repeating-linear-gradient(0deg, var(--grid), var(--grid) 1px, transparent 1px, transparent 28px),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .margin-rule{
+    position:fixed;
+    top:0; bottom:0;
+    left:64px;
+    width:2px;
+    background:var(--red);
+    opacity:0.55;
+    z-index:0;
+  }
+  @media (max-width:720px){ .margin-rule{ left:28px; } }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width:920px;
+    margin:0 auto;
+    padding:56px 40px 120px 96px;
+  }
+  @media (max-width:720px){
+    .wrap{ padding:36px 20px 100px 48px; }
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    margin-bottom:44px;
+  }
+
+  .eyebrow-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  h1{
+    font-family:'Newsreader', serif;
+    font-weight:600;
+    font-size:clamp(34px,5vw,50px);
+    margin:0;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+
+  .subtitle{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+
+  .tally{
+    display:flex;
+    gap:28px;
+    margin-top:34px;
+    flex-wrap:wrap;
+  }
+
+  .tally-item{
+    min-width:110px;
+  }
+
+  .tally-num{
+    font-family:'Newsreader', serif;
+    font-size:40px;
+    font-weight:500;
+    line-height:1;
+  }
+  .tally-num.red{ color:var(--red); }
+  .tally-num.green{ color:var(--green); }
+
+  .tally-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    text-transform:lowercase;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    margin:40px 0 8px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .filters{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:6px 12px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .chip:hover{ border-color:var(--ink-soft); color:var(--ink); }
+  .chip.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:var(--paper);
+  }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:9px 16px;
+    border-radius:var(--radius);
+    border:1px solid var(--ink);
+    background:var(--ink);
+    color:var(--paper);
+    cursor:pointer;
+    transition:transform .12s, opacity .12s;
+  }
+  .btn:hover{ opacity:0.88; }
+  .btn:active{ transform:translateY(1px); }
+
+  .btn.ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line);
+    font-weight:500;
+  }
+  .btn.ghost:hover{ border-color:var(--ink); opacity:1; }
+
+  .icon-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--ink-soft);
+    font-size:15px;
+    padding:4px 6px;
+    border-radius:3px;
+  }
+  .icon-btn:hover{ color:var(--ink); background:rgba(32,43,29,0.06); }
+
+  /* ---------- Ledger sections ---------- */
+  .year-block{ margin-top:36px; }
+
+  .year-title{
+    font-family:'Newsreader', serif;
+    font-size:26px;
+    font-weight:600;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .year-title .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    font-weight:400;
+  }
+
+  .month-block{ margin-top:22px; }
+
+  .month-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+    margin-bottom:2px;
+  }
+
+  .entry-row{
+    display:grid;
+    grid-template-columns: 90px 110px 1fr auto auto;
+    align-items:center;
+    gap:14px;
+    padding:11px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:640px){
+    .entry-row{ grid-template-columns: 76px 92px 1fr auto; }
+    .entry-row .note-cell{ display:none; }
+  }
+
+  .entry-row:hover{ background:rgba(255,255,255,0.35); }
+
+  .code-cell{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:14px;
+  }
+
+  .date-cell{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  .note-cell{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .status-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+    cursor:pointer;
+    user-select:none;
+    border:1px solid transparent;
+  }
+  .status-pill.paid{ background:var(--green-soft); color:var(--green); }
+  .status-pill.unpaid{ background:var(--amber-soft); color:var(--amber); border-color:rgba(181,118,32,0.3); }
+
+  .row-tools{
+    display:flex;
+    gap:2px;
+    opacity:0;
+    transition:opacity .12s;
+  }
+  .entry-row:hover .row-tools{ opacity:1; }
+
+  .empty-state{
+    padding:40px 10px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    border:1px dashed var(--line);
+    border-radius:6px;
+    margin-top:20px;
+  }
+
+  /* ---------- Non svolti ---------- */
+  .skipped-section{ margin-top:56px; }
+  .skipped-title{
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    font-size:20px;
+    color:var(--red);
+    margin-bottom:10px;
+  }
+  .skipped-row{
+    display:grid;
+    grid-template-columns: 90px 110px 1fr auto;
+    gap:14px;
+    align-items:center;
+    padding:10px 4px;
+    border-bottom:1px dashed var(--line);
+    color:var(--ink-soft);
+  }
+  .skipped-row .code-cell{ text-decoration:line-through; color:var(--ink-soft); }
+
+  footer{
+    margin-top:70px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  footer a{ color:var(--ink-soft); }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(32,43,29,0.35);
+    backdrop-filter:blur(2px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .hidden{ display:none !important; }
+
+  .modal{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    width:100%;
+    max-width:440px;
+    padding:28px;
+  }
+
+  .modal h2{
+    font-family:'Newsreader', serif;
+    font-size:22px;
+    margin:0 0 20px;
+  }
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    text-transform:lowercase;
+  }
+  .field input[type=text],
+  .field input[type=date]{
+    width:100%;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .field input:focus{ outline:2px solid var(--ink); outline-offset:1px; }
+
+  .radio-group{ display:flex; gap:10px; }
+  .radio-opt{
+    flex:1;
+    text-align:center;
+    padding:9px 6px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    cursor:pointer;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .radio-opt.selected{
+    border-color:var(--ink);
+    color:var(--ink);
+    background:rgba(32,43,29,0.05);
+    font-weight:600;
+  }
+
+  .checkbox-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+  .checkbox-row input{ width:16px; height:16px; }
+
+  .modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:22px;
+  }
+
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    padding:10px 18px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s, transform .25s;
+    z-index:60;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+  input[type=file]{ display:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="margin-rule"></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow-row">
+      <h1>Tutoraggi svolti</h1>
+      <button class="btn" id="btnAdd">+ nuovo corso</button>
+    </div>
+    <div class="subtitle">registro personale — salvato in questo browser</div>
+
+    <div class="tally">
+      <div class="tally-item">
+        <div class="tally-num" id="statTotal">0</div>
+        <div class="tally-label">corsi svolti</div>
+      </div>
+      <div class="tally-item">
+        <div class="tally-num green" id="statPaid">0</div>
+        <div class="tally-label">pagati</div>
+      </div>
+      <div class="tally-item">
+        <div class="tally-num red" id="statUnpaid">0</div>
+        <div class="tally-label">da incassare</div>
+      </div>
+      <div class="tally-item">
+        <div class="tally-num" id="statSkipped">0</div>
+        <div class="tally-label">non svolti</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters" id="yearFilters">
+      <button class="chip active" data-year="all">tutti</button>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="btnExport">esporta backup</button>
+      <label class="btn ghost" for="importFile" style="cursor:pointer;">importa</label>
+      <input type="file" id="importFile" accept="application/json">
+    </div>
+  </div>
+
+  <div id="ledger"></div>
+
+  <div class="skipped-section" id="skippedSection">
+    <div class="skipped-title">Corsi non svolti</div>
+    <div id="skippedList"></div>
+  </div>
+
+  <footer>
+    <span>registro-tutoraggi</span>
+    <span id="lastSaved">—</span>
+  </footer>
+
+</div>
+
+<!-- Modal -->
+<div class="overlay hidden" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">Nuovo corso</h2>
+    <form id="entryForm">
+      <div class="field">
+        <label>stato</label>
+        <div class="radio-group">
+          <div class="radio-opt selected" data-status="done">svolto</div>
+          <div class="radio-opt" data-status="skipped">non svolto</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>codice</label>
+        <input type="text" id="fieldCode" placeholder="C-432" required>
+      </div>
+      <div class="field">
+        <label>data</label>
+        <input type="date" id="fieldDate" required>
+      </div>
+      <div class="field" id="paidField">
+        <label class="checkbox-row" style="display:flex;">
+          <input type="checkbox" id="fieldPaid"> pagato
+        </label>
+      </div>
+      <div class="field">
+        <label>nota (facoltativa)</label>
+        <input type="text" id="fieldNote" placeholder="es. regalo, sostituzione…">
+      </div>
+      <input type="hidden" id="fieldId">
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="btnDelete" style="margin-right:auto; display:none; border-color:var(--red); color:var(--red);">elimina</button>
+        <button type="button" class="btn ghost" id="btnCancel">annulla</button>
+        <button type="submit" class="btn">salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'tutoraggi_registro_v1';
+  const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+  let data = load();
+  let activeYear = 'all';
+  let editingStatus = 'done';
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return [];
+      return JSON.parse(raw);
+    }catch(e){
+      console.error('Errore lettura dati', e);
+      return [];
+    }
+  }
+
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById('lastSaved').textContent = 'ultimo salvataggio ' + new Date().toLocaleTimeString('it-IT');
+  }
+
+  function uid(){ return 'e_' + Math.random().toString(36).slice(2,10); }
+
+  function suggestNextCode(){
+    let max = 399;
+    data.forEach(e => {
+      const m = /^C-?(\d+)$/i.exec((e.code||'').trim());
+      if(m){ const n = parseInt(m[1],10); if(n>max) max = n; }
+    });
+    return 'C-' + (max+1);
+  }
+
+  function fmtDate(iso){
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  function groupData(){
+    const done = data.filter(e => e.status !== 'skipped');
+    const skipped = data.filter(e => e.status === 'skipped');
+    const years = {};
+    done.forEach(e => {
+      const y = (e.date || '').slice(0,4) || '—';
+      years[y] = years[y] || {};
+      const monthIdx = e.date ? parseInt(e.date.slice(5,7),10)-1 : -1;
+      const mName = monthIdx>=0 ? MESI[monthIdx] : 'senza data';
+      years[y][mName] = years[y][mName] || [];
+      years[y][mName].push(e);
+    });
+    return { years, skipped };
+  }
+
+  function render(){
+    const { years, skipped } = groupData();
+    const yearKeys = Object.keys(years).sort((a,b)=> b.localeCompare(a));
+
+    // year filter chips
+    const filterWrap = document.getElementById('yearFilters');
+    filterWrap.innerHTML = '<button class="chip ' + (activeYear==='all'?'active':'') + '" data-year="all">tutti</button>' +
+      yearKeys.map(y => `<button class="chip ${activeYear===y?'active':''}" data-year="${y}">${y}</button>`).join('');
+    filterWrap.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => { activeYear = chip.dataset.year; render(); });
+    });
+
+    // ledger
+    const ledger = document.getElementById('ledger');
+    const visibleYears = activeYear==='all' ? yearKeys : yearKeys.filter(y=>y===activeYear);
+
+    if(visibleYears.length === 0){
+      ledger.innerHTML = '<div class="empty-state">nessun corso registrato ancora — aggiungine uno con "+ nuovo corso"</div>';
+    } else {
+      ledger.innerHTML = visibleYears.map(y => {
+        const monthsObj = years[y];
+        const monthKeys = Object.keys(monthsObj).sort((a,b)=> MESI.indexOf(a)-MESI.indexOf(b));
+        const totalYear = monthKeys.reduce((s,m)=> s+monthsObj[m].length, 0);
+        const monthsHtml = monthKeys.map(m => {
+          const rows = monthsObj[m].slice().sort((a,b)=> (a.date||'').localeCompare(b.date||''));
+          const rowsHtml = rows.map(rowHtml).join('');
+          return `<div class="month-block">
+            <div class="month-title">${m}</div>
+            ${rowsHtml}
+          </div>`;
+        }).join('');
+        return `<div class="year-block">
+          <div class="year-title">${y} <span class="count">${totalYear} corsi</span></div>
+          ${monthsHtml}
+        </div>`;
+      }).join('');
+    }
+
+    // attach handlers for done rows
+    ledger.querySelectorAll('.entry-row').forEach(row => {
+      const id = row.dataset.id;
+      row.querySelector('.status-pill').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        togglePaid(id);
+      });
+      row.querySelector('.edit-btn').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        openModal(id);
+      });
+    });
+
+    // skipped section
+    const skippedList = document.getElementById('skippedList');
+    const skippedSection = document.getElementById('skippedSection');
+    if(skipped.length === 0){
+      skippedSection.classList.add('hidden');
+    } else {
+      skippedSection.classList.remove('hidden');
+      skippedList.innerHTML = skipped
+        .slice()
+        .sort((a,b)=> (b.date||'').localeCompare(a.date||''))
+        .map(e => `
+        <div class="skipped-row" data-id="${e.id}">
+          <div class="code-cell">${escapeHtml(e.code)}</div>
+          <div class="date-cell">${fmtDate(e.date)}</div>
+          <div class="note-cell" style="white-space:normal;">${escapeHtml(e.note||'')}</div>
+          <button class="icon-btn edit-btn">✎</button>
+        </div>`).join('');
+      skippedList.querySelectorAll('.edit-btn').forEach((btn,i) => {
+        btn.addEventListener('click', () => openModal(skippedList.querySelectorAll('.skipped-row')[i].dataset.id));
+      });
+    }
+
+    // stats
+    const doneAll = data.filter(e=>e.status!=='skipped');
+    const paidAll = doneAll.filter(e=>e.paid);
+    document.getElementById('statTotal').textContent = doneAll.length;
+    document.getElementById('statPaid').textContent = paidAll.length;
+    document.getElementById('statUnpaid').textContent = doneAll.length - paidAll.length;
+    document.getElementById('statSkipped').textContent = skipped.length;
+  }
+
+  function rowHtml(e){
+    return `<div class="entry-row" data-id="${e.id}">
+      <div class="code-cell">${escapeHtml(e.code)}</div>
+      <div class="date-cell">${fmtDate(e.date)}</div>
+      <div class="note-cell">${escapeHtml(e.note||'')}</div>
+      <div class="status-pill ${e.paid?'paid':'unpaid'}" title="clicca per cambiare">${e.paid? 'pagato' : 'da pagare'}</div>
+      <div class="row-tools"><button class="icon-btn edit-btn" title="modifica">✎</button></div>
+    </div>`;
+  }
+
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function togglePaid(id){
+    const e = data.find(x=>x.id===id);
+    if(!e) return;
+    e.paid = !e.paid;
+    save();
+    render();
+    showToast(e.paid ? 'Segnato come pagato' : 'Segnato come da pagare');
+  }
+
+  // ---------- Modal handling ----------
+  const overlay = document.getElementById('overlay');
+  const form = document.getElementById('entryForm');
+  const btnAdd = document.getElementById('btnAdd');
+  const btnCancel = document.getElementById('btnCancel');
+  const btnDelete = document.getElementById('btnDelete');
+
+  function setStatus(status){
+    editingStatus = status;
+    document.querySelectorAll('.radio-opt').forEach(o => o.classList.toggle('selected', o.dataset.status===status));
+    document.getElementById('paidField').style.display = status==='done' ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.radio-opt').forEach(opt => {
+    opt.addEventListener('click', () => setStatus(opt.dataset.status));
+  });
+
+  function openModal(id){
+    form.reset();
+    document.getElementById('fieldId').value = id || '';
+    if(id){
+      const e = data.find(x=>x.id===id);
+      document.getElementById('modalTitle').textContent = 'Modifica corso';
+      document.getElementById('fieldCode').value = e.code;
+      document.getElementById('fieldDate').value = e.date || '';
+      document.getElementById('fieldPaid').checked = !!e.paid;
+      document.getElementById('fieldNote').value = e.note || '';
+      setStatus(e.status === 'skipped' ? 'skipped' : 'done');
+      btnDelete.style.display = 'inline-block';
+    } else {
+      document.getElementById('modalTitle').textContent = 'Nuovo corso';
+      document.getElementById('fieldCode').value = suggestNextCode();
+      document.getElementById('fieldDate').value = new Date().toISOString().slice(0,10);
+      setStatus('done');
+      btnDelete.style.display = 'none';
+    }
+    overlay.classList.remove('hidden');
+    setTimeout(()=> document.getElementById('fieldCode').focus(), 50);
+  }
+
+  function closeModal(){ overlay.classList.add('hidden'); }
+
+  btnAdd.addEventListener('click', ()=> openModal(null));
+  btnCancel.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (ev)=> { if(ev.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (ev)=> { if(ev.key === 'Escape' && !overlay.classList.contains('hidden')) closeModal(); });
+
+  btnDelete.addEventListener('click', () => {
+    const id = document.getElementById('fieldId').value;
+    if(!id) return;
+    if(confirm('Eliminare definitivamente questo corso dal registro?')){
+      data = data.filter(x=>x.id!==id);
+      save(); render(); closeModal();
+      showToast('Corso eliminato');
+    }
+  });
+
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const id = document.getElementById('fieldId').value;
+    const code = document.getElementById('fieldCode').value.trim();
+    const dateVal = document.getElementById('fieldDate').value;
+    const paid = document.getElementById('fieldPaid').checked;
+    const note = document.getElementById('fieldNote').value.trim();
+
+    if(id){
+      const e = data.find(x=>x.id===id);
+      Object.assign(e, { code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus });
+    } else {
+      data.push({ id: uid(), code, date: dateVal, paid: editingStatus==='done' ? paid : false, note, status: editingStatus });
+    }
+    save();
+    render();
+    closeModal();
+    showToast('Corso salvato');
+  });
+
+  // ---------- Export / Import ----------
+  document.getElementById('btnExport').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tutoraggi-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Backup scaricato');
+  });
+
+  document.getElementById('importFile').addEventListener('change', (ev) => {
+    const file = ev.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const imported = JSON.parse(reader.result);
+        if(!Array.isArray(imported)) throw new Error('formato non valido');
+        if(confirm(`Importare ${imported.length} corsi? Verranno aggiunti al registro attuale (i duplicati non vengono controllati).`)){
+          imported.forEach(e => { if(!e.id) e.id = uid(); data.push(e); });
+          save(); render();
+          showToast('Backup importato');
+        }
+      }catch(e){
+        alert('Il file selezionato non è un backup valido.');
+      }
+      ev.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> t.classList.remove('show'), 2200);
+  }
+
+  render();
+  if(data.length){ document.getElementById('lastSaved').textContent = 'dati caricati dal browser'; }
+})();
+</script>
+
+</body>
+</html>
